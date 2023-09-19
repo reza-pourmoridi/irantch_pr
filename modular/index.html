@@ -1,0 +1,31 @@
+<head>
+</head>
+
+<form enctype="multipart/form-data">
+    <input type="file" id="fileInput" name="file">
+    <button type="button" onclick="sendFile()">Upload File</button>
+</form>
+
+<p id="message">loading...</p>
+
+<script>
+    function sendFile() {
+        var formData = new FormData();
+        formData.append('file', document.getElementById('fileInput').files[0]);
+
+        $.ajax({
+            url: '/upload',
+            method: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                $('#message').text(response.message);
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    }
+</script>
+55
