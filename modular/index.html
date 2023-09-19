@@ -1,12 +1,14 @@
-<head>
-</head>
+<div class="container mt-4">
+    <form enctype="multipart/form-data">
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" id="fileInput" name="file">
+            <label class="custom-file-label" for="fileInput">Choose file</label>
+        </div>
+        <button type="button" class="btn btn-primary mt-2" onclick="sendFile()">Upload File</button>
+    </form>
 
-<form enctype="multipart/form-data">
-    <input type="file" id="fileInput" name="file">
-    <button type="button" onclick="sendFile()">Upload File</button>
-</form>
-
-<p id="message">loading...</p>
+    <p id="message" class="mt-3">Loading...</p>
+</div>
 
 <script>
     function sendFile() {
@@ -28,4 +30,3 @@
         });
     }
 </script>
-55
