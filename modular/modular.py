@@ -2,12 +2,7 @@ from flask import Flask, jsonify, request, send_file, jsonify
 from bs4 import BeautifulSoup
 
 import os
-
-
-def run_app():
-    # Add your logic for the '/recom-back-end' route here
-    response = {"message": "This is the modular back-end."}
-    return jsonify(response)
+import shutil
 
 
 def upload_file():
@@ -57,37 +52,67 @@ def upload_file():
 
 
 def initiation_progress():
-    # get html file and pass sections for modulation in appropriate function like blog_module if section exist
     if 'file' not in request.files:
         return jsonify({"message": "No file part"})
 
-    file = request.files['file']
+    if 'project_name' not in request.form:
+        return jsonify({"message": "No project name"})
 
+    file = request.files['file']
     if file.filename == '':
         return jsonify({"message": "No selected file"})
 
-    create_folder(request.project_name)
-    copy_repeated_file_folders(request.project_name)
+    create_folder_massage = create_folder(request.form['project_name'])
+    copy_repeated_file_folders_massage = copy_repeated_file_folders(request.form['project_name'])
+    return jsonify({"error": copy_repeated_file_folders_massage})
 
-    html_content = file.read()
-    soup = BeautifulSoup(html_content, 'html.parser')
-    blog_section = soup.find("section", class_="blog")
-    if blog_section:
-        # separate blog section for sending to blog_module
-        blog_module(blog_section)
-
-    return jsonify({"message": "File uploaded and modified successfully"})
-
-
-def create_folder(folder_file_path):
-    # create folders and files and upload fill in target files and folders
-    return 'massage'
+    # html_content = file.read()
+    # soup = BeautifulSoup(html_content, 'html.parser')
+    # blog_section = soup.find("section", class_="blog")
+    # if blog_section:
+    #     # separate blog section for sending to blog_module
+    #     blog_module(blog_section)
+    #
+    # return jsonify({"message": "File uploaded and modified successfully"})
 
 
-def copy_repeated_file_folders(folder_file_path):
-    # create folders and files and upload fill in target files and folders
-    return 'massage'
+def create_folder(folder_name):
+    try:
+        script_directory = os.path.dirname(__file__)  # Get the directory of the script
+        files_directory = os.path.join(script_directory, 'files')  # Create a 'files' subdirectory
+        folder_path = os.path.join(files_directory, folder_name)
 
+        # Check if the folder already exists
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)  # Create the folder and any necessary parent folders
+            return f'Folder "{folder_name}" created successfully in the "files" directory'
+        else:
+            return f'Folder "{folder_name}" already exists in the "files" directory'
+    except Exception as e:
+        return f'Error creating folder: {str(e)}'
+
+
+def copy_repeated_file_folders(target_folder):
+    try:
+        source_folder = 'repeated_files'
+        # Construct the full paths to the source and target directories
+        source_directory = os.path.join(os.path.dirname(__file__), 'files', source_folder)
+        target_directory = os.path.join(os.path.dirname(__file__), 'files', target_folder)
+
+        # Ensure the source directory exists
+        if not os.path.exists(source_directory):
+            return f'Source directory "{source_directory}" does not exist.'
+
+        # Create the target directory if it doesn't exist
+        if not os.path.exists(target_directory):
+            os.makedirs(target_directory)
+
+        # Copy the entire contents of the source directory to the target directory
+        shutil.copytree(source_directory, os.path.join(target_directory, os.path.basename(source_directory)))
+
+        return f'Contents of "{source_folder}" copied successfully to "{target_folder}"'
+    except Exception as e:
+        return f'Error copying directory contents: {str(e)}'
 
 def create_file(folder_file_path):
     # create folders and files and upload fill in target files and folders
