@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, send_file, jsonify
 from bs4 import BeautifulSoup
 import os
 import shutil
+import re
 
 
 def initiation_progress():
@@ -17,13 +18,11 @@ def initiation_progress():
 
     project_path = create_folder(request.form['project_name'])
     copy_repeated_file_folders_massage = copy_repeated_file_folders(request.form['project_name'])
-    # return jsonify({"message": copy_repeated_file_folders_massage})
-
     html_content = file.read()
     soup = BeautifulSoup(html_content, 'html.parser')
 
     # blog module
-    blog_section = soup.find("section", class_="blog")
+    blog_section = soup.find(class_="blog")
     if blog_section:
         blog_module_massage = blog_module(blog_section,project_path)
         return jsonify({"message": blog_module_massage})
@@ -127,20 +126,58 @@ def blog_module(blog_section, project_path):
             "__all_article__": "https://example.com/all_articles"
         }
 
-        # Iterate through all strings and tag attributes
-        for tag in blog_section.find_all():
-            for attr, value in tag.attrs.items():
-                if isinstance(value, str):
-                    for key, new_value in blog_replacement_data.items():
-                        tag[attr] = tag[attr].replace(key, new_value)
+        pattern = re.compile(r'__i_modular_c_item_(\d+)')
+        elements = blog_section.find_all(class_=pattern)
 
-            for key, value in blog_replacement_data.items():
-                if tag.string and key in tag.string:
-                    tag.string = tag.string.replace(key, value)
+        extracted_numbers = []
 
-        blog_final_content = blog_section.prettify()
-        blog_final_content = f'{{if !empty($internalTours) || !empty($foreginTours)}}\n{blog_final_content}\n{{/if}}'
+        for element in elements:
+            match = pattern.search(element.get('class')[0])
+            if match:
+                number = match.group(1)
+                blog_complex_replacement_data = {
+                    "__link__": "https://example.com" + number,
+                    "__image__": "image_url.jpg" + number,
+                    "__title__": "Sample Title" + number,
+                    "__all_article__": "https://example.com/all_articles" + number
+                }
+                element = replace_placeholders(element, blog_complex_replacement_data)
+                return element
+            else:
+                raise ValueError(f"No number found in class attribute: {element.get('class')[0]}")
 
-        return create_file(blog_final_content, project_path, 'blog', 'tpl')
+
+        blog_final_content = f'{{if !empty($internalTours) || !empty($foreginTours)}}\n{blog_section}\n{{/if}}'
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        return create_file(blog_final_content, include_files_directory, 'blog', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
+
+
+def replace_placeholders_recursive(tag, replacement_data):
+    # Iterate over the tag's attributes
+    for attr, value in tag.attrs.items():
+        if isinstance(value, str):
+            # Replace keys in attribute values
+            for key, new_value in replacement_data.items():
+                tag[attr] = tag[attr].replace(key, new_value)
+
+    # Iterate over the replacement_data
+    for key, value in replacement_data.items():
+        # Replace keys in the tag's string content
+        if tag.string and key in tag.string:
+            tag.string = tag.string.replace(key, value)
+
+    # Recursively process the parent tags
+    if tag.parent:
+        replace_placeholders_recursive(tag.parent, replacement_data)
+
+
+def replace_placeholders(section, replacement_data):
+    # Iterate over all tags in the section
+    for tag in section.find_all():
+        replace_placeholders_recursive(tag, replacement_data)
+
+    section_final_content = section.prettify()
+    return section_final_content
+
