@@ -133,18 +133,19 @@ def blog_module(blog_section, project_path):
             match = pattern.search(element.get('class')[0])
             if match:
                 number = match.group(1)
-                blog_complex_replacement_data = {
-                    "__link__": "https://example.com" + number,
-                    "__image__": "image_url.jpg" + number,
-                    "__title__": "Sample Title" + number,
-                    "__all_article__": "https://example.com/all_articles" + number
-                }
-                element_initiate = element.prettify()
-                element_final = replace_placeholders(element, blog_complex_replacement_data)
-                blog_section = replace_placeholders(blog_section, {element_initiate: element_final})
-                blog_section = BeautifulSoup(blog_section, 'html.parser')
+                extracted_numbers.append(number)
             else:
                 raise ValueError(f"No number found in class attribute: {element.get('class')[0]}")
+
+        for num in extracted_numbers:
+            blog_complex_replacement_data = {
+                "__link__": "https://example.com" + num,
+                "__image__": "image_url.jpg" + num,
+                "__title__": "Sample Title" + num,
+                "__all_article__": "https://example.com/all_articles" + num
+            }
+            complex_element = blog_section.find(class_="__i_modular_c_item_" + num)
+            complex_element_final = replace_placeholders(complex_element, blog_complex_replacement_data)
 
         blog_final_content = f'{{if !empty($internalTours) || !empty($foreginTours)}}\n{blog_section}\n{{/if}}'
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
