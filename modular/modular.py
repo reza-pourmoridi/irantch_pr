@@ -128,9 +128,7 @@ def blog_module(blog_section, project_path):
 
         pattern = re.compile(r'__i_modular_c_item_(\d+)')
         elements = blog_section.find_all(class_=pattern)
-
         extracted_numbers = []
-
         for element in elements:
             match = pattern.search(element.get('class')[0])
             if match:
@@ -141,11 +139,12 @@ def blog_module(blog_section, project_path):
                     "__title__": "Sample Title" + number,
                     "__all_article__": "https://example.com/all_articles" + number
                 }
-                element = replace_placeholders(element, blog_complex_replacement_data)
-                return element
+                element_initiate = element.prettify()
+                element_final = replace_placeholders(element, blog_complex_replacement_data)
+                blog_section = replace_placeholders(blog_section, {element_initiate: element_final})
+                blog_section = BeautifulSoup(blog_section, 'html.parser')
             else:
                 raise ValueError(f"No number found in class attribute: {element.get('class')[0]}")
-
 
         blog_final_content = f'{{if !empty($internalTours) || !empty($foreginTours)}}\n{blog_section}\n{{/if}}'
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
