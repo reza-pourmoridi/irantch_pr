@@ -62,18 +62,22 @@ def initiation_progress():
     if file.filename == '':
         return jsonify({"message": "No selected file"})
 
-    create_folder_massage = create_folder(request.form['project_name'])
+    project_path = create_folder(request.form['project_name'])
     copy_repeated_file_folders_massage = copy_repeated_file_folders(request.form['project_name'])
-    return jsonify({"error": copy_repeated_file_folders_massage})
+    # return jsonify({"message": copy_repeated_file_folders_massage})
 
-    # html_content = file.read()
-    # soup = BeautifulSoup(html_content, 'html.parser')
-    # blog_section = soup.find("section", class_="blog")
-    # if blog_section:
-    #     # separate blog section for sending to blog_module
-    #     blog_module(blog_section)
-    #
-    # return jsonify({"message": "File uploaded and modified successfully"})
+    html_content = file.read()
+    soup = BeautifulSoup(html_content, 'html.parser')
+
+    # blog module
+    blog_section = soup.find("section", class_="blog")
+    if blog_section:
+        # separate blog section for sending to blog_module
+        blog_module(blog_section)
+
+    # blog module
+
+    return jsonify({"message": "File uploaded and modified successfully"})
 
 
 def create_folder(folder_name):
@@ -85,7 +89,7 @@ def create_folder(folder_name):
         # Check if the folder already exists
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)  # Create the folder and any necessary parent folders
-            return f'Folder "{folder_name}" created successfully in the "files" directory'
+            return folder_path
         else:
             return f'Folder "{folder_name}" already exists in the "files" directory'
     except Exception as e:
@@ -114,9 +118,24 @@ def copy_repeated_file_folders(target_folder):
     except Exception as e:
         return f'Error copying directory contents: {str(e)}'
 
-def create_file(folder_file_path):
-    # create folders and files and upload fill in target files and folders
-    return 'massage'
+
+def create_file(content, path, file_name, file_format):
+    try:
+        # Combine the provided path and file name with format to create the full file path
+        full_file_path = os.path.join(path, f'{file_name}.{file_format}')
+
+        # Write the content to the file
+        with open(full_file_path, 'w', encoding='utf-8') as file:
+            file.write(content)
+
+        return f'File "{full_file_path}" created successfully'
+    except Exception as e:
+        return f'Error creating file: {str(e)}'
+
+    # file_content = file.read()
+    # soup = BeautifulSoup(file_content, 'html.parser')
+    # file_content_string = soup.prettify()
+    # create_file_message = create_file(file_content_string, project_path, 'blog', 'tpl')
 
 
 def blog_module(blog_section):
