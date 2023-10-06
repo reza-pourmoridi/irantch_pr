@@ -118,6 +118,7 @@ def create_file(content, path, file_name, file_format):
 def blog_module(blog_section, project_path):
     try:
 
+
         # Placeholder replacement logic
         blog_replacement_data = {
             "__link__": "https://example.com",
