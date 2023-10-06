@@ -1,54 +1,7 @@
 from flask import Flask, jsonify, request, send_file, jsonify
 from bs4 import BeautifulSoup
-
 import os
 import shutil
-
-
-def upload_file():
-    if 'file' not in request.files:
-        return jsonify({"message": "No file part"})
-
-    file = request.files['file']
-
-    if file.filename == '':
-        return jsonify({"message": "No selected file"})
-
-    # Read HTML content from the uploaded file
-    html_content = file.read()
-    soup = BeautifulSoup(html_content, 'html.parser')
-
-    blog_section = soup.find("section", class_="blog")
-    if blog_section:
-        # Add the conditional block before and after the <section class="blog"> tag
-        blog_section.insert_before('{if !empty($internalTours) || !empty($foreginTours)}')
-        blog_section.insert_after('{/if}')
-
-    replacement_data = {
-        "__link__": "https://example.com",
-        "__image__": "image_url.jpg",
-        "__title__": "Sample Title",
-        "__all_article__": "https://example.com/all_articles"
-    }
-    # Iterate through all strings and tag attributes
-    for tag in soup.find_all():
-        for attr, value in tag.attrs.items():
-            if isinstance(value, str):
-                for key, new_value in replacement_data.items():
-                    tag[attr] = tag[attr].replace(key, new_value)
-
-        for key, value in replacement_data.items():
-            if tag.string and key in tag.string:
-                tag.string = tag.string.replace(key, value)
-
-    new_html_code = soup.prettify()
-
-    # Save the modified HTML code to a new file with UTF-8 encoding
-    modified_file_path = os.path.join('modular/uploads', 'modified5_' + file.filename)
-    with open(modified_file_path, 'w', encoding='utf-8') as modified_file:
-        modified_file.write(new_html_code)
-
-    return jsonify({"message": "File uploaded and modified successfully"})
 
 
 def initiation_progress():
@@ -72,10 +25,10 @@ def initiation_progress():
     # blog module
     blog_section = soup.find("section", class_="blog")
     if blog_section:
-        # separate blog section for sending to blog_module
-        blog_module(blog_section)
+        blog_module_massage = blog_module(blog_section,project_path)
+        return jsonify({"message": blog_module_massage})
 
-    # blog module
+    # tour module
 
     return jsonify({"message": "File uploaded and modified successfully"})
 
@@ -96,13 +49,8 @@ def create_folder(folder_name):
         return f'Error creating folder: {str(e)}'
 
 
-def copy_repeated_file_folders(target_folder):
+def copy_directory_contents(source_directory, target_directory):
     try:
-        source_folder = 'repeated_files'
-        # Construct the full paths to the source and target directories
-        source_directory = os.path.join(os.path.dirname(__file__), 'files', source_folder)
-        target_directory = os.path.join(os.path.dirname(__file__), 'files', target_folder)
-
         # Ensure the source directory exists
         if not os.path.exists(source_directory):
             return f'Source directory "{source_directory}" does not exist.'
@@ -112,11 +60,46 @@ def copy_repeated_file_folders(target_folder):
             os.makedirs(target_directory)
 
         # Copy the entire contents of the source directory to the target directory
-        shutil.copytree(source_directory, os.path.join(target_directory, os.path.basename(source_directory)))
+        for item in os.listdir(source_directory):
+            source_item = os.path.join(source_directory, item)
+            target_item = os.path.join(target_directory, item)
 
-        return f'Contents of "{source_folder}" copied successfully to "{target_folder}"'
+            if os.path.isdir(source_item):
+                # Recursively copy subdirectories and their contents
+                copy_directory_contents(source_item, target_item)
+            else:
+                # Copy individual files
+                shutil.copy2(source_item, target_item)
+
+        return f'Contents of "{source_directory}" copied successfully to "{target_directory}"'
     except Exception as e:
         return f'Error copying directory contents: {str(e)}'
+
+
+def copy_repeated_file_folders(target_folder):
+    try:
+        source_folders = ['repeated_files', 'include_files', 'project_files']
+
+        # Construct the full paths to the source and target directories
+        target_directory = os.path.join(os.path.dirname(__file__), 'files', target_folder)
+
+        # Ensure the target directory exists
+        if not os.path.exists(target_directory):
+            os.makedirs(target_directory)
+
+        for source_folder in source_folders:
+            source_directory = os.path.join(os.path.dirname(__file__), 'files', source_folder)
+
+            # Skip source directories that don't exist
+            if not os.path.exists(source_directory):
+                continue
+
+            # Copy the entire contents of the source directory to the target directory
+            copy_directory_contents(source_directory, target_directory)
+
+        return f'Contents of source folders copied successfully to "{target_folder}"'
+    except Exception as e:
+        return f'Error copying source folders: {str(e)}'
 
 
 def create_file(content, path, file_name, file_format):
@@ -132,34 +115,32 @@ def create_file(content, path, file_name, file_format):
     except Exception as e:
         return f'Error creating file: {str(e)}'
 
-    # file_content = file.read()
-    # soup = BeautifulSoup(file_content, 'html.parser')
-    # file_content_string = soup.prettify()
-    # create_file_message = create_file(file_content_string, project_path, 'blog', 'tpl')
 
+def blog_module(blog_section, project_path):
+    try:
 
-def blog_module(blog_section):
-    # modulation the passed section
-    blog_section.insert_before('{if !empty($internalTours) || !empty($foreginTours)}')
-    blog_section.insert_after('{/if}')
+        # Placeholder replacement logic
+        blog_replacement_data = {
+            "__link__": "https://example.com",
+            "__image__": "image_url.jpg",
+            "__title__": "Sample Title",
+            "__all_article__": "https://example.com/all_articles"
+        }
 
-    blog_replacement_data = {
-        "__link1__": "https://example.com",
-        "__link__": "https://example.com",
-        "__image__": "image_url.jpg",
-        "__title__": "Sample Title",
-        "__all_article__": "https://example.com/all_articles"
-    }
-    # Iterate through all strings and tag attributes
-    for tag in blog_section.find_all():
-        for attr, value in tag.attrs.items():
-            if isinstance(value, str):
-                for key, new_value in blog_replacement_data.items():
-                    tag[attr] = tag[attr].replace(key, new_value)
+        # Iterate through all strings and tag attributes
+        for tag in blog_section.find_all():
+            for attr, value in tag.attrs.items():
+                if isinstance(value, str):
+                    for key, new_value in blog_replacement_data.items():
+                        tag[attr] = tag[attr].replace(key, new_value)
 
-        for key, value in blog_replacement_data.items():
-            if tag.string and key in tag.string:
-                tag.string = tag.string.replace(key, value)
+            for key, value in blog_replacement_data.items():
+                if tag.string and key in tag.string:
+                    tag.string = tag.string.replace(key, value)
 
-    new_html_code = blog_section.prettify()
-    create_file(new_html_code)
+        blog_final_content = blog_section.prettify()
+        blog_final_content = f'{{if !empty($internalTours) || !empty($foreginTours)}}\n{blog_final_content}\n{{/if}}'
+
+        return create_file(blog_final_content, project_path, 'blog', 'tpl')
+    except Exception as e:
+        return str(e)  # Return the exception message for now
