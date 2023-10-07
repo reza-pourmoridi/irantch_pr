@@ -3,6 +3,8 @@
         <div class="custom-file">
             <input type="file" class="custom-file-input" id="fileInput" name="file">
             <label class="custom-file-label" for="fileInput">Choose file</label>
+
+            <input placeholder="project name" type="text" class="mt-1" style="width: 100%;" id="project_name" name="project_name">
         </div>
         <button type="button" class="btn btn-primary mt-2" onclick="sendFile()">Upload File</button>
     </form>
@@ -14,9 +16,10 @@
     function sendFile() {
         var formData = new FormData();
         formData.append('file', document.getElementById('fileInput').files[0]);
+        formData.append('project_name', document.getElementById('project_name').value);
 
         $.ajax({
-            url: '/upload',
+            url: '/initiation_progress',
             method: 'POST',
             data: formData,
             contentType: false,
