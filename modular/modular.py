@@ -117,28 +117,49 @@ def create_file(content, path, file_name, file_format):
 
 def blog_module(blog_section, project_path):
     try:
+        complex_itesm_pattern = re.compile(r'__i_modular_c_item_(\d+)')
+        simple_itesm_pattern = re.compile(r'__i_modular_nc_item_(\d+)')
+        complex_items_numbers = []
+        simple_items_numbers = []
 
-
-        # Placeholder replacement logic
-        blog_replacement_data = {
-            "__link__": "https://example.com",
-            "__image__": "image_url.jpg",
-            "__title__": "Sample Title",
-            "__all_article__": "https://example.com/all_articles"
-        }
-
-        pattern = re.compile(r'__i_modular_c_item_(\d+)')
-        elements = blog_section.find_all(class_=pattern)
-        extracted_numbers = []
+        elements = blog_section.find_all(class_=complex_itesm_pattern)
         for element in elements:
-            match = pattern.search(element.get('class')[0])
+            match = complex_itesm_pattern.search(element.get('class')[0])
             if match:
                 number = match.group(1)
-                extracted_numbers.append(number)
+                complex_items_numbers.append(number)
+            else:
+                raise ValueError(f"No number found in class attribute: {element.get('class')[0]}")
+        elements = blog_section.find_all(class_=simple_itesm_pattern)
+        for element in elements:
+            match = simple_itesm_pattern.search(element.get('class')[0])
+            if match:
+                number = match.group(1)
+                simple_items_numbers.append(number)
             else:
                 raise ValueError(f"No number found in class attribute: {element.get('class')[0]}")
 
-        for num in extracted_numbers:
+        for num in simple_items_numbers:
+            blog_replacement_data = {
+                "__link__": "https://example.com",
+                "__image__": "image_url.jpg",
+                "__title__": "Sample Title",
+                "__all_article__": "https://example.com/all_articles"
+            }
+            simple_element = blog_section.find(class_="__i_modular_nc_item_" + num)
+
+            # Check if it's the first simple element
+            if num == simple_items_numbers[0]:
+                simple_element_final = replace_placeholders(simple_element, blog_replacement_data)
+            else:
+                simple_element.decompose()
+
+        # simple_element = blog_section.find(class_="__i_modular_nc_item_" + num)
+        # blog_section = blog_section.prettify()
+        # blog_section = replace_placeholders(simple_element, {simple_element: f'{{if !empty($internalTours) || !empty($foreginTours)}}\n{simple_element}\n{{/if}}'})
+
+
+        for num in complex_items_numbers:
             blog_complex_replacement_data = {
                 "__link__": "https://example.com" + num,
                 "__image__": "image_url.jpg" + num,
