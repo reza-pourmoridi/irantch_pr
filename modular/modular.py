@@ -179,6 +179,7 @@ def blog_module(blog_section, project_path):
 
         blog_final_content = f'{{if !empty($internalTours) || !empty($foreginTours)}}\n{blog_section}\n{{/if}}'
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        write_text_in_path(project_path, "{inclued 'include_files/blog.tpl'}")
         return create_file(blog_final_content, include_files_directory, 'blog', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
@@ -215,4 +216,10 @@ def replace_placeholders(section, replacement_data):
 
     section_final_content = section.prettify()
     return section_final_content
+
+
+def write_text_in_path(path, text):
+    mainpage_tpl_path = os.path.join(path, 'mainPage.tpl')
+    with open(mainpage_tpl_path, 'w') as mainPage_tpl_file:
+        mainPage_tpl_file.write(text)
 
