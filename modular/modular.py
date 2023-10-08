@@ -18,7 +18,10 @@ def initiation_progress():
 
     project_path = create_folder(request.form['project_name'])
     copy_repeated_file_folders_massage = copy_repeated_file_folders(request.form['project_name'])
+
+    # turn html to string
     html_content = file.read()
+    # turn string to soup object
     soup = BeautifulSoup(html_content, 'html.parser')
 
     # blog module
@@ -77,7 +80,7 @@ def copy_directory_contents(source_directory, target_directory):
 
 def copy_repeated_file_folders(target_folder):
     try:
-        source_folders = ['repeated_files', 'include_files', 'project_files']
+        source_folders = ['repeated_files']
 
         # Construct the full paths to the source and target directories
         target_directory = os.path.join(os.path.dirname(__file__), 'files', target_folder)
@@ -117,22 +120,22 @@ def create_file(content, path, file_name, file_format):
 
 def blog_module(blog_section, project_path):
     try:
-        complex_itesm_pattern = re.compile(r'__i_modular_c_item_(\d+)')
-        simple_itesm_pattern = re.compile(r'__i_modular_nc_item_(\d+)')
+        complex_items_pattern = re.compile(r'__i_modular_c_item_(\d+)')
+        simple_items_pattern = re.compile(r'__i_modular_nc_item_(\d+)')
         complex_items_numbers = []
         simple_items_numbers = []
 
-        elements = blog_section.find_all(class_=complex_itesm_pattern)
+        elements = blog_section.find_all(class_=complex_items_pattern)
         for element in elements:
-            match = complex_itesm_pattern.search(element.get('class')[0])
+            match = complex_items_pattern.search(element.get('class')[0])
             if match:
                 number = match.group(1)
                 complex_items_numbers.append(number)
             else:
                 raise ValueError(f"No number found in class attribute: {element.get('class')[0]}")
-        elements = blog_section.find_all(class_=simple_itesm_pattern)
+        elements = blog_section.find_all(class_=simple_items_pattern)
         for element in elements:
-            match = simple_itesm_pattern.search(element.get('class')[0])
+            match = simple_items_pattern.search(element.get('class')[0])
             if match:
                 number = match.group(1)
                 simple_items_numbers.append(number)
@@ -150,14 +153,9 @@ def blog_module(blog_section, project_path):
 
             # Check if it's the first simple element
             if num == simple_items_numbers[0]:
-                simple_element_final = replace_placeholders(simple_element, blog_replacement_data)
+                simple_element = replace_placeholders(simple_element, blog_replacement_data)
             else:
                 simple_element.decompose()
-
-        # simple_element = blog_section.find(class_="__i_modular_nc_item_" + num)
-        # blog_section = blog_section.prettify()
-        # blog_section = replace_placeholders(simple_element, {simple_element: f'{{if !empty($internalTours) || !empty($foreginTours)}}\n{simple_element}\n{{/if}}'})
-
 
         for num in complex_items_numbers:
             blog_complex_replacement_data = {
