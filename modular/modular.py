@@ -120,6 +120,7 @@ def create_file(content, path, file_name, file_format):
 
 def blog_module(blog_section, project_path):
     try:
+        # create regex objects containing patterns of items classes
         complex_items_pattern = re.compile(r'__i_modular_c_item_(\d+)')
         simple_items_pattern = re.compile(r'__i_modular_nc_item_(\d+)')
         complex_items_numbers = []
@@ -147,12 +148,20 @@ def blog_module(blog_section, project_path):
                 "__link__": "https://example.com",
                 "__image__": "image_url.jpg",
                 "__title__": "Sample Title",
-                "__all_article__": "https://example.com/all_articles"
+                "__all_article__": "https://example.com/all_articles",
+                '<span class="__title__">تایتل</span>': ' تایتل '
             }
             simple_element = blog_section.find(class_="__i_modular_nc_item_" + num)
 
             # Check if it's the first simple element
             if num == simple_items_numbers[0]:
+                # new_tag = BeautifulSoup(simple_element, 'html.parser')
+                # simple_element = replace_placeholders(simple_element, {
+                #     new_tag: f'{{if !empty($internalTours) || !empty($foreginTours)}}\n{new_tag}\n{{/if}}'})
+                for tag in blog_section.find_all():
+                    if tag.decode() == simple_element.decode():
+                        new_tag = BeautifulSoup(f'{{if !empty($internalTours) || !empty($foreginTours)}}\n{simple_element}\n{{/if}}', 'html.parser')
+                        simple_element.replace_with(new_tag)
                 simple_element = replace_placeholders(simple_element, blog_replacement_data)
             else:
                 simple_element.decompose()
@@ -162,7 +171,8 @@ def blog_module(blog_section, project_path):
                 "__link__": "https://example.com" + num,
                 "__image__": "image_url.jpg" + num,
                 "__title__": "Sample Title" + num,
-                "__all_article__": "https://example.com/all_articles" + num
+                "__all_article__": "https://example.com/all_articles" + num,
+                '<span class="__title__">تایتل</span>': ' تایتل ' + num
             }
             complex_element = blog_section.find(class_="__i_modular_c_item_" + num)
             complex_element_final = replace_placeholders(complex_element, blog_complex_replacement_data)
@@ -191,6 +201,11 @@ def replace_placeholders_recursive(tag, replacement_data):
     # Recursively process the parent tags
     if tag.parent:
         replace_placeholders_recursive(tag.parent, replacement_data)
+
+    # Replace entire tag if it's in replacement_data
+    if tag.decode() in replacement_data:
+        new_tag = BeautifulSoup(replacement_data[tag.decode()], 'html.parser')
+        tag.replace_with(new_tag)
 
 
 def replace_placeholders(section, replacement_data):
