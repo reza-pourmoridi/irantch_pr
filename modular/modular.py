@@ -25,7 +25,7 @@ def initiation_progress():
     soup = BeautifulSoup(html_content, 'html.parser')
 
     # blog module
-    blog_section = soup.find(class_="blog")
+    blog_section = soup.find(class_="i_modular_blog")
     if blog_section:
         blog_module_massage = blog_module(blog_section,project_path)
         return jsonify({"message": blog_module_massage})
@@ -123,6 +123,16 @@ def blog_module(blog_section, project_path):
         # create regex objects containing patterns of items classes
         complex_items_pattern = re.compile(r'__i_modular_c_item_(\d+)')
         simple_items_pattern = re.compile(r'__i_modular_nc_item_(\d+)')
+        before_html = '''{assign var="data_search_blog" value=['service'=>'Public','section'=>'article', 'limit' =>4]}
+                        {assign var='articles' value=$obj_main_page->articlesPosition($data_search_blog)}
+                        {assign var='counter' value=0}
+                        {assign var="article_count" value=$articles|count}
+                        {if $articles}'''
+
+        after_html = '{/if}'
+        before_foreach = '''{foreach $articles as $key => $article}'''
+        after_foreach = '''{/foreach}'''
+
         complex_items_numbers = []
         simple_items_numbers = []
 
@@ -145,11 +155,14 @@ def blog_module(blog_section, project_path):
 
         for num in simple_items_numbers:
             blog_replacement_data = {
-                "__link__": "https://example.com",
-                "__image__": "image_url.jpg",
-                "__title__": "Sample Title",
-                "__all_article__": "https://example.com/all_articles",
-                '<span class="__title__">تایتل</span>': ' تایتل '
+                "__airline__": '''{$article['link']}''',
+                "__link__": '''{$article['link']}''',
+                "__image__": '''{$article['image']}''',
+                "__title__": '''{$article['title']}''',
+                "__alt_article__": '''{$article['title']}''',
+                '<span class="__date__">5 بهمن 1402</span>': '''{$article['created_at']}''',
+                '<span class="__comments_number__">450</span>': '''{$article['comments_count']['comments_count']}''',
+                '<span class="__title__">تایتل</span>': '''{$article['title']}'''
             }
             simple_element = blog_section.find(class_="__i_modular_nc_item_" + num)
 
@@ -160,24 +173,28 @@ def blog_module(blog_section, project_path):
                 #     new_tag: f'{{if !empty($internalTours) || !empty($foreginTours)}}\n{new_tag}\n{{/if}}'})
                 for tag in blog_section.find_all():
                     if tag.decode() == simple_element.decode():
-                        new_tag = BeautifulSoup(f'{{if !empty($internalTours) || !empty($foreginTours)}}\n{simple_element}\n{{/if}}', 'html.parser')
+                        new_tag = BeautifulSoup(f'{before_foreach}\n{simple_element}\n{after_foreach}')
                         simple_element.replace_with(new_tag)
+                simple_element = blog_section.find(class_="__i_modular_nc_item_" + num)
                 simple_element = replace_placeholders(simple_element, blog_replacement_data)
             else:
                 simple_element.decompose()
-
         for num in complex_items_numbers:
             blog_complex_replacement_data = {
-                "__link__": "https://example.com" + num,
-                "__image__": "image_url.jpg" + num,
-                "__title__": "Sample Title" + num,
-                "__all_article__": "https://example.com/all_articles" + num,
-                '<span class="__title__">تایتل</span>': ' تایتل ' + num
+                "__link__": '''{{articles[{0}]['link']}}'''.format(num),
+                "__image__": '''{{articles[{0}]['image']}}'''.format(num),
+                "__title__": '''{{articles[{0}]['title']}}'''.format(num),
+                "__alt_article__": '''{{articles[{0}]['title']}}'''.format(num),
+                '<span class="__date__">5 بهمن 1402</span>': '''{{articles[{0}]['created_at']}}'''.format(num),
+                '<span class="__comments_number__">450</span>': '''{{articles[{0}]['comments_count']['comments_count']}}'''.format(num),
+                '<span class="__title__">تایتل</span>': '''{{articles[{0}]['title']}}'''.format(num)
             }
             complex_element = blog_section.find(class_="__i_modular_c_item_" + num)
             complex_element_final = replace_placeholders(complex_element, blog_complex_replacement_data)
 
-        blog_final_content = f'{{if !empty($internalTours) || !empty($foreginTours)}}\n{blog_section}\n{{/if}}'
+        blog_final_content = f'{before_html}\n{blog_section}\n{after_html}'
+        blog_final_content = BeautifulSoup(blog_final_content)
+        blog_final_content = blog_final_content.prettify()
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         write_text_in_path(project_path, "{inclued 'include_files/blog.tpl'}")
         return create_file(blog_final_content, include_files_directory, 'blog', 'tpl')

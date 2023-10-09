@@ -1,1 +1,0 @@
-{inclued 'include_files/blog.tpl'}
