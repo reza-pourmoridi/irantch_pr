@@ -181,22 +181,24 @@ def blog_module(blog_section, project_path):
                 simple_element.decompose()
         for num in complex_items_numbers:
             blog_complex_replacement_data = {
-                "__link__": '''{{articles[{0}]['link']}}'''.format(num),
-                "__image__": '''{{articles[{0}]['image']}}'''.format(num),
-                "__title__": '''{{articles[{0}]['title']}}'''.format(num),
-                "__alt_article__": '''{{articles[{0}]['title']}}'''.format(num),
-                '<span class="__date__">5 بهمن 1402</span>': '''{{articles[{0}]['created_at']}}'''.format(num),
-                '<span class="__comments_number__">450</span>': '''{{articles[{0}]['comments_count']['comments_count']}}'''.format(num),
-                '<span class="__title__">تایتل</span>': '''{{articles[{0}]['title']}}'''.format(num)
+                "__link__": '''{{$articles[{0}]['link']}}'''.format(num),
+                "__image__": '''{{$articles[{0}]['image']}}'''.format(num),
+                "__title__": '''{{$articles[{0}]['title']}}'''.format(num),
+                "__alt_article__": '''{{$articles[{0}]['title']}}'''.format(num),
+                '<span class="__date__">5 بهمن 1402</span>': '''{{$articles[{0}]['created_at']}}'''.format(num),
+                '<span class="__comments_number__">450</span>': '''{{$articles[{0}]['comments_count']['comments_count']}}'''.format(num),
+                '<span class="__title__">تایتل</span>': '''{{$articles[{0}]['title']}}'''.format(num)
             }
             complex_element = blog_section.find(class_="__i_modular_c_item_" + num)
             complex_element_final = replace_placeholders(complex_element, blog_complex_replacement_data)
 
         blog_final_content = f'{before_html}\n{blog_section}\n{after_html}'
-        blog_final_content = BeautifulSoup(blog_final_content)
-        blog_final_content = blog_final_content.prettify()
+        # blog_final_content = BeautifulSoup(blog_final_content)
+        # blog_final_content = blog_final_content.prettify()
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         write_text_in_path(project_path, "{inclued 'include_files/blog.tpl'}")
+        blog_final_content = blog_final_content.replace("&gt;", ">")
+
         return create_file(blog_final_content, include_files_directory, 'blog', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
