@@ -3,6 +3,10 @@ from bs4 import BeautifulSoup
 import os
 import shutil
 import re
+import requests
+import json
+import codecs
+
 
 
 def initiation_progress():
@@ -16,6 +20,8 @@ def initiation_progress():
     if file.filename == '':
         return jsonify({"message": "No selected file"})
 
+
+
     project_path = create_folder(request.form['project_name'])
     copy_repeated_file_folders_massage = copy_repeated_file_folders(request.form['project_name'])
 
@@ -27,6 +33,10 @@ def initiation_progress():
     # blog module
     blog_section = soup.find(class_="i_modular_blog")
     if blog_section:
+        #blog unit test
+        intial_blog_test_massage = initial_blog_test(blog_section)
+        return jsonify({"message": intial_blog_test_massage})
+
         blog_module_massage = blog_module(blog_section,project_path)
         return jsonify({"message": blog_module_massage})
 
@@ -123,16 +133,6 @@ def blog_module(blog_section, project_path):
         # create regex objects containing patterns of items classes
         complex_items_pattern = re.compile(r'__i_modular_c_item_(\d+)')
         simple_items_pattern = re.compile(r'__i_modular_nc_item_(\d+)')
-        before_html = '''{assign var="data_search_blog" value=['service'=>'Public','section'=>'article', 'limit' =>4]}
-                        {assign var='articles' value=$obj_main_page->articlesPosition($data_search_blog)}
-                        {assign var='counter' value=0}
-                        {assign var="article_count" value=$articles|count}
-                        {if $articles}'''
-
-        after_html = '{/if}'
-        before_foreach = '''{foreach $articles as $key => $article}'''
-        after_foreach = '''{/foreach}'''
-
         complex_items_numbers = []
         simple_items_numbers = []
 
@@ -153,6 +153,33 @@ def blog_module(blog_section, project_path):
             else:
                 raise ValueError(f"No number found in class attribute: {element.get('class')[0]}")
 
+        complex_items_numbers_max = max(complex_items_numbers)
+        simple_items_numbers_max = max(simple_items_numbers)
+        simple_items_numbers_min = min(simple_items_numbers)
+
+        # Compare the maximum values and print the larger one
+        if complex_items_numbers_max > simple_items_numbers_max:
+            max_item_number = complex_items_numbers_max
+        elif simple_items_numbers_max > complex_items_numbers_max:
+            max_item_number = simple_items_numbers_max
+        else:
+            max_item_number = complex_items_numbers_max
+
+
+        before_html = '''{assign var="data_search_blog" value=['service'=>'Public','section'=>'article', 'limit' =>i_modular__max_limit0]}
+                        {assign var='articles' value=$obj_main_page->articlesPosition($data_search_blog)}
+                        {assign var='counter' value=0}
+                        {assign var="article_count" value=$articles|count}
+                        {if $articles}'''
+        before_html = before_html.replace("i_modular__max_limit", max_item_number)
+
+        after_html = '{/if}'
+        before_foreach = '''{foreach $articles as $key => $article} {if $counter >= i_modular__min_for_limit and $counter <= i_modular__max_for_limit}'''
+        before_foreach = before_foreach.replace("i_modular__min_for_limit", simple_items_numbers_min)
+        before_foreach = before_foreach.replace("i_modular__max_for_limit", simple_items_numbers_max)
+
+        after_foreach = '''{/if}{$counter = $counter + 1}{/foreach}'''
+
         for num in simple_items_numbers:
             blog_replacement_data = {
                 "__airline__": '''{$article['link']}''',
@@ -162,6 +189,7 @@ def blog_module(blog_section, project_path):
                 "__alt_article__": '''{$article['title']}''',
                 '<span class="__date__">5 بهمن 1402</span>': '''{$article['created_at']}''',
                 '<span class="__comments_number__">450</span>': '''{$article['comments_count']['comments_count']}''',
+                'images/5497750661271-6.jpg': '''{$article['image']}''',
                 '<span class="__title__">تایتل</span>': '''{$article['title']}'''
             }
             simple_element = blog_section.find(class_="__i_modular_nc_item_" + num)
@@ -185,6 +213,7 @@ def blog_module(blog_section, project_path):
                 "__image__": '''{{$articles[{0}]['image']}}'''.format(num),
                 "__title__": '''{{$articles[{0}]['title']}}'''.format(num),
                 "__alt_article__": '''{{$articles[{0}]['title']}}'''.format(num),
+                'images/5497750661271-6.jpg': '''{{$articles[{0}]['image']}}'''.format(num),
                 '<span class="__date__">5 بهمن 1402</span>': '''{{$articles[{0}]['created_at']}}'''.format(num),
                 '<span class="__comments_number__">450</span>': '''{{$articles[{0}]['comments_count']['comments_count']}}'''.format(num),
                 '<span class="__title__">تایتل</span>': '''{{$articles[{0}]['title']}}'''.format(num)
@@ -198,6 +227,7 @@ def blog_module(blog_section, project_path):
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         write_text_in_path(project_path, "{inclued 'include_files/blog.tpl'}")
         blog_final_content = blog_final_content.replace("&gt;", ">")
+        blog_final_content = blog_final_content.replace("&lt;", "<")
 
         return create_file(blog_final_content, include_files_directory, 'blog', 'tpl')
     except Exception as e:
@@ -241,4 +271,133 @@ def write_text_in_path(path, text):
     mainpage_tpl_path = os.path.join(path, 'mainPage.tpl')
     with open(mainpage_tpl_path, 'w') as mainPage_tpl_file:
         mainPage_tpl_file.write(text)
+
+
+
+
+def initial_blog_test(blog_section):
+    # Replace the URL with your local machine's URL
+    url = "http://192.168.1.100/"
+
+    try:
+        response = requests.get(url)
+
+        # Check if the request was successful (status code 200)
+        if response.status_code == 200:
+            html_content = response.text
+
+            soup = BeautifulSoup(html_content, 'html.parser')
+            blog_section_online = soup.find(class_="i_modular_blog")
+            blog_unit_test_massage = blog_unit_test(blog_section, blog_section_online)
+            return blog_unit_test_massage
+
+            # Check if "i_modular_blog" is present in the HTML content
+            if "i_modular_blog" in html_content:
+                return "ماژول وبلاگ یافت شد"
+            else:
+                return "ماژول وبلاگ موجود نیست."
+        else:
+            return f"Failed to retrieve content. Status code: {response.status_code}"
+
+    except requests.exceptions.RequestException as e:
+        return f"An error occurred: {e}"
+
+
+def blog_unit_test(blog_section, blog_section_online):
+    script_directory = os.path.dirname(__file__)  # Get the directory of the script
+    unit_test_files_directory = os.path.join(script_directory, 'unit_test_fles')
+    json_file_path = os.path.join(unit_test_files_directory, 'blog_test_data.json')
+
+    # Initialize an empty list to store the data
+    blog_data = []
+    json_string = codecs.open(json_file_path, 'r', encoding='utf-8').read()
+
+    blog_data = json.loads(json_string)
+
+    # for item in blog_data:
+    #     testt = (item["title"])
+
+    complex_items_pattern = re.compile(r'__i_modular_c_item_(\d+)')
+    simple_items_pattern = re.compile(r'__i_modular_nc_item_(\d+)')
+    complex_items_numbers = []
+    simple_items_numbers = []
+
+    elements = blog_section.find_all(class_=complex_items_pattern)
+    for element in elements:
+        match = complex_items_pattern.search(element.get('class')[0])
+        if match:
+            number = match.group(1)
+            complex_items_numbers.append(number)
+        else:
+            raise ValueError(f"No number found in class attribute: {element.get('class')[0]}")
+    elements = blog_section.find_all(class_=simple_items_pattern)
+    for element in elements:
+        match = simple_items_pattern.search(element.get('class')[0])
+        if match:
+            number = match.group(1)
+            simple_items_numbers.append(number)
+        else:
+            raise ValueError(f"No number found in class attribute: {element.get('class')[0]}")
+
+
+    for num in simple_items_numbers:
+        blog_replacement_data = {
+            "__airline__": blog_data[int(num)]['link'],
+            "__link__": blog_data[int(num)]['link'],
+            "__image__": blog_data[int(num)]['image'],
+            "__title__": blog_data[int(num)]['title'],
+            "__alt_article__": blog_data[int(num)]['title'],
+            '<span class="__date__">5 بهمن 1402</span>': blog_data[int(num)]['created_at'],
+            '<span class="__comments_number__">450</span>': blog_data[int(num)]['comments_count']['comments_count'],
+            'images/5497750661271-6.jpg': blog_data[int(num)]['image'],
+            '<span class="__title__">تایتل</span>': blog_data[int(num)]['title']
+        }
+        simple_element = blog_section.find(class_="__i_modular_nc_item_" + num)
+        simple_element = replace_placeholders(simple_element, blog_replacement_data)
+
+
+    for num in complex_items_numbers:
+        blog_complex_replacement_data = {
+            "__airline__": blog_data[int(num)]['link'],
+            "__link__": blog_data[int(num)]['link'],
+            "__image__": blog_data[int(num)]['image'],
+            "__title__": blog_data[int(num)]['title'],
+            "__alt_article__": blog_data[int(num)]['title'],
+            '<span class="__date__">5 بهمن 1402</span>': blog_data[int(num)]['created_at'],
+            '<span class="__comments_number__">450</span>': blog_data[int(num)]['comments_count']['comments_count'],
+            'images/5497750661271-6.jpg': blog_data[int(num)]['image'],
+            '<span class="__title__">تایتل</span>': blog_data[int(num)]['title']
+        }
+
+        complex_element = blog_section.find(class_="__i_modular_c_item_" + num)
+        complex_element_final = replace_placeholders(complex_element, blog_complex_replacement_data)
+
+
+    # blog_section = f'{blog_section}'
+    # blog_section = blog_section.replace("__i_modular_nc_item_2", "__i_modular_nc_item_")]
+    return blog_section
+
+    blog_section_online = blog_section_online.prettify()
+    blog_section = blog_section.prettify()
+
+    if blog_section_online == blog_section:
+        return "blog_section_online and blog_section are identical."
+    else:
+        # Find the differences between the two strings
+        import difflib
+
+        differ = difflib.Differ()
+        diff = list(differ.compare(blog_section.splitlines(), blog_section_online.splitlines()))
+
+        # # Print the differences
+        # for line in diff:
+        #     if line.startswith('- '):
+        #         return f"Removed: {line[2:]}"
+        #     elif line.startswith('+ '):
+        #         return f"Added: {line[2:]}"
+                
+                
+    return blog_section_online + '   ' + blog_section
+
+
 
