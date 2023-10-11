@@ -40,7 +40,7 @@ def initiation_progress():
 
     # tour module
 
-    return jsonify({"message":  "<div style='color:green'> building blog section result =" + blog_module_massage + "- - - - <br><br>- - - - blog test result =" + intial_blog_test_massage + "</div>"})
+    return jsonify({"message":  " building blog section result =" + blog_module_massage + "- - - - <br><br>- - - - blog test result =" + intial_blog_test_massage })
 
 
 def create_folder(folder_name):
@@ -151,12 +151,18 @@ def blog_module(blog_section, project_path):
             else:
                 raise ValueError(f"No number found in class attribute: {element.get('class')[0]}")
 
-        complex_items_numbers_max = max(complex_items_numbers)
-        simple_items_numbers_max = max(simple_items_numbers)
-        simple_items_numbers_min = min(simple_items_numbers)
+        complex_items_numbers_max = '0'
+        simple_items_numbers_max = '0'
+        simple_items_numbers_min = '0'
+
+        if complex_items_numbers:
+            complex_items_numbers_max = max(complex_items_numbers)
+        if simple_items_numbers:
+            simple_items_numbers_max = max(simple_items_numbers)
+            simple_items_numbers_min = min(simple_items_numbers)
 
         # Compare the maximum values and print the larger one
-        if complex_items_numbers_max > simple_items_numbers_max:
+        if  complex_items_numbers_max > simple_items_numbers_max:
             max_item_number = complex_items_numbers_max
         elif simple_items_numbers_max > complex_items_numbers_max:
             max_item_number = simple_items_numbers_max
@@ -214,7 +220,18 @@ def blog_module(blog_section, project_path):
                 'images/5497750661271-6.jpg': '''{{$articles[{0}]['image']}}'''.format(num),
                 '<span class="__date__">5 بهمن 1402</span>': '''{{$articles[{0}]['created_at']}}'''.format(num),
                 '<span class="__comments_number__">450</span>': '''{{$articles[{0}]['comments_count']['comments_count']}}'''.format(num),
-                '<span class="__title__">تایتل</span>': '''{{$articles[{0}]['title']}}'''.format(num)
+                '<span class="__title__">تایتل</span>': '''{{$articles[{0}]['title']}}'''.format(num),
+                'images/images/article1.jpg': '''{{$articles[{0}]['image']}}'''.format(num),
+                '<h2>جاهای دیدنی مازندران</h2>': '<h2>' + '''{{$articles[{0}]['title']}}'''.format(num) + '</h2>',
+                '<h2>جاهای دیدنی چالوس</h2>': '<h2>' + '''{{$articles[{0}]['title']}}'''.format(num) + '</h2>',
+                '<h2>جاهای دیدنی چابکسر</h2>': '<h2>' + '''{{$articles[{0}]['title']}}'''.format(num) + '</h2>',
+                '<h2>بهترین جاهای دیدنی دبی</h2>': '<h2>' + '''{{$articles[{0}]['title']}}'''.format(num) + '</h2>',
+                '<h2>جاهای دیدنی اسپانیا</h2>': '<h2>' + '''{{$articles[{0}]['title']}}'''.format(num) + '</h2>',
+                '<p>در میان تنوع آب‌وهوایی موجود در ایران، این خطه سرسبز شمال است که همیشه اولین مقصد برای سفرهای گاه‌و‌بی‌گاه ما محسوب می‌شود. در این میان، چالوس را باید با شگفتی‌های بی‌نظیری که دارد، بهشت گمشده ایران دانست. جاهای دیدنی چالوس از طبیعت بکر تا آبشارهای حیرت‌انگیز آن، همگی مسافران خوش‌ذوق را به سمت خود فرامی‌خوانند. ما در این مطلب از مجله گردشگری فلای‌ تودی، قصد داریم نگاهی تخصصی به جاهای دیدنی چالوس داشته باشیم تا راز محبوبیت این شهر شمالی را بیشتر دریابیم. به شما نیز برای داشتن سفری رویایی، پیشنهاد می‌کنیم تا پایان این مطلب همراه ما باشید.</p>': '''<p>{{$articles[{0}]['description']}}</p>'''.format(num),
+                '<p>همه شما از زیبایی‌های شهرهای شمالی ایران باخبر هستید. این مطلب را هم به معرفی جاهای دیدنی یکی از همین شهرها، یعنی شهر زیبای چابکسر، اختصاص داده‌ایم. با خواندن این مطلب، قطعا نمی‌توانید از بازدید از جاهای دیدنی چابکسر صرف‌نظر کنید. دلیل معروف‌بودن چابکسر، این جواهر در مرز استان‌های گیلان و مازندران، فاصله کم میان کوهستان‌های جنگلی سرسبز و دریای زیبای خزر است. مسیرهای میان شهرهای شمالی، طولانی نیستند و این مسئله، شما را برای گردش در میان زیبایی‌های شگفت‌انگیز طبیعت تشویق خواهد کرد. جاذبه‌ های گردشگری چابکسر از طبیعت مسحورکننده گرفته تا سایر مکان‌های دیدنی و تفریحی، این شهر را به یکی از بهترین مقاصد گردشگری کشور تبدیل کرده‌اند. برای آشنایی با جاهای دیدنی چابکسر در این مطلب از مجله گردشگری فلای تودی، با ما همراه باشید.   </p>': '''<p>{{$articles[{0}]['description']}}</p>'''.format(num),
+                '<p>جاذبه های گردشگری دبی را می‌شناسید؟ حتما بعد از دیدن این سوال خیلی زود به یاد آسمانخراش‌های دبی افتاده‌اید. اما به جز برج های سر از آسمان برآورده، دبی جاهای دیدنی دیگری نیز دارد که شاید خیلی از گردشگران از وجود آنها خبر هم نداشته باشند. در این مطلب از مجله گردشگری فلای تودی با مکان های دیدنی دبی آشنا شوید.</p>': '''<p>{{$articles[{0}]['description']}}</p>'''.format(num),
+                '<p>اگر قطب گردشگری در اروپا را جاهای دیدنی اسپانیا بدانیم، بیراه نگفته‌ایم؛ کشوری زنده و پرانرژی که گوشه‌گوشه آن، زندگی را به‌ معنای واقعی کلمه به‌ تصویر می‌کشد. عظمت قصر خلیفه، شادی یک روز آفتابی در سواحل مدیترانه و سکوت حیرت‌انگیز زائران در کلیسای سانتیاگو، همگی از تجربه‌های نابی است که از سفر به اسپانیا به‌ دست می‌آیند. اسپانیا پر است از جاذبه‌های گردشگری که هر کدام از آن‌ها، حکایت‌هایی شیرین از تاریخ غنی، فرهنگ جذاب و طبیعت مسحورکننده این کشور را روایت می‌کنند. اگر به این کشور رویایی سفر کردید، بدانید با برنامه‌ای شلوغ، نفس‌گیر اما هیجان‌انگیز مواجه خواهید شد. ما نیز در این مطلب از مجله گردشگری فلای‌ تودی با معرفی بهترین جاهای دیدنی اسپانیا، چاشنی شور و هیجان سفرتان را بیشتر می‌کنیم.</p>': '''<p>{{$articles[{0}]['description']}}</p>'''.format(num),
+                '<p>بدون شک، یکی از بهترین مقاصد سفر برای ما ایرانی‌ها، مناطق شمالی ایران است. در این میان، جاهای دیدنی مازندران چهره‌ای دیگر از زیبایی‌های این منطقه دوست‌داشتنی را به تصویر می‌کشند. حدس می‌زنیم شهرت محبوبیت مازندران از لحاظ دارا بودن جاذبه‌های گردشگری به گوش شما هم رسیده باشد. در عین‌ حال، اگر زیبایی‌های طبیعت بکر و تماشایی این استان زیبا را از نزدیک لمس نکرده‌اید، با ما در این مطلب از مجله گردشگری فلای‌ تودی، همراه شوید تا با معرفی بهترین جاهای دیدنی مازندران در فصول مختلف سال، اسباب سفری خوش و خاطره‌انگیز را برای شما در آینده فراهم کنیم. آماده سفر به بهترین قطب گردشگری شمال ایران هستید؟</p>': '''<p>{{$articles[{0}]['description']}}</p>'''.format(num),
             }
             complex_element = blog_section.find(class_="__i_modular_c_item_" + num)
             complex_element_final = replace_placeholders(complex_element, blog_complex_replacement_data)
@@ -275,8 +292,6 @@ def write_text_in_path(path, text):
         mainPage_tpl_file.write(text)
 
 
-
-
 def initial_blog_test(blog_section):
     # Replace the URL with your local machine's URL
     url = "http://192.168.1.100/"
@@ -288,16 +303,17 @@ def initial_blog_test(blog_section):
         if response.status_code == 200:
             html_content = response.text
 
-            soup = BeautifulSoup(html_content, 'html.parser')
-            blog_section_online = soup.find(class_="i_modular_blog")
-            blog_unit_test_massage = blog_unit_test(blog_section, blog_section_online)
-            return blog_unit_test_massage
-
             # Check if "i_modular_blog" is present in the HTML content
             if "i_modular_blog" in html_content:
-                return "ماژول وبلاگ یافت شد"
+                soup = BeautifulSoup(html_content, 'html.parser')
+                blog_section_online = soup.find(class_="i_modular_blog")
+                blog_unit_test_massage = blog_unit_test(blog_section, blog_section_online)
+                return blog_unit_test_massage
             else:
                 return "ماژول وبلاگ موجود نیست."
+
+
+
         else:
             return f"Failed to retrieve content. Status code: {response.status_code}"
 
@@ -371,7 +387,18 @@ def blog_unit_test(blog_section, blog_section_online):
                 '<span class="__date__">5 بهمن 1402</span>': blog_data[int(num)]['created_at'],
                 '<span class="__comments_number__">450</span>': blog_data[int(num)]['comments_count']['comments_count'],
                 'images/5497750661271-6.jpg': blog_data[int(num)]['image'],
-                '<span class="__title__">تایتل</span>': blog_data[int(num)]['title']
+                'images/images/article1.jpg': blog_data[int(num)]['image'],
+                '<span class="__title__">تایتل</span>': blog_data[int(num)]['title'],
+                '<h2>جاهای دیدنی مازندران</h2>': '<h2>' +blog_data[int(num)]['title'] + '</h2>',
+                '<h2>جاهای دیدنی چالوس</h2>': '<h2>' +blog_data[int(num)]['title'] + '</h2>',
+                '<h2>جاهای دیدنی چابکسر</h2>': '<h2>' +blog_data[int(num)]['title'] + '</h2>',
+                '<h2>بهترین جاهای دیدنی دبی</h2>': '<h2>' +blog_data[int(num)]['title'] + '</h2>',
+                '<h2>جاهای دیدنی اسپانیا</h2>': '<h2>' +blog_data[int(num)]['title'] + '</h2>',
+                '<p>در میان تنوع آب‌وهوایی موجود در ایران، این خطه سرسبز شمال است که همیشه اولین مقصد برای سفرهای گاه‌و‌بی‌گاه ما محسوب می‌شود. در این میان، چالوس را باید با شگفتی‌های بی‌نظیری که دارد، بهشت گمشده ایران دانست. جاهای دیدنی چالوس از طبیعت بکر تا آبشارهای حیرت‌انگیز آن، همگی مسافران خوش‌ذوق را به سمت خود فرامی‌خوانند. ما در این مطلب از مجله گردشگری فلای‌ تودی، قصد داریم نگاهی تخصصی به جاهای دیدنی چالوس داشته باشیم تا راز محبوبیت این شهر شمالی را بیشتر دریابیم. به شما نیز برای داشتن سفری رویایی، پیشنهاد می‌کنیم تا پایان این مطلب همراه ما باشید.</p>': '<p>' + blog_data[int(num)]['description'] + '</p>',
+                '<p>همه شما از زیبایی‌های شهرهای شمالی ایران باخبر هستید. این مطلب را هم به معرفی جاهای دیدنی یکی از همین شهرها، یعنی شهر زیبای چابکسر، اختصاص داده‌ایم. با خواندن این مطلب، قطعا نمی‌توانید از بازدید از جاهای دیدنی چابکسر صرف‌نظر کنید. دلیل معروف‌بودن چابکسر، این جواهر در مرز استان‌های گیلان و مازندران، فاصله کم میان کوهستان‌های جنگلی سرسبز و دریای زیبای خزر است. مسیرهای میان شهرهای شمالی، طولانی نیستند و این مسئله، شما را برای گردش در میان زیبایی‌های شگفت‌انگیز طبیعت تشویق خواهد کرد. جاذبه‌ های گردشگری چابکسر از طبیعت مسحورکننده گرفته تا سایر مکان‌های دیدنی و تفریحی، این شهر را به یکی از بهترین مقاصد گردشگری کشور تبدیل کرده‌اند. برای آشنایی با جاهای دیدنی چابکسر در این مطلب از مجله گردشگری فلای تودی، با ما همراه باشید.   </p>': '<p>' + blog_data[int(num)]['description'] + '</p>',
+                '<p>جاذبه های گردشگری دبی را می‌شناسید؟ حتما بعد از دیدن این سوال خیلی زود به یاد آسمانخراش‌های دبی افتاده‌اید. اما به جز برج های سر از آسمان برآورده، دبی جاهای دیدنی دیگری نیز دارد که شاید خیلی از گردشگران از وجود آنها خبر هم نداشته باشند. در این مطلب از مجله گردشگری فلای تودی با مکان های دیدنی دبی آشنا شوید.</p>': '<p>' + blog_data[int(num)]['description'] + '</p>',
+                '<p>اگر قطب گردشگری در اروپا را جاهای دیدنی اسپانیا بدانیم، بیراه نگفته‌ایم؛ کشوری زنده و پرانرژی که گوشه‌گوشه آن، زندگی را به‌ معنای واقعی کلمه به‌ تصویر می‌کشد. عظمت قصر خلیفه، شادی یک روز آفتابی در سواحل مدیترانه و سکوت حیرت‌انگیز زائران در کلیسای سانتیاگو، همگی از تجربه‌های نابی است که از سفر به اسپانیا به‌ دست می‌آیند. اسپانیا پر است از جاذبه‌های گردشگری که هر کدام از آن‌ها، حکایت‌هایی شیرین از تاریخ غنی، فرهنگ جذاب و طبیعت مسحورکننده این کشور را روایت می‌کنند. اگر به این کشور رویایی سفر کردید، بدانید با برنامه‌ای شلوغ، نفس‌گیر اما هیجان‌انگیز مواجه خواهید شد. ما نیز در این مطلب از مجله گردشگری فلای‌ تودی با معرفی بهترین جاهای دیدنی اسپانیا، چاشنی شور و هیجان سفرتان را بیشتر می‌کنیم.</p>': '<p>' + blog_data[int(num)]['description'] + '</p>',
+                '<p>بدون شک، یکی از بهترین مقاصد سفر برای ما ایرانی‌ها، مناطق شمالی ایران است. در این میان، جاهای دیدنی مازندران چهره‌ای دیگر از زیبایی‌های این منطقه دوست‌داشتنی را به تصویر می‌کشند. حدس می‌زنیم شهرت محبوبیت مازندران از لحاظ دارا بودن جاذبه‌های گردشگری به گوش شما هم رسیده باشد. در عین‌ حال، اگر زیبایی‌های طبیعت بکر و تماشایی این استان زیبا را از نزدیک لمس نکرده‌اید، با ما در این مطلب از مجله گردشگری فلای‌ تودی، همراه شوید تا با معرفی بهترین جاهای دیدنی مازندران در فصول مختلف سال، اسباب سفری خوش و خاطره‌انگیز را برای شما در آینده فراهم کنیم. آماده سفر به بهترین قطب گردشگری شمال ایران هستید؟</p>': '<p>' + blog_data[int(num)]['description'] + '</p>',
             }
 
             complex_element = blog_section.find(class_="__i_modular_c_item_" + num)
@@ -397,7 +424,7 @@ def blog_unit_test(blog_section, blog_section_online):
         if html_code_1 == html_code_2:
             return "تست سکشن بلاگ موفقیت آمیز بود."
 
-        # return blog_section_online + '   ' + blog_section
+        return blog_section_online + '   ' + blog_section
         return 'طرح و سکشن بلاگ ماژول گذاری شده هماهنگ نیستند.'
     except requests.exceptions.RequestException as e:
         return f"An error occurred: {e}"
