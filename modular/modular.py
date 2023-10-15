@@ -52,8 +52,17 @@ def initiation_progress():
         # news_section = soup.find(class_="i_modular_news")
         # intial_news_test_massage = initial_news_test(news_section)
 
+    # banner gallery module
+    banner_gallery_section = soup.find(class_="i_modular_banner_gallery")
+    if banner_gallery_section:
+        banner_gallery_module_massage = banner_gallery_module(banner_gallery_section,project_path)
+        # soup = BeautifulSoup(html_content, 'html.parser')
+        # banner_gallery_section = soup.find(class_="i_modular_banner_gallery")
+        # intial_banner_gallery_test_massage = initial_banner_gallery_test(banner_gallery_section)
+
 
     return jsonify({"message":  " building blog section result =" + blog_module_massage
+                                + " building banner gallery section result =" + banner_gallery_module_massage
                                 + " building newsletter section result =" + newsletter_module_massage
                                 + " building news section result =" + news_module_massage  })
 
@@ -142,6 +151,76 @@ def blog_module(blog_section, project_path):
         blog_final_content = blog_final_content.replace("&lt;", "<")
 
         return helper.create_file(blog_final_content, include_files_directory, 'blog', 'tpl')
+    except Exception as e:
+        return str(e)  # Return the exception message for now
+
+def banner_gallery_module(banner_gallery_section, project_path):
+    try:
+        # create regex objects containing patterns of items classes
+        complex_items_pattern = re.compile(r'__i_modular_c_item_(\d+)')
+        simple_items_pattern = re.compile(r'__i_modular_nc_item_(\d+)')
+        complex_items_numbers = helper.item_numbers(banner_gallery_section,complex_items_pattern)
+        simple_items_numbers = helper.item_numbers(banner_gallery_section,simple_items_pattern)
+        complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
+        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
+        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
+        max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
+
+        before_html = '''{assign var="type_data" value=['is_active'=>1 , 'limit' =>5]}
+                        {assign var='banners' value=$obj_main_page->galleryBannerMain($type_data)}'''
+        after_html = ''
+
+        before_foreach = '''{foreach $banners as $key => $banner}'''
+        after_foreach = '''{/foreach}'''
+
+        for num in simple_items_numbers:
+            banner_gallery_replacement_data = {
+                "__title__": '''{$banner['title']}''',
+                "__link__": '''{$banner['link']}'''
+            }
+            simple_element = banner_gallery_section.find(class_="__i_modular_nc_item_" + num)
+            if num == simple_items_numbers[0]:
+                for tag in banner_gallery_section.find_all():
+                    if tag.decode() == simple_element.decode():
+                        new_tag = BeautifulSoup(f'{before_foreach}\n{simple_element}\n{after_foreach}')
+                        simple_element.replace_with(new_tag)
+                simple_element = banner_gallery_section.find(class_="__i_modular_nc_item_" + num)
+                simple_element = helper.replace_placeholders(simple_element, banner_gallery_replacement_data)
+                simple_element = banner_gallery_section.find(class_="__i_modular_nc_item_" + num)
+                helper.replace_attribute(simple_element, '__image__', 'src','{$banner["image"]}')
+                helper.replace_attribute(simple_element, '__image__', 'alt','{$banner["title"]}')
+
+            else:
+                simple_element.decompose()
+        for num in complex_items_numbers:
+            before_if = '''{if banners[{0}] }'''
+            before_if = before_if.replace("{0}", num)
+            after_if = '''{/if}'''
+
+            banner_gallery_complex_replacement_data = {
+                "__link__": '''{{banners[{0}]['link']}}'''.format(num),
+                "__title__": '''{{banners[{0}]['title']}}'''.format(num),
+            }
+            complex_element = banner_gallery_section.find(class_="__i_modular_c_item_" + num)
+            for tag in banner_gallery_section.find_all():
+                if tag.decode() == complex_element.decode():
+                    new_tag = BeautifulSoup(f'{before_if}\n{complex_element}\n{after_if}')
+                    complex_element.replace_with(new_tag)
+
+            complex_element = banner_gallery_section.find(class_="__i_modular_c_item_" + num)
+            complex_element_final = helper.replace_placeholders(complex_element, banner_gallery_complex_replacement_data)
+            complex_element = banner_gallery_section.find(class_="__i_modular_c_item_" + num)
+            helper.replace_attribute(complex_element, '__image__', 'src', '''{{banners[{0}]['image']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__title__', 'alt', '''{{banners[{0}]['title']}}'''.format(num))
+
+
+        banner_gallery_final_content = f'{before_html}\n{banner_gallery_section}\n{after_html}'
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        helper.write_text_in_path(project_path, "{inclued 'include_files/banner-gallery.tpl'}")
+        banner_gallery_final_content = banner_gallery_final_content.replace("&gt;", ">")
+        banner_gallery_final_content = banner_gallery_final_content.replace("&lt;", "<")
+
+        return helper.create_file(banner_gallery_final_content, include_files_directory, 'banner_gallery', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
