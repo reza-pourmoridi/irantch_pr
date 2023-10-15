@@ -52,6 +52,14 @@ def initiation_progress():
         # news_section = soup.find(class_="i_modular_news")
         # intial_news_test_massage = initial_news_test(news_section)
 
+    # menu module
+    menu_section = soup.find(class_="i_modular_menu")
+    if menu_section:
+        menu_module_massage = menu_module(menu_section,project_path)
+        # soup = BeautifulSoup(html_content, 'html.parser')
+        # menu_section = soup.find(class_="i_modular_menu")
+        # intial_menu_test_massage = initial_menu_test(menu_section)
+
     # banner gallery module
     banner_gallery_section = soup.find(class_="i_modular_banner_gallery")
     if banner_gallery_section:
@@ -64,6 +72,7 @@ def initiation_progress():
     return jsonify({"message":  " building blog section result =" + blog_module_massage
                                 + " building banner gallery section result =" + banner_gallery_module_massage
                                 + " building newsletter section result =" + newsletter_module_massage
+                                + " building menu section result =" + menu_module_massage
                                 + " building news section result =" + news_module_massage  })
 
 
@@ -154,6 +163,7 @@ def blog_module(blog_section, project_path):
     except Exception as e:
         return str(e)  # Return the exception message for now
 
+
 def banner_gallery_module(banner_gallery_section, project_path):
     try:
         # create regex objects containing patterns of items classes
@@ -223,6 +233,7 @@ def banner_gallery_module(banner_gallery_section, project_path):
         return helper.create_file(banner_gallery_final_content, include_files_directory, 'banner_gallery', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
+
 
 def news_module(news_section, project_path):
     try:
@@ -307,6 +318,7 @@ def news_module(news_section, project_path):
     except Exception as e:
         return str(e)  # Return the exception message for now
 
+
 def newsletter_module(newsletter_section, project_path):
     try:
         helper.replace_attribute(newsletter_section, '__name__', 'name','NameSms')
@@ -331,6 +343,37 @@ def newsletter_module(newsletter_section, project_path):
         newsletter_final_content = newsletter_final_content.replace("&lt;", "<")
 
         return helper.create_file(newsletter_final_content, include_files_directory, 'newsletter', 'tpl')
+    except Exception as e:
+        return str(e)  # Return the exception message for now
+
+
+def menu_module(menu_section, project_path):
+    try:
+
+
+        repeatable_links = {
+            'پرواز': '{$smarty.const.ROOT_ADDRESS}/page/flight',
+            'پیگیری خرید': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
+            'وبلاگ': '{$smarty.const.ROOT_ADDRESS}/mag',
+            'اخبار سایت': '{$smarty.const.ROOT_ADDRESS}/news',
+            'معرفی ايران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
+            'قوانین و مقررات': '{$smarty.const.ROOT_ADDRESS}/rules',
+            'درباره ما': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
+            'تماس با ما': '{$smarty.const.ROOT_ADDRESS}/contactUs',
+            'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
+        }
+
+        for key, val in repeatable_links.items():
+            helper.replace_attribute_by_text(menu_section, key, 'href', val)
+
+
+        menu_final_content = f'{menu_section}'
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        helper.write_text_in_path(project_path, "{inclued 'include_files/menu.tpl'}")
+        menu_final_content = menu_final_content.replace("&gt;", ">")
+        menu_final_content = menu_final_content.replace("&lt;", "<")
+
+        return helper.create_file(menu_final_content, include_files_directory, 'menu', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 

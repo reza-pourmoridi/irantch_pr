@@ -153,3 +153,12 @@ def replace_attribute(section, class_name, attr, value):
                 tag.string = value  # Replace with desired code
 
 
+def replace_attribute_by_text(section, target_text, attr, value):
+    for tag in section.find_all(text=target_text):
+        parent_tag = tag.find_parent()
+        if parent_tag:
+            if attr != 'string':
+                parent_tag[attr] = value
+            else:
+                parent_tag.string = value
+
