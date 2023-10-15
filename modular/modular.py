@@ -350,7 +350,6 @@ def newsletter_module(newsletter_section, project_path):
 def menu_module(menu_section, project_path):
     try:
 
-
         repeatable_links = {
             'پرواز': '{$smarty.const.ROOT_ADDRESS}/page/flight',
             'پیگیری خرید': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
@@ -362,7 +361,7 @@ def menu_module(menu_section, project_path):
             'تماس با ما': '{$smarty.const.ROOT_ADDRESS}/contactUs',
             'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
         }
-
+        helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', '{$smarty.const.ROOT_ADDRESS}')
         for key, val in repeatable_links.items():
             helper.replace_attribute_by_text(menu_section, key, 'href', val)
 
