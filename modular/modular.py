@@ -36,9 +36,26 @@ def initiation_progress():
         # blog_section = soup.find(class_="i_modular_blog")
         # intial_blog_test_massage = initial_blog_test(blog_section)
 
-    # tour module
+    # newsletter module
+    newsletter_section = soup.find(class_="i_modular_newsletter")
+    if newsletter_section:
+        newsletter_module_massage = newsletter_module(newsletter_section,project_path)
+        # soup = BeautifulSoup(html_content, 'html.parser')
+        # newsletter_section = soup.find(class_="i_modular_newsletter")
+        # intial_newsletter_test_massage = initial_newsletter_test(newsletter_section)
 
-    return jsonify({"message":  " building blog section result =" + blog_module_massage + "- - - - <br><br>- - - - blog test result =" })
+    # news module
+    news_section = soup.find(class_="i_modular_news")
+    if news_section:
+        news_module_massage = news_module(news_section,project_path)
+        # soup = BeautifulSoup(html_content, 'html.parser')
+        # news_section = soup.find(class_="i_modular_news")
+        # intial_news_test_massage = initial_news_test(news_section)
+
+
+    return jsonify({"message":  " building blog section result =" + blog_module_massage
+                                + " building newsletter section result =" + newsletter_module_massage
+                                + " building news section result =" + news_module_massage  })
 
 
 def blog_module(blog_section, project_path):
@@ -53,7 +70,7 @@ def blog_module(blog_section, project_path):
         simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
         max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
 
-        before_html = '''{assign var="data_search_blog" value=['service'=>'Public','section'=>'article', 'limit' =>i_modular__max_limit0]}
+        before_html = '''{assign var="data_search_blog" value=['service'=>'Public','section'=>'article', 'limit' =>1i_modular__max_limit]}
                         {assign var='articles' value=$obj_main_page->articlesPosition($data_search_blog)}
                         {assign var='counter' value=0}
                         {assign var="article_count" value=$articles|count}
@@ -85,19 +102,18 @@ def blog_module(blog_section, project_path):
                 simple_element = blog_section.find(class_="__i_modular_nc_item_" + num)
                 simple_element = helper.replace_placeholders(simple_element, blog_replacement_data)
                 simple_element = blog_section.find(class_="__i_modular_nc_item_" + num)
-                for tag in simple_element.find_all():
-                    if "__image__" in tag.get('class', []):
-                        # Replace the src attribute for tags with class __image__
-                        tag['src'] = '{$article["image"]}'  # Replace with desired code
-                    if "__title__" in tag.get('class', []):
-                        # Replace the text content for tags with class __title__
-                        tag.string = '{$article["title"]}'  # Replace with desired code
+                helper.replace_attribute(simple_element, '__image__', 'src','{$article["image"]}')
                 helper.replace_attribute(simple_element, '__image__', 'src','{$article["image"]}')
                 helper.replace_attribute(simple_element, '__title__', 'string','{$article["title"]}')
+                helper.replace_attribute(simple_element, '__heading__', 'string','{$article["heading"]}')
 
             else:
                 simple_element.decompose()
         for num in complex_items_numbers:
+            before_if = '''{if $articles[{0}] }'''
+            before_if = before_if.replace("{0}", num)
+            after_if = '''{/if}'''
+
             blog_complex_replacement_data = {
                 "__link__": '''{{$articles[{0}]['link']}}'''.format(num),
                 "__alt_article__": '''{{$articles[{0}]['title']}}'''.format(num),
@@ -106,12 +122,17 @@ def blog_module(blog_section, project_path):
                 '<span class="__comments_number__">450</span>': '''{{$articles[{0}]['comments_count']['comments_count']}}'''.format(num)
             }
             complex_element = blog_section.find(class_="__i_modular_c_item_" + num)
+            for tag in blog_section.find_all():
+                if tag.decode() == complex_element.decode():
+                    new_tag = BeautifulSoup(f'{before_if}\n{complex_element}\n{after_if}')
+                    complex_element.replace_with(new_tag)
+                    
+            complex_element = blog_section.find(class_="__i_modular_c_item_" + num)
             complex_element_final = helper.replace_placeholders(complex_element, blog_complex_replacement_data)
             complex_element = blog_section.find(class_="__i_modular_c_item_" + num)
             helper.replace_attribute(complex_element, '__image__', 'src', '''{{$articles[{0}]['image']}}'''.format(num))
             helper.replace_attribute(complex_element, '__title__', 'string', '''{{$articles[{0}]['title']}}'''.format(num))
-
-
+            helper.replace_attribute(complex_element, '__heading__', 'string', '''{{$articles[{0}]['heading']}}'''.format(num))
 
 
         blog_final_content = f'{before_html}\n{blog_section}\n{after_html}'
@@ -121,6 +142,116 @@ def blog_module(blog_section, project_path):
         blog_final_content = blog_final_content.replace("&lt;", "<")
 
         return helper.create_file(blog_final_content, include_files_directory, 'blog', 'tpl')
+    except Exception as e:
+        return str(e)  # Return the exception message for now
+
+def news_module(news_section, project_path):
+    try:
+        # create regex objects containing patterns of items classes
+        complex_items_pattern = re.compile(r'__i_modular_c_item_(\d+)')
+        simple_items_pattern = re.compile(r'__i_modular_nc_item_(\d+)')
+        complex_items_numbers = helper.item_numbers(news_section,complex_items_pattern)
+        simple_items_numbers = helper.item_numbers(news_section,simple_items_pattern)
+        complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
+        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
+        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
+        max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
+
+        before_html = '''{assign var="main_articles" value=$obj_main_page->getNewsArticles()}
+                            {assign var="othe_itmes" value=$main_articles['data']}
+                            {assign var="i" value="2"}
+                            {assign var='counter' value=0}
+                            {if $main_articles['count'] > 0 }'''
+        after_html = '{/if}'
+
+        before_foreach = '''{foreach $othe_itmes as $item} {if $counter >= i_modular__min_for_limit and $counter <= i_modular__max_for_limit}'''
+        before_foreach = before_foreach.replace("i_modular__min_for_limit", simple_items_numbers_min)
+        before_foreach = before_foreach.replace("i_modular__max_for_limit", simple_items_numbers_max)
+        after_foreach = '''{/if}{$counter = $counter + 1}{/foreach}'''
+
+        for num in simple_items_numbers:
+            news_replacement_data = {
+                "__link__": '''{$item['link']}''',
+            }
+            simple_element = news_section.find(class_="__i_modular_nc_item_" + num)
+            if num == simple_items_numbers[0]:
+                for tag in news_section.find_all():
+                    if tag.decode() == simple_element.decode():
+                        new_tag = BeautifulSoup(f'{before_foreach}\n{simple_element}\n{after_foreach}')
+                        simple_element.replace_with(new_tag)
+                simple_element = news_section.find(class_="__i_modular_nc_item_" + num)
+                simple_element = helper.replace_placeholders(simple_element, news_replacement_data)
+                simple_element = news_section.find(class_="__i_modular_nc_item_" + num)
+                helper.replace_attribute(simple_element, '__image__', 'src','{$item["image"]}')
+                helper.replace_attribute(simple_element, '__image__', 'alt','{$item["alt"]}')
+                helper.replace_attribute(simple_element, '__title__', 'string','{$item["title"]}')
+                helper.replace_attribute(simple_element, '__heading__', 'string','{$item["heading"]}')
+                helper.replace_attribute(simple_element, '__description__', 'string','{$item["description"]}')
+
+            else:
+                simple_element.decompose()
+        for num in complex_items_numbers:
+            before_if = '''{if $othe_itmes[{0}] }'''
+            before_if = before_if.replace("{0}", num)
+            after_if = '''{/if}'''
+
+            news_complex_replacement_data = {
+                "__link__": '''{{$othe_itmes[{0}]['link']}}'''.format(num),
+                "__alt_article__": '''{{$othe_itmes[{0}]['title']}}'''.format(num),
+                'images/5497750661271-6.jpg': '''{{$othe_itmes[{0}]['image']}}'''.format(num),
+                '<span class="__date__">5 بهمن 1402</span>': '''{{$othe_itmes[{0}]['created_at']}}'''.format(num),
+                '<span class="__comments_number__">450</span>': '''{{$othe_itmes[{0}]['comments_count']['comments_count']}}'''.format(num)
+            }
+            complex_element = news_section.find(class_="__i_modular_c_item_" + num)
+            for tag in news_section.find_all():
+                if tag.decode() == complex_element.decode():
+                    new_tag = BeautifulSoup(f'{before_if}\n{complex_element}\n{after_if}')
+                    complex_element.replace_with(new_tag)
+
+            complex_element = news_section.find(class_="__i_modular_c_item_" + num)
+            complex_element_final = helper.replace_placeholders(complex_element, news_complex_replacement_data)
+            complex_element = news_section.find(class_="__i_modular_c_item_" + num)
+            helper.replace_attribute(complex_element, '__image__', 'src', '''{{$othe_itmes[{0}]['image']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__image__', 'alt', '''{{$othe_itmes[{0}]['alt']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__title__', 'string', '''{{$othe_itmes[{0}]['title']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__heading__', 'string', '''{{$othe_itmes[{0}]['heading']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__description__', 'string', '''{{$othe_itmes[{0}]['description']}}'''.format(num))
+
+
+        news_final_content = f'{before_html}\n{news_section}\n{after_html}'
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        helper.write_text_in_path(project_path, "{inclued 'include_files/news.tpl'}")
+        news_final_content = news_final_content.replace("&gt;", ">")
+        news_final_content = news_final_content.replace("&lt;", "<")
+
+        return helper.create_file(news_final_content, include_files_directory, 'news', 'tpl')
+    except Exception as e:
+        return str(e)  # Return the exception message for now
+
+def newsletter_module(newsletter_section, project_path):
+    try:
+        helper.replace_attribute(newsletter_section, '__name__', 'name','NameSms')
+        helper.replace_attribute(newsletter_section, '__email__', 'name','EmailSms')
+        helper.replace_attribute(newsletter_section, '__phone__', 'name','CellSms')
+
+        helper.replace_attribute(newsletter_section, '__name__', 'id','NameSms')
+        helper.replace_attribute(newsletter_section, '__email__', 'id','EmailSms')
+        helper.replace_attribute(newsletter_section, '__phone__', 'id','CellSms')
+
+        helper.replace_attribute(newsletter_section, '__name__', 'class','full-name-js')
+        helper.replace_attribute(newsletter_section, '__email__', 'class','email-js')
+        helper.replace_attribute(newsletter_section, '__phone__', 'class','mobile-js')
+
+        helper.replace_attribute(newsletter_section, '__submit__', 'onclick','submitNewsLetter()')
+
+
+        newsletter_final_content = f'{newsletter_section}'
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        helper.write_text_in_path(project_path, "{inclued 'include_files/newsletter.tpl'}")
+        newsletter_final_content = newsletter_final_content.replace("&gt;", ">")
+        newsletter_final_content = newsletter_final_content.replace("&lt;", "<")
+
+        return helper.create_file(newsletter_final_content, include_files_directory, 'newsletter', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
