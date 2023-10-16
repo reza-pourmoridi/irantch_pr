@@ -141,7 +141,7 @@ def blog_unit_test(blog_section, blog_section_online):
         return f"An error occurred: {e}"
 
 
-def unit_test_blog():
+def unit_test_blog(blog_section, blog_section_online):
     try:
         script_directory = os.path.dirname(__file__)  # Get the directory of the script
         unit_test_files_directory = os.path.join(script_directory, 'unit_test_fles')
@@ -160,7 +160,8 @@ def unit_test_blog():
         blog_data = []
         json_string = codecs.open(json_file_path, 'r', encoding='utf-8').read()
         blog_data = json.loads(json_string)
-
+        complex_items_numbers = []
+        simple_items_numbers = []
         for num in simple_items_numbers:
             blog_replacement_data = {
                 "__i_modular_nc_item_" + num: "__i_modular_nc_item_" + simple_items_numbers[0],
@@ -178,13 +179,14 @@ def unit_test_blog():
 
 
         for num in complex_items_numbers:
-            blog_replacement_data = {
+            blog_complex_replacement_data = {
                 "__i_modular_nc_item_" + num: "__i_modular_nc_item_" + simple_items_numbers[0],
                 "__airline__": blog_data[int(num)]['link'],
                 "__link__": blog_data[int(num)]['link'],
                 "__image__": blog_data[int(num)]['image'],
                 "__alt_article__": blog_data[int(num)]['title']
             }
+
             complex_element = blog_section.find(class_="__i_modular_c_item_" + num)
             helper.replace_attribute(complex_element, '__image__', 'src', blog_data[int(num)]['image'])
             helper.replace_attribute(complex_element, '__title__', 'string', blog_data[int(num)]['title'])
@@ -192,17 +194,16 @@ def unit_test_blog():
             complex_element = blog_section.find(class_="__i_modular_c_item_" + num)
             complex_element_final = helper.replace_placeholders(complex_element, blog_complex_replacement_data)
 
+
         blog_section_online = blog_section_online.prettify()
         # blog_section = blog_section.prettify()
 
         blog_section = f'{blog_section}'
         for num in simple_items_numbers:
-            blog_section = blog_section.replace("__i_modular_nc_item_" + num,
-                                                "__i_modular_nc_item_" + simple_items_numbers[0])
+            blog_section = blog_section.replace("__i_modular_nc_item_" + num,"__i_modular_nc_item_" + simple_items_numbers[0])
 
         for num in complex_items_numbers:
-            blog_section = blog_section.replace("__i_modular_c_item_" + num,
-                                                "__i_modular_c_item_" + complex_items_numbers[0])
+            blog_section = blog_section.replace("__i_modular_c_item_" + num,"__i_modular_c_item_" + complex_items_numbers[0])
 
         blog_section_online = blog_section_online.replace("</img>", "")
         blog_section = blog_section.replace("/>", ">")
@@ -214,9 +215,9 @@ def unit_test_blog():
         if html_code_1 == html_code_2:
             return "تست سکشن بلاگ موفقیت آمیز بود."
 
-        # return blog_section_online + '   ' + blog_section
+        return blog_section_online + '   ' + blog_section
         return 'طرح و سکشن بلاگ ماژول گذاری شده هماهنگ نیستند.'
     except requests.exceptions.RequestException as e:
-        return f"An error occurred: {e}"
+        return f"خطایی در ماژول گذار پیش آمد.: {e}"
 
 

@@ -28,7 +28,12 @@ def initiation_progress():
     html_content = file.read()
     # turn string to soup object
     soup = BeautifulSoup(html_content, 'html.parser')
+    if not soup:
+        return jsonify({"message": "testing blog section = " + f'{soup}'})
+
     soup_online = unit_test.get_online_html()
+    if not soup_online:
+        return jsonify({"message": "testing blog section = " + f'{soup_online}'})
 
     # # blog module
     # blog_section = soup.find(class_="i_modular_blog")
@@ -91,7 +96,7 @@ def initiation_progress():
         blog_section_online = soup_online.find(class_="i_modular_blog")
         blog_test_massage = unit_test.unit_test_blog(blog_section, blog_section_online)
 
-    return jsonify({"message":  " testing blog section = " + blog_module_massage })
+    return jsonify({"message":  " testing blog section = " + f'{blog_test_massage}' })
 
 
 def blog_module(blog_section, project_path):
