@@ -159,3 +159,7 @@ def replace_attribute_by_text(section, target_text, attr, value):
             else:
                 parent_tag.string = value
 
+def changing_numbers_to_array_elements(array, num):
+    for key, val in array.items():
+        array[key] = val.format(num)
+    return array
