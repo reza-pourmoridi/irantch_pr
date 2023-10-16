@@ -149,6 +149,9 @@ def unit_test_blog(blog_section, blog_section_online):
 
         complex_items_pattern = re.compile(r'__i_modular_c_item_(\d+)')
         simple_items_pattern = re.compile(r'__i_modular_nc_item_(\d+)')
+        complex_items_numbers = []
+        simple_items_numbers = []
+
         complex_items_numbers = helper.item_numbers(blog_section, complex_items_pattern)
         simple_items_numbers = helper.item_numbers(blog_section, simple_items_pattern)
         complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
@@ -160,8 +163,7 @@ def unit_test_blog(blog_section, blog_section_online):
         blog_data = []
         json_string = codecs.open(json_file_path, 'r', encoding='utf-8').read()
         blog_data = json.loads(json_string)
-        complex_items_numbers = []
-        simple_items_numbers = []
+
         for num in simple_items_numbers:
             blog_replacement_data = {
                 "__i_modular_nc_item_" + num: "__i_modular_nc_item_" + simple_items_numbers[0],
@@ -180,7 +182,6 @@ def unit_test_blog(blog_section, blog_section_online):
 
         for num in complex_items_numbers:
             blog_complex_replacement_data = {
-                "__i_modular_nc_item_" + num: "__i_modular_nc_item_" + simple_items_numbers[0],
                 "__airline__": blog_data[int(num)]['link'],
                 "__link__": blog_data[int(num)]['link'],
                 "__image__": blog_data[int(num)]['image'],
@@ -199,6 +200,8 @@ def unit_test_blog(blog_section, blog_section_online):
         # blog_section = blog_section.prettify()
 
         blog_section = f'{blog_section}'
+
+
         for num in simple_items_numbers:
             blog_section = blog_section.replace("__i_modular_nc_item_" + num,"__i_modular_nc_item_" + simple_items_numbers[0])
 
@@ -215,7 +218,7 @@ def unit_test_blog(blog_section, blog_section_online):
         if html_code_1 == html_code_2:
             return "تست سکشن بلاگ موفقیت آمیز بود."
 
-        return blog_section_online + '   ' + blog_section
+        return blog_section
         return 'طرح و سکشن بلاگ ماژول گذاری شده هماهنگ نیستند.'
     except requests.exceptions.RequestException as e:
         return f"خطایی در ماژول گذار پیش آمد.: {e}"
