@@ -60,6 +60,14 @@ def initiation_progress():
         # menu_section = soup.find(class_="i_modular_menu")
         # intial_menu_test_massage = initial_menu_test(menu_section)
 
+    # footer module
+    footer_section = soup.find(class_="i_modular_footer")
+    if footer_section:
+        footer_module_massage = footer_module(footer_section,project_path)
+        # soup = BeautifulSoup(html_content, 'html.parser')
+        # footer_section = soup.find(class_="i_modular_footer")
+        # intial_footer_test_massage = initial_footer_test(footer_section)
+
     # banner gallery module
     banner_gallery_section = soup.find(class_="i_modular_banner_gallery")
     if banner_gallery_section:
@@ -73,6 +81,7 @@ def initiation_progress():
                                 + " building banner gallery section result =" + banner_gallery_module_massage
                                 + " building newsletter section result =" + newsletter_module_massage
                                 + " building menu section result =" + menu_module_massage
+                                + " building footer section result =" + footer_module_massage
                                 + " building news section result =" + news_module_massage  })
 
 
@@ -361,7 +370,22 @@ def menu_module(menu_section, project_path):
             'تماس با ما': '{$smarty.const.ROOT_ADDRESS}/contactUs',
             'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
         }
-        helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', '{$smarty.const.ROOT_ADDRESS}')
+        helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
+        helper.replace_attribute(menu_section, '__login_register__', 'class','__login_register__ main-navigation__button2 show-box-login-js ')
+
+
+        after_login = '''<div class="main-navigation__sub-menu2 arrow-up show-content-box-login-js" style="display: none">
+                            {include file="`$smarty.const.FRONT_CURRENT_THEME`topBar.tpl"}
+                        </div>'''
+
+        simple_element = menu_section.find(class_=lambda classes: classes and '__login_register__' in classes)
+        for tag in menu_section.find_all():
+            if tag.decode() == simple_element.decode():
+                new_tag = BeautifulSoup(f'{simple_element}\n{after_login}')
+                simple_element.replace_with(new_tag)
+
+        # return f'{menu_section}'
+
         for key, val in repeatable_links.items():
             helper.replace_attribute_by_text(menu_section, key, 'href', val)
 
@@ -373,6 +397,79 @@ def menu_module(menu_section, project_path):
         menu_final_content = menu_final_content.replace("&lt;", "<")
 
         return helper.create_file(menu_final_content, include_files_directory, 'menu', 'tpl')
+    except Exception as e:
+        return str(e)  # Return the exception message for now
+
+
+def footer_module(footer_section, project_path):
+    try:
+        before_html = '''{load_presentation_object filename="aboutUs" assign="objAbout"}
+                            {assign var="about"  value=$objAbout->getData()}
+                            {assign var="socialLinks"  value=$about['social_links']|json_decode:true}
+                            
+                            
+                            {if $smarty.session.layout neq 'pwa'}
+                                {if $smarty.const.GDS_SWITCH neq $smarty.const.ConstPrintHotel && $smarty.const.GDS_SWITCH neq $smarty.const.ConstPrintTicket && $smarty.const.GDS_SWITCH neq $smarty.const.ConstPrintHotelReservation && $smarty.const.GDS_SWITCH neq $smarty.const.ConstPrintHotelReservationAhuan}
+                                   '''
+        after_html = '''    {/if}
+                            {else}
+                                {include file="`$smarty.const.FRONT_CURRENT_CLIENT`pwaFooter.tpl"}
+                            {/if}'''
+
+
+        befor_social_media = '''{assign var="socialLinks"  value=$about['social_links']|json_decode:true}
+                                {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref']}
+    
+                                {foreach $socialLinks as $key => $val}
+                                        {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}
+                                {/foreach}'''
+
+        social_element = footer_section.find(class_=lambda classes: classes and '__social__' in classes)
+        for tag in footer_section.find_all():
+            if tag.decode() == social_element.decode():
+                new_tag = BeautifulSoup(f'{befor_social_media}\n{social_element}')
+                social_element.replace_with(new_tag)
+
+        social_element = footer_section.find(class_=lambda classes: classes and '__social__' in classes)
+        repeatable_social_links = {
+            '__telegram__': '{if $telegramHref}{$telegramHref}{/if}',
+            '__whatsapp__': '{if $telegramHref}{$whatsappHref}{/if}',
+            '__instagram__': '{if $telegramHref}{$instagramHref}{/if}',
+        }
+
+        for key, val in repeatable_social_links.items():
+            helper.replace_attribute(social_element, key, 'href', val)
+
+
+
+        repeatable_links = {
+            'پرواز': '{$smarty.const.ROOT_ADDRESS}/page/flight',
+            'پیگیری خرید': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
+            'وبلاگ': '{$smarty.const.ROOT_ADDRESS}/mag',
+            'اخبار سایت': '{$smarty.const.ROOT_ADDRESS}/news',
+            'معرفی ايران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
+            'قوانین و مقررات': '{$smarty.const.ROOT_ADDRESS}/rules',
+            'درباره ما': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
+            'تماس با ما': '{$smarty.const.ROOT_ADDRESS}/contactUs',
+            'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
+        }
+        for key, val in repeatable_links.items():
+            helper.replace_attribute_by_text(footer_section, key, 'href', val)
+
+        helper.replace_attribute(footer_section, '__aboutUs__', 'string', '''{$htmlContent = $about['body']|strip_tags}{$htmlContent|truncate:300}''')
+        helper.replace_attribute(footer_section, '__address__', 'string', ''' آدرس :  {$smarty.const.CLIENT_ADDRESS} ''')
+        helper.replace_attribute(footer_section, '__mobile__', 'string', '''{$smarty.const.CLIENT_MOBILE}''')
+        helper.replace_attribute(footer_section, '__mobile__', 'href', '''tel:{$smarty.const.CLIENT_MOBILE}''')
+        footer_section = helper.replace_placeholders(footer_section, {'__aboutUsLink__':'{$smarty.const.ROOT_ADDRESS}/aboutUs'})
+        footer_final_content = f'{before_html}\n{footer_section}\n{after_html}'
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        helper.write_text_in_path(project_path, "{inclued 'include_files/footer.tpl'}")
+        footer_final_content = footer_final_content.replace("&gt;", ">")
+        footer_final_content = footer_final_content.replace("&lt;", "<")
+
+        soup = BeautifulSoup(footer_final_content, 'html.parser')
+        prettified_html = soup.prettify()
+        return helper.create_file(prettified_html, include_files_directory, 'footer', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 

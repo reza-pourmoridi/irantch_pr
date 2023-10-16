@@ -142,15 +142,12 @@ def write_text_in_path(path, text):
 
 
 def replace_attribute(section, class_name, attr, value):
-    for tag in section.find_all():
+    for tag in section.find_all(class_=class_name):
         if attr != 'string':
-            if class_name in tag.get('class', []):
-                # Replace the src attribute for tags with class __image__
-                tag[attr] = value  # Replace with desired code
+            tag[attr] = value
         else:
-            if class_name in tag.get('class', []):
-                # Replace the src attribute for tags with class __image__
-                tag.string = value  # Replace with desired code
+            tag.string = value
+
 
 
 def replace_attribute_by_text(section, target_text, attr, value):
