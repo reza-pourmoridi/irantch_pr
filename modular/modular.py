@@ -44,12 +44,12 @@ def initiation_progress():
     #     # intial_blog_test_massage = initial_blog_test(blog_section)
     #
     # # newsletter module
-    # newsletter_section = soup.find(class_="i_modular_newsletter")
-    # if newsletter_section:
-    #     newsletter_module_massage = newsletter_module(newsletter_section,project_path)
-    #     # soup = BeautifulSoup(html_content, 'html.parser')
-    #     # newsletter_section = soup.find(class_="i_modular_newsletter")
-    #     # intial_newsletter_test_massage = initial_newsletter_test(newsletter_section)
+    newsletter_section = soup.find(class_="i_modular_newsletter")
+    if newsletter_section:
+        newsletter_module_massage = newsletter_module(newsletter_section,project_path)
+        # soup = BeautifulSoup(html_content, 'html.parser')
+        # newsletter_section = soup.find(class_="i_modular_newsletter")
+        # intial_newsletter_test_massage = initial_newsletter_test(newsletter_section)
     #
     # # news module
     # news_section = soup.find(class_="i_modular_news")
@@ -96,7 +96,12 @@ def initiation_progress():
         blog_section_online = soup_online.find(class_="i_modular_blog")
         blog_test_massage = unit_test.unit_test_blog(blog_section, blog_section_online)
 
-    return jsonify({"message":  " testing blog section = " + f'{blog_test_massage}' })
+    newsletter_section = soup.find(class_="i_modular_newsletter")
+    if newsletter_section:
+        newsletter_section_online = soup_online.find(class_="i_modular_newsletter")
+        newsletter_test_massage = unit_test.unit_test_newsletter(newsletter_section, newsletter_section_online)
+
+    return jsonify({"message":  " تست بخش بلاگ = " + f'{blog_test_massage}' + " تست بخش خبرنامه = " + f'{newsletter_test_massage}' })
 
 
 def blog_module(blog_section, project_path):

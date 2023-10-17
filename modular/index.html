@@ -25,7 +25,7 @@
             contentType: false,
             processData: false,
             success: function (response) {
-                $('#message').text(response.message);
+                $('#message').html(response.message);
             },
             error: function (xhr, status, error) {
                 console.error(xhr.responseText);
