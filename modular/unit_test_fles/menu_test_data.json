@@ -1,0 +1,15 @@
+[    {
+    "main": "https://192.168.1.100",
+    "login": "https://192.168.1.100/gds/fa/loginUser",
+    "register": "https://192.168.1.100/gds/fa/registerUser",
+    "flight": "https://192.168.1.100/gds/fa/page/flight",
+    "mag": "https://192.168.1.100/gds/fa/mag",
+    "news": "https://192.168.1.100/gds/fa/news",
+    "aboutIran": "https://192.168.1.100/gds/fa/aboutIran",
+    "UserTracking": "https://192.168.1.100/gds/fa/UserTracking",
+    "rules": "https://192.168.1.100/gds/fa/rules",
+    "aboutUs": "https://192.168.1.100/gds/fa/aboutUs",
+    "contactUs": "https://192.168.1.100/gds/fa/contactUs",
+    "pay": "https://192.168.1.100/gds/fa/pay"
+    }
+]

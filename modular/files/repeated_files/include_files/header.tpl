@@ -100,5 +100,3 @@
 
 <body>
 
-{include file="include_files/menu.tpl"}
-

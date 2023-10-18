@@ -32,76 +32,48 @@ def initiation_progress():
         return jsonify({"message": "testing blog section = " + f'{soup}'})
 
     soup_online = unit_test.get_online_html()
-    if not soup_online:
+    if  soup_online == 'خطایی پیش آمده و دیتایی نمایش ندارد.':
         return jsonify({"message": "testing blog section = " + f'{soup_online}'})
-
-    # # blog module
+    # blog module
     # blog_section = soup.find(class_="i_modular_blog")
     # if blog_section:
     #     blog_module_massage = blog_module(blog_section,project_path)
-    #     # soup = BeautifulSoup(html_content, 'html.parser')
-    #     # blog_section = soup.find(class_="i_modular_blog")
-    #     # intial_blog_test_massage = initial_blog_test(blog_section)
-    #
     # # newsletter module
-    newsletter_section = soup.find(class_="i_modular_newsletter")
-    if newsletter_section:
-        newsletter_module_massage = newsletter_module(newsletter_section,project_path)
-        # soup = BeautifulSoup(html_content, 'html.parser')
-        # newsletter_section = soup.find(class_="i_modular_newsletter")
-        # intial_newsletter_test_massage = initial_newsletter_test(newsletter_section)
-    #
+    # newsletter_section = soup.find(class_="i_modular_newsletter")
+    # if newsletter_section:
+    #     newsletter_module_massage = newsletter_module(newsletter_section,project_path)
     # # news module
     # news_section = soup.find(class_="i_modular_news")
     # if news_section:
     #     news_module_massage = news_module(news_section,project_path)
-    #     # soup = BeautifulSoup(html_content, 'html.parser')
-    #     # news_section = soup.find(class_="i_modular_news")
-    #     # intial_news_test_massage = initial_news_test(news_section)
-    #
     # # menu module
     # menu_section = soup.find(class_="i_modular_menu")
     # if menu_section:
     #     menu_module_massage = menu_module(menu_section,project_path)
-    #     # soup = BeautifulSoup(html_content, 'html.parser')
-    #     # menu_section = soup.find(class_="i_modular_menu")
-    #     # intial_menu_test_massage = initial_menu_test(menu_section)
-    #
     # # footer module
     # footer_section = soup.find(class_="i_modular_footer")
     # if footer_section:
     #     footer_module_massage = footer_module(footer_section,project_path)
-    #     # soup = BeautifulSoup(html_content, 'html.parser')
-    #     # footer_section = soup.find(class_="i_modular_footer")
-    #     # intial_footer_test_massage = initial_footer_test(footer_section)
+    #
     #
     # # banner gallery module
     # banner_gallery_section = soup.find(class_="i_modular_banner_gallery")
     # if banner_gallery_section:
     #     banner_gallery_module_massage = banner_gallery_module(banner_gallery_section,project_path)
-    #     # soup = BeautifulSoup(html_content, 'html.parser')
-    #     # banner_gallery_section = soup.find(class_="i_modular_banner_gallery")
-    #     # intial_banner_gallery_test_massage = initial_banner_gallery_test(banner_gallery_section)
 
-    # return jsonify({"message":  " building blog section result =" + blog_module_massage
-    #                             + " building banner gallery section result =" + banner_gallery_module_massage
-    #                             + " building newsletter section result =" + newsletter_module_massage
-    #                             + " building menu section result =" + menu_module_massage
-    #                             + " building footer section result =" + footer_module_massage
-    #                             + " building news section result =" + news_module_massage  })
 
-    # blog module test
-    blog_section = soup.find(class_="i_modular_blog")
-    if blog_section:
-        blog_section_online = soup_online.find(class_="i_modular_blog")
-        blog_test_massage = unit_test.unit_test_blog(blog_section, blog_section_online)
+    # UNIT TEST
+    blog_test_massage = initiation_test('i_modular_blog', ' وبلاگ ', unit_test.unit_test_blog , soup, soup_online)
+    newsletter_test_massage = initiation_test('i_modular_newsletter', ' خبرنامه ', unit_test.unit_test_newsletter , soup, soup_online)
+    news_test_massage = initiation_test('i_modular_news', ' اخبار ', unit_test.unit_test_news , soup, soup_online)
+    menu_test_massage = initiation_test('i_modular_menu', ' منوی هدر ', unit_test.unit_test_menu , soup, soup_online)
+    footer_test_massage = initiation_test('i_modular_footer', ' فوتر ', unit_test.unit_test_footer , soup, soup_online)
 
-    newsletter_section = soup.find(class_="i_modular_newsletter")
-    if newsletter_section:
-        newsletter_section_online = soup_online.find(class_="i_modular_newsletter")
-        newsletter_test_massage = unit_test.unit_test_newsletter(newsletter_section, newsletter_section_online)
-
-    return jsonify({"message":  " تست بخش بلاگ = " + f'{blog_test_massage}' + " تست بخش خبرنامه = " + f'{newsletter_test_massage}' })
+    return jsonify({"message":  "<br><br> تست بخش بلاگ = " + f'{blog_test_massage}' +
+                                " <br><br> تست بخش خبرنامه = " + f'{newsletter_test_massage}' +
+                                " <br><br> تست بخش اخبار = " + f'{news_test_massage}' +
+                                " <br><br> تست بخش منوی هدر = " + f'{menu_test_massage}' +
+                                " <br><br> تست بخش فوتر = " + f'{footer_test_massage}'  })
 
 
 def blog_module(blog_section, project_path):
@@ -183,13 +155,24 @@ def blog_module(blog_section, project_path):
 
         blog_final_content = f'{before_html}\n{blog_section}\n{after_html}'
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        helper.write_text_in_path(project_path, "{inclued 'include_files/blog.tpl'}")
+        # helper.write_text_in_path(project_path, "{inclued 'include_files/blog.tpl'}")
         blog_final_content = blog_final_content.replace("&gt;", ">")
         blog_final_content = blog_final_content.replace("&lt;", "<")
 
         return helper.create_file(blog_final_content, include_files_directory, 'blog', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
+
+
+def initiation_test(class_name, module_name, module_test_function, soup, soup_online):
+    section = soup.find(class_=class_name)
+    section_online = soup_online.find(class_=class_name) if section else None
+
+    if section_online:
+        return module_test_function(section, section_online)
+
+    return f'ماژول {module_name} بازگذاری نشد'
+
 
 
 def banner_gallery_module(banner_gallery_section, project_path):
@@ -254,7 +237,7 @@ def banner_gallery_module(banner_gallery_section, project_path):
 
         banner_gallery_final_content = f'{before_html}\n{banner_gallery_section}\n{after_html}'
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        helper.write_text_in_path(project_path, "{inclued 'include_files/banner-gallery.tpl'}")
+        # helper.write_text_in_path(project_path, "{inclued 'include_files/banner-gallery.tpl'}")
         banner_gallery_final_content = banner_gallery_final_content.replace("&gt;", ">")
         banner_gallery_final_content = banner_gallery_final_content.replace("&lt;", "<")
 
@@ -338,7 +321,7 @@ def news_module(news_section, project_path):
 
         news_final_content = f'{before_html}\n{news_section}\n{after_html}'
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        helper.write_text_in_path(project_path, "{inclued 'include_files/news.tpl'}")
+        # helper.write_text_in_path(project_path, "{inclued 'include_files/news.tpl'}")
         news_final_content = news_final_content.replace("&gt;", ">")
         news_final_content = news_final_content.replace("&lt;", "<")
 
@@ -366,7 +349,7 @@ def newsletter_module(newsletter_section, project_path):
 
         newsletter_final_content = f'{newsletter_section}'
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        helper.write_text_in_path(project_path, "{inclued 'include_files/newsletter.tpl'}")
+        # helper.write_text_in_path(project_path, "{inclued 'include_files/newsletter.tpl'}")
         newsletter_final_content = newsletter_final_content.replace("&gt;", ">")
         newsletter_final_content = newsletter_final_content.replace("&lt;", "<")
 
@@ -411,7 +394,7 @@ def menu_module(menu_section, project_path):
 
         menu_final_content = f'{menu_section}'
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        helper.write_text_in_path(project_path, "{inclued 'include_files/menu.tpl'}")
+        # helper.write_text_in_path(project_path, "{inclued 'include_files/menu.tpl'}")
         menu_final_content = menu_final_content.replace("&gt;", ">")
         menu_final_content = menu_final_content.replace("&lt;", "<")
 
@@ -442,12 +425,9 @@ def footer_module(footer_section, project_path):
                                 {foreach $socialLinks as $key => $val}
                                         {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}
                                 {/foreach}'''
-
+        befor_social_media_soup = BeautifulSoup(befor_social_media, "html.parser")
         social_element = footer_section.find(class_=lambda classes: classes and '__social__' in classes)
-        for tag in footer_section.find_all():
-            if tag.decode() == social_element.decode():
-                new_tag = BeautifulSoup(f'{befor_social_media}\n{social_element}')
-                social_element.replace_with(new_tag)
+        social_element.insert_before(befor_social_media_soup)
 
         social_element = footer_section.find(class_=lambda classes: classes and '__social__' in classes)
         repeatable_social_links = {
@@ -482,13 +462,12 @@ def footer_module(footer_section, project_path):
         footer_section = helper.replace_placeholders(footer_section, {'__aboutUsLink__':'{$smarty.const.ROOT_ADDRESS}/aboutUs'})
         footer_final_content = f'{before_html}\n{footer_section}\n{after_html}'
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        helper.write_text_in_path(project_path, "{inclued 'include_files/footer.tpl'}")
+        # helper.write_text_in_path(project_path, "{inclued 'include_files/footer.tpl'}")
         footer_final_content = footer_final_content.replace("&gt;", ">")
         footer_final_content = footer_final_content.replace("&lt;", "<")
 
-        soup = BeautifulSoup(footer_final_content, 'html.parser')
-        prettified_html = soup.prettify()
-        return helper.create_file(prettified_html, include_files_directory, 'footer', 'tpl')
+
+        return helper.create_file(footer_final_content, include_files_directory, 'footer', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
