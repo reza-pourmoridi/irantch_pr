@@ -34,6 +34,49 @@ def initiation_progress():
     soup_online = unit_test.get_online_html()
     if  soup_online == 'خطایی پیش آمده و دیتایی نمایش ندارد.':
         return jsonify({"message": "testing blog section = " + f'{soup_online}'})
+
+
+    moduls_array = {
+            'blog': {
+                'class': 'i_modular_blog',
+                'name': 'وبلاگ',
+                'modular': blog_module,
+                'test_function': unit_test.unit_test_blog
+            },
+            'newsletter': {
+                'class': 'i_modular_newsletter',
+                'name': 'خبرنامه',
+                'modular': newsletter_module,
+                'test_function': unit_test.unit_test_newsletter
+            },
+            'news': {
+                'class': 'i_modular_news',
+                'name': 'اخبار',
+                'modular': news_module,
+                'test_function': unit_test.unit_test_news
+            },
+            'menu': {
+                'class': 'i_modular_menu',
+                'name': 'منو',
+                'modular': menu_module,
+                'test_function': unit_test.unit_test_menu
+            },
+            'footer': {
+                'class': 'i_modular_footer',
+                'name': 'فوتر',
+                'modular': footer_module,
+                'test_function': unit_test.unit_test_footer
+            },
+            'banner_gallery': {
+                'class': 'i_modular_banner_gallery',
+                'name': 'گالری بنر',
+                'modular': banner_gallery_module,
+                'test_function': unit_test.unit_test_blog
+            },
+
+        }
+
+
     # blog module
     blog_section = soup.find(class_="i_modular_blog")
     if blog_section:
@@ -169,6 +212,15 @@ def blog_module(blog_section, project_path):
 
 
 def initiation_test(class_name, module_name, module_test_function, soup, soup_online):
+    section = soup.find(class_=class_name)
+    section_online = soup_online.find(class_=class_name) if section else None
+
+    if section_online:
+        return module_test_function(section, section_online)
+
+    return f'ماژول {module_name} بازگذاری نشد'
+
+def initiation_modulation(class_name, module_name, modular_function, soup, soup_online):
     section = soup.find(class_=class_name)
     section_online = soup_online.find(class_=class_name) if section else None
 
