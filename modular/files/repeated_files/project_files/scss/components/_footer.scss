@@ -28,7 +28,7 @@
   list-style: none;
   flex-wrap: wrap;
 }
-.footer_main > ul > li > a{transition :all .3s;color: #fff;width: 100%;font-size: 12px;text-align: justify;display: flex;margin: 10px 0;align-items: center;gap: 5px}
+.footer_main > ul > li > a{transition :all .3s;color: #fff;width: fit-content;font-size: 12px;text-align: justify;display: flex;margin: 10px 0;align-items: center;gap: 5px}
 .footer_main > ul > li > a:hover{text-decoration: none;color:$thirdColor}
 .footer_main > ul > li > a:hover svg{fill: $thirdColor;}
 .footer_main > ul > li > a svg{
@@ -53,14 +53,16 @@
   /*! flex-wrap: wrap; */
 }
 .asan{
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
 }
 .asan > .asan_link{
   color: #fff;
   display: flex;
-  width: 50%;
+  width: fit-content;
   margin: 10px 0;
   font-size: 14px;
   transition: all .3s;

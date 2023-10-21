@@ -149,6 +149,18 @@ def replace_attribute(section, class_name, attr, value):
             tag.string = value
 
 
+def add_value_to_attribute(section, class_name, attr, value):
+    for tag in section.find_all(class_=class_name):
+        if attr != 'string':
+            if tag.get(attr) is not None:
+                tag[attr] += value
+        else:
+            if tag.string is not None:
+                tag.string += value
+
+
+
+
 
 def replace_attribute_by_text(section, target_text, attr, value):
     for tag in section.find_all(text=target_text):
@@ -163,3 +175,10 @@ def changing_numbers_to_array_elements(array, num):
     for key, val in array.items():
         array[key] = val.format(num)
     return array
+
+
+def add_before_after(section, class_name, before, after):
+    complex_element = section.find(class_=class_name)
+    if complex_element:
+        inner_html = f'{before}\n{complex_element}\n{after}'
+        complex_element.replace_with(BeautifulSoup(inner_html, 'html.parser'))

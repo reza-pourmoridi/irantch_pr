@@ -35,41 +35,50 @@ def initiation_progress():
     if  soup_online == 'خطایی پیش آمده و دیتایی نمایش ندارد.':
         return jsonify({"message": "testing blog section = " + f'{soup_online}'})
     # blog module
-    # blog_section = soup.find(class_="i_modular_blog")
-    # if blog_section:
-    #     blog_module_massage = blog_module(blog_section,project_path)
-    # # newsletter module
-    # newsletter_section = soup.find(class_="i_modular_newsletter")
-    # if newsletter_section:
-    #     newsletter_module_massage = newsletter_module(newsletter_section,project_path)
-    # # news module
-    # news_section = soup.find(class_="i_modular_news")
-    # if news_section:
-    #     news_module_massage = news_module(news_section,project_path)
-    # # menu module
-    # menu_section = soup.find(class_="i_modular_menu")
-    # if menu_section:
-    #     menu_module_massage = menu_module(menu_section,project_path)
-    # # footer module
-    # footer_section = soup.find(class_="i_modular_footer")
-    # if footer_section:
-    #     footer_module_massage = footer_module(footer_section,project_path)
-    #
-    #
-    # # banner gallery module
-    # banner_gallery_section = soup.find(class_="i_modular_banner_gallery")
-    # if banner_gallery_section:
-    #     banner_gallery_module_massage = banner_gallery_module(banner_gallery_section,project_path)
+    blog_section = soup.find(class_="i_modular_blog")
+    if blog_section:
+        blog_module_massage = blog_module(blog_section,project_path)
+    # newsletter module
+    newsletter_section = soup.find(class_="i_modular_newsletter")
+    if newsletter_section:
+        newsletter_module_massage = newsletter_module(newsletter_section,project_path)
+    # news module
+    news_section = soup.find(class_="i_modular_news")
+    if news_section:
+        news_module_massage = news_module(news_section,project_path)
+    # menu module
+    menu_section = soup.find(class_="i_modular_menu")
+    if menu_section:
+        menu_module_massage = menu_module(menu_section,project_path)
+    # footer module
+    footer_section = soup.find(class_="i_modular_footer")
+    if footer_section:
+        footer_module_massage = footer_module(footer_section,project_path)
+
+
+    # banner gallery module
+    banner_gallery_section = soup.find(class_="i_modular_banner_gallery")
+    if banner_gallery_section:
+        banner_gallery_module_massage = banner_gallery_module(banner_gallery_section,project_path)
 
 
     # UNIT TEST
+    soup = BeautifulSoup(html_content, 'html.parser')
+    if not soup:
+        return jsonify({"message": "testing blog section = " + f'{soup}'})
+
     blog_test_massage = initiation_test('i_modular_blog', ' وبلاگ ', unit_test.unit_test_blog , soup, soup_online)
     newsletter_test_massage = initiation_test('i_modular_newsletter', ' خبرنامه ', unit_test.unit_test_newsletter , soup, soup_online)
     news_test_massage = initiation_test('i_modular_news', ' اخبار ', unit_test.unit_test_news , soup, soup_online)
     menu_test_massage = initiation_test('i_modular_menu', ' منوی هدر ', unit_test.unit_test_menu , soup, soup_online)
     footer_test_massage = initiation_test('i_modular_footer', ' فوتر ', unit_test.unit_test_footer , soup, soup_online)
 
-    return jsonify({"message":  "<br><br> تست بخش بلاگ = " + f'{blog_test_massage}' +
+    return jsonify({"message":  "<br><br> تست ماژول گذاری بخش بلاگ = " + f'{blog_module_massage}' +
+                                " <br><br> تست ماژول گذاری بخش خبرنامه = " + f'{newsletter_module_massage}' +
+                                " <br><br> تست ماژول گذاری بخش اخبار = " + f'{news_module_massage}' +
+                                " <br><br> تست  ماژول گذاریبخش منوی هدر = " + f'{menu_module_massage}' +
+                                " <br><br> تست ماژول گذاری بخش فوتر = " + f'{footer_module_massage}' +
+                                 "<br><br> تست بخش بلاگ = " + f'{blog_test_massage}' +
                                 " <br><br> تست بخش خبرنامه = " + f'{newsletter_test_massage}' +
                                 " <br><br> تست بخش اخبار = " + f'{news_test_massage}' +
                                 " <br><br> تست بخش منوی هدر = " + f'{menu_test_massage}' +
@@ -113,10 +122,8 @@ def blog_module(blog_section, project_path):
             }
             simple_element = blog_section.find(class_="__i_modular_nc_item_" + num)
             if num == simple_items_numbers[0]:
-                for tag in blog_section.find_all():
-                    if tag.decode() == simple_element.decode():
-                        new_tag = BeautifulSoup(f'{before_foreach}\n{simple_element}\n{after_foreach}')
-                        simple_element.replace_with(new_tag)
+                helper.add_before_after(blog_section, "__i_modular_nc_item_" + num, before_foreach, after_foreach)
+
                 simple_element = blog_section.find(class_="__i_modular_nc_item_" + num)
                 simple_element = helper.replace_placeholders(simple_element, blog_replacement_data)
                 simple_element = blog_section.find(class_="__i_modular_nc_item_" + num)
@@ -139,12 +146,9 @@ def blog_module(blog_section, project_path):
                 '<span class="__date__">5 بهمن 1402</span>': '''{{$articles[{0}]['created_at']}}'''.format(num),
                 '<span class="__comments_number__">450</span>': '''{{$articles[{0}]['comments_count']['comments_count']}}'''.format(num)
             }
-            complex_element = blog_section.find(class_="__i_modular_c_item_" + num)
-            for tag in blog_section.find_all():
-                if tag.decode() == complex_element.decode():
-                    new_tag = BeautifulSoup(f'{before_if}\n{complex_element}\n{after_if}')
-                    complex_element.replace_with(new_tag)
-                    
+            helper.add_before_after(blog_section, "__i_modular_c_item_" + num, before_if, after_if)
+
+
             complex_element = blog_section.find(class_="__i_modular_c_item_" + num)
             complex_element_final = helper.replace_placeholders(complex_element, blog_complex_replacement_data)
             complex_element = blog_section.find(class_="__i_modular_c_item_" + num)
@@ -187,7 +191,7 @@ def banner_gallery_module(banner_gallery_section, project_path):
         simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
         max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
 
-        before_html = '''{assign var="type_data" value=['is_active'=>1 , 'limit' =>5]}
+        before_html = '''{assign var="type_data" value=['is_active'=>1 , 'limit' =>10]}
                         {assign var='banners' value=$obj_main_page->galleryBannerMain($type_data)}'''
         after_html = ''
 
@@ -236,10 +240,13 @@ def banner_gallery_module(banner_gallery_section, project_path):
 
 
         banner_gallery_final_content = f'{before_html}\n{banner_gallery_section}\n{after_html}'
+
+
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         # helper.write_text_in_path(project_path, "{inclued 'include_files/banner-gallery.tpl'}")
         banner_gallery_final_content = banner_gallery_final_content.replace("&gt;", ">")
         banner_gallery_final_content = banner_gallery_final_content.replace("&lt;", "<")
+        return banner_gallery_final_content
 
         return helper.create_file(banner_gallery_final_content, include_files_directory, 'banner_gallery', 'tpl')
     except Exception as e:
@@ -373,7 +380,8 @@ def menu_module(menu_section, project_path):
             'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
         }
         helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
-        helper.replace_attribute(menu_section, '__login_register__', 'class','__login_register__ main-navigation__button2 show-box-login-js ')
+        helper.replace_attribute(menu_section, '__login_register__2', 'class','__login_register__2 main-navigation__button2 show-box-login-js')
+        helper.replace_attribute(menu_section, '__login_register__', 'class','__login_register__ main-navigation__button2 show-box-login-js button_header logIn d-flex d-lg-none')
 
 
         after_login = '''<div class="main-navigation__sub-menu2 arrow-up show-content-box-login-js" style="display: none">
