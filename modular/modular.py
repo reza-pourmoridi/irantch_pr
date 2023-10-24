@@ -77,6 +77,8 @@ def initiation_progress():
         }
 
 
+
+
     # blog module
     blog_section = soup.find(class_="i_modular_blog")
     if blog_section:
