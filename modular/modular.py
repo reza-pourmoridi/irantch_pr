@@ -29,11 +29,8 @@ def initiation_progress():
     # turn string to soup object
     soup = BeautifulSoup(html_content, 'html.parser')
     if not soup:
-        return jsonify({"message": "testing blog section = " + f'{soup}'})
+        return jsonify({"message": "testing html = " + f'{soup}'})
 
-    soup_online = unit_test.get_online_html()
-    if  soup_online == 'خطایی پیش آمده و دیتایی نمایش ندارد.':
-        return jsonify({"message": "testing blog section = " + f'{soup_online}'})
 
 
     moduls_array = {
@@ -76,58 +73,33 @@ def initiation_progress():
 
         }
 
+    module_messages = []
 
-
-
-    # blog module
-    blog_section = soup.find(class_="i_modular_blog")
-    if blog_section:
-        blog_module_massage = blog_module(blog_section,project_path)
-    # newsletter module
-    newsletter_section = soup.find(class_="i_modular_newsletter")
-    if newsletter_section:
-        newsletter_module_massage = newsletter_module(newsletter_section,project_path)
-    # news module
-    news_section = soup.find(class_="i_modular_news")
-    if news_section:
-        news_module_massage = news_module(news_section,project_path)
-    # menu module
-    menu_section = soup.find(class_="i_modular_menu")
-    if menu_section:
-        menu_module_massage = menu_module(menu_section,project_path)
-    # footer module
-    footer_section = soup.find(class_="i_modular_footer")
-    if footer_section:
-        footer_module_massage = footer_module(footer_section,project_path)
-
-
-    # banner gallery module
-    banner_gallery_section = soup.find(class_="i_modular_banner_gallery")
-    if banner_gallery_section:
-        banner_gallery_module_massage = banner_gallery_module(banner_gallery_section,project_path)
-
+    for module_name, module_info in moduls_array.items():
+        section = soup.find(class_=module_info['class'])
+        if section:
+            module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name'] + " = " + module_info['modular'](section, project_path))
+    # Combine the module messages into a single string
+    summary_message = '\n'.join(module_messages)
 
     # UNIT TEST
     soup = BeautifulSoup(html_content, 'html.parser')
     if not soup:
-        return jsonify({"message": "testing blog section = " + f'{soup}'})
+        return jsonify({"message": "testing html = " + f'{soup}'})
 
-    blog_test_massage = initiation_test('i_modular_blog', ' وبلاگ ', unit_test.unit_test_blog , soup, soup_online)
-    newsletter_test_massage = initiation_test('i_modular_newsletter', ' خبرنامه ', unit_test.unit_test_newsletter , soup, soup_online)
-    news_test_massage = initiation_test('i_modular_news', ' اخبار ', unit_test.unit_test_news , soup, soup_online)
-    menu_test_massage = initiation_test('i_modular_menu', ' منوی هدر ', unit_test.unit_test_menu , soup, soup_online)
-    footer_test_massage = initiation_test('i_modular_footer', ' فوتر ', unit_test.unit_test_footer , soup, soup_online)
+    soup_online = unit_test.get_online_html()
+    if 'خطایی' in soup_online:
+        return jsonify({"message": "testing local connection = " + f'{soup_online}'})
+    module_test_messages = []
 
-    return jsonify({"message":  "<br><br> تست ماژول گذاری بخش بلاگ = " + f'{blog_module_massage}' +
-                                " <br><br> تست ماژول گذاری بخش خبرنامه = " + f'{newsletter_module_massage}' +
-                                " <br><br> تست ماژول گذاری بخش اخبار = " + f'{news_module_massage}' +
-                                " <br><br> تست  ماژول گذاریبخش منوی هدر = " + f'{menu_module_massage}' +
-                                " <br><br> تست ماژول گذاری بخش فوتر = " + f'{footer_module_massage}' +
-                                 "<br><br> تست بخش بلاگ = " + f'{blog_test_massage}' +
-                                " <br><br> تست بخش خبرنامه = " + f'{newsletter_test_massage}' +
-                                " <br><br> تست بخش اخبار = " + f'{news_test_massage}' +
-                                " <br><br> تست بخش منوی هدر = " + f'{menu_test_massage}' +
-                                " <br><br> تست بخش فوتر = " + f'{footer_test_massage}'  })
+    for module_name, module_info in moduls_array.items():
+        section = soup.find(class_=module_info['class'])
+        if section:
+            module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online))
+    # Combine the module messages into a single string
+    summary_test_message = '\n'.join(module_test_messages)
+
+    return jsonify({"message": f'{summary_message}'+ '<br><br><br>' + f'{summary_test_message}'})
 
 
 def blog_module(blog_section, project_path):
@@ -300,7 +272,6 @@ def banner_gallery_module(banner_gallery_section, project_path):
         # helper.write_text_in_path(project_path, "{inclued 'include_files/banner-gallery.tpl'}")
         banner_gallery_final_content = banner_gallery_final_content.replace("&gt;", ">")
         banner_gallery_final_content = banner_gallery_final_content.replace("&lt;", "<")
-        return banner_gallery_final_content
 
         return helper.create_file(banner_gallery_final_content, include_files_directory, 'banner_gallery', 'tpl')
     except Exception as e:

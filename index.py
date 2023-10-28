@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify
 # from recommendation import index as recom_index  # Import the recommendation/index module
 from modular import modular as modular_index
+from modular import modular as modular_index
 
 
 app = Flask(__name__)
