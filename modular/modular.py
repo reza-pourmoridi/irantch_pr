@@ -9,6 +9,10 @@ import codecs
 from modular import helper_functions as helper
 from modular import unit_test
 
+complex_items_pattern = re.compile(r'__i_modular_c_item_class_(\d+)')
+simple_items_pattern = re.compile(r'__i_modular_nc_item_class_(\d+)')
+complex_items_class = "__i_modular_c_item_class_"
+simple_items_class = "__i_modular_nc_item_class_"
 
 def initiation_progress():
     if 'file' not in request.files:
@@ -21,7 +25,7 @@ def initiation_progress():
     if file.filename == '':
         return jsonify({"message": "No selected file"})
 
-
+    lang = 'fa'
 
     project_path = helper.create_folder(request.form['project_name'])
     copy_repeated_file_folders_massage = helper.copy_repeated_file_folders(request.form['project_name'])
@@ -64,12 +68,12 @@ def initiation_progress():
                 'modular': footer_module,
                 'test_function': unit_test.unit_test_footer
             },
-            # 'banner_gallery': {
-            #     'class': 'i_modular_banner_gallery',
-            #     'name': 'گالری بنر',
-            #     'modular': banner_gallery_module,
-            #     'test_function': unit_test.unit_test_blog
-            # },
+            'banner_gallery': {
+                'class': 'i_modular_banner_gallery',
+                'name': 'گالری بنر',
+                'modular': banner_gallery_module,
+                'test_function': unit_test.unit_test_blog
+            },
 
         }
 
@@ -78,7 +82,7 @@ def initiation_progress():
     for module_name, module_info in moduls_array.items():
         section = soup.find(class_=module_info['class'])
         if section:
-            module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name'] + " = " + module_info['modular'](section, project_path))
+            module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name'] + " = " + module_info['modular'](section, project_path , lang))
     # Combine the module messages into a single string
     summary_message = '\n'.join(module_messages)
 
@@ -95,18 +99,34 @@ def initiation_progress():
     for module_name, module_info in moduls_array.items():
         section = soup.find(class_=module_info['class'])
         if section:
-            module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online))
+            module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online ,lang))
     # Combine the module messages into a single string
     summary_test_message = '\n'.join(module_test_messages)
 
     return jsonify({"message": f'{summary_message}'+ '<br><br><br>' + f'{summary_test_message}'})
 
+def initiation_test(class_name, module_name, module_test_function, soup, soup_online , lang):
+    section = soup.find(class_=class_name)
+    section_online = soup_online.find(class_=class_name) if section else None
 
-def blog_module(blog_section, project_path):
+    if section_online:
+        return module_test_function(section, section_online , lang)
+
+    return f'ماژول {module_name} بازگذاری نشد'
+
+def initiation_modulation(class_name, module_name, modular_function, soup, soup_online):
+    section = soup.find(class_=class_name)
+    section_online = soup_online.find(class_=class_name) if section else None
+
+    if section_online:
+        return module_test_function(section, section_online)
+
+    return f'ماژول {module_name} بازگذاری نشد'
+
+
+def blog_module(blog_section, project_path , lang = 'fa'):
     try:
         # create regex objects containing patterns of items classes
-        complex_items_pattern = re.compile(r'__i_modular_c_item_(\d+)')
-        simple_items_pattern = re.compile(r'__i_modular_nc_item_(\d+)')
         complex_items_numbers = helper.item_numbers(blog_section,complex_items_pattern)
         simple_items_numbers = helper.item_numbers(blog_section,simple_items_pattern)
         complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
@@ -131,23 +151,18 @@ def blog_module(blog_section, project_path):
             blog_replacement_data = {
                 "__airline__": '''{$article['link']}''',
                 "__link__": '''{$article['link']}''',
-                "__image__": '''{$article['image']}''',
-                "__alt_article__": '''{$article['title']}''',
-                '<span class="__date__">5 بهمن 1402</span>': '''{$article['created_at']}''',
-                '<span class="__comments_number__">450</span>': '''{$article['comments_count']['comments_count']}''',
-                'images/5497750661271-6.jpg': '''{$article['image']}'''
             }
-            simple_element = blog_section.find(class_="__i_modular_nc_item_" + num)
+            simple_element = blog_section.find(class_=simple_items_class + num)
             if num == simple_items_numbers[0]:
-                helper.add_before_after(blog_section, "__i_modular_nc_item_" + num, before_foreach, after_foreach)
+                helper.add_before_after(blog_section, simple_items_class + num, before_foreach, after_foreach)
 
-                simple_element = blog_section.find(class_="__i_modular_nc_item_" + num)
+                simple_element = blog_section.find(class_=simple_items_class + num)
                 simple_element = helper.replace_placeholders(simple_element, blog_replacement_data)
-                simple_element = blog_section.find(class_="__i_modular_nc_item_" + num)
-                helper.replace_attribute(simple_element, '__image__', 'src','{$article["image"]}')
-                helper.replace_attribute(simple_element, '__image__', 'src','{$article["image"]}')
-                helper.replace_attribute(simple_element, '__title__', 'string','{$article["title"]}')
-                helper.replace_attribute(simple_element, '__heading__', 'string','{$article["heading"]}')
+                simple_element = blog_section.find(class_=simple_items_class + num)
+                helper.replace_attribute(simple_element, '__image_class__', 'src','{$article["image"]}')
+                helper.replace_attribute(simple_element, '__image_class__', 'src','{$article["image"]}')
+                helper.replace_attribute(simple_element, '__title_class__', 'string','{$article["title"]}')
+                helper.replace_attribute(simple_element, '__heading_class__', 'string','{$article["heading"]}')
 
             else:
                 simple_element.decompose()
@@ -163,15 +178,15 @@ def blog_module(blog_section, project_path):
                 '<span class="__date__">5 بهمن 1402</span>': '''{{$articles[{0}]['created_at']}}'''.format(num),
                 '<span class="__comments_number__">450</span>': '''{{$articles[{0}]['comments_count']['comments_count']}}'''.format(num)
             }
-            helper.add_before_after(blog_section, "__i_modular_c_item_" + num, before_if, after_if)
+            helper.add_before_after(blog_section, complex_items_class + num, before_if, after_if)
 
 
-            complex_element = blog_section.find(class_="__i_modular_c_item_" + num)
+            complex_element = blog_section.find(class_=complex_items_class + num)
             complex_element_final = helper.replace_placeholders(complex_element, blog_complex_replacement_data)
-            complex_element = blog_section.find(class_="__i_modular_c_item_" + num)
-            helper.replace_attribute(complex_element, '__image__', 'src', '''{{$articles[{0}]['image']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__title__', 'string', '''{{$articles[{0}]['title']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__heading__', 'string', '''{{$articles[{0}]['heading']}}'''.format(num))
+            complex_element = blog_section.find(class_=complex_items_class + num)
+            helper.replace_attribute(complex_element, '__image_class__', 'src', '''{{$articles[{0}]['image']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__title_class__', 'string', '''{{$articles[{0}]['title']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__heading_class__', 'string', '''{{$articles[{0}]['heading']}}'''.format(num))
 
 
         blog_final_content = f'{before_html}\n{blog_section}\n{after_html}'
@@ -184,32 +199,9 @@ def blog_module(blog_section, project_path):
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-
-def initiation_test(class_name, module_name, module_test_function, soup, soup_online):
-    section = soup.find(class_=class_name)
-    section_online = soup_online.find(class_=class_name) if section else None
-
-    if section_online:
-        return module_test_function(section, section_online)
-
-    return f'ماژول {module_name} بازگذاری نشد'
-
-def initiation_modulation(class_name, module_name, modular_function, soup, soup_online):
-    section = soup.find(class_=class_name)
-    section_online = soup_online.find(class_=class_name) if section else None
-
-    if section_online:
-        return module_test_function(section, section_online)
-
-    return f'ماژول {module_name} بازگذاری نشد'
-
-
-
-def banner_gallery_module(banner_gallery_section, project_path):
+def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa'):
     try:
         # create regex objects containing patterns of items classes
-        complex_items_pattern = re.compile(r'__i_modular_c_item_(\d+)')
-        simple_items_pattern = re.compile(r'__i_modular_nc_item_(\d+)')
         complex_items_numbers = helper.item_numbers(banner_gallery_section,complex_items_pattern)
         simple_items_numbers = helper.item_numbers(banner_gallery_section,simple_items_pattern)
         complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
@@ -229,17 +221,14 @@ def banner_gallery_module(banner_gallery_section, project_path):
                 "__title__": '''{$banner['title']}''',
                 "__link__": '''{$banner['link']}'''
             }
-            simple_element = banner_gallery_section.find(class_="__i_modular_nc_item_" + num)
+            simple_element = banner_gallery_section.find(class_=simple_items_class + num)
             if num == simple_items_numbers[0]:
-                for tag in banner_gallery_section.find_all():
-                    if tag.decode() == simple_element.decode():
-                        new_tag = BeautifulSoup(f'{before_foreach}\n{simple_element}\n{after_foreach}')
-                        simple_element.replace_with(new_tag)
-                simple_element = banner_gallery_section.find(class_="__i_modular_nc_item_" + num)
+                helper.add_before_after(banner_gallery_section, simple_items_class + num, before_foreach,after_foreach)
+                simple_element = banner_gallery_section.find(class_=simple_items_class + num)
                 simple_element = helper.replace_placeholders(simple_element, banner_gallery_replacement_data)
-                simple_element = banner_gallery_section.find(class_="__i_modular_nc_item_" + num)
-                helper.replace_attribute(simple_element, '__image__', 'src','{$banner["image"]}')
-                helper.replace_attribute(simple_element, '__image__', 'alt','{$banner["title"]}')
+                simple_element = banner_gallery_section.find(class_=simple_items_class + num)
+                helper.replace_attribute(simple_element, '__image_class__', 'src','{$banner["pic"]}')
+                helper.replace_attribute(simple_element, '__image_class__', 'alt','{$banner["title"]}')
 
             else:
                 simple_element.decompose()
@@ -252,17 +241,13 @@ def banner_gallery_module(banner_gallery_section, project_path):
                 "__link__": '''{{banners[{0}]['link']}}'''.format(num),
                 "__title__": '''{{banners[{0}]['title']}}'''.format(num),
             }
-            complex_element = banner_gallery_section.find(class_="__i_modular_c_item_" + num)
-            for tag in banner_gallery_section.find_all():
-                if tag.decode() == complex_element.decode():
-                    new_tag = BeautifulSoup(f'{before_if}\n{complex_element}\n{after_if}')
-                    complex_element.replace_with(new_tag)
-
-            complex_element = banner_gallery_section.find(class_="__i_modular_c_item_" + num)
+            complex_element = banner_gallery_section.find(class_=complex_items_class + num)
+            helper.add_before_after(banner_gallery_section, complex_items_class + num, before_if, after_if)
+            complex_element = banner_gallery_section.find(class_=complex_items_class + num)
             complex_element_final = helper.replace_placeholders(complex_element, banner_gallery_complex_replacement_data)
-            complex_element = banner_gallery_section.find(class_="__i_modular_c_item_" + num)
-            helper.replace_attribute(complex_element, '__image__', 'src', '''{{banners[{0}]['image']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__title__', 'alt', '''{{banners[{0}]['title']}}'''.format(num))
+            complex_element = banner_gallery_section.find(class_=complex_items_class + num)
+            helper.replace_attribute(complex_element, '__image_class__', 'src', '''{{banners[{0}]['pic']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__title_class__', 'alt', '''{{banners[{0}]['title']}}'''.format(num))
 
 
         banner_gallery_final_content = f'{before_html}\n{banner_gallery_section}\n{after_html}'
@@ -277,12 +262,9 @@ def banner_gallery_module(banner_gallery_section, project_path):
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-
-def news_module(news_section, project_path):
+def news_module(news_section, project_path , lang = 'fa'):
     try:
         # create regex objects containing patterns of items classes
-        complex_items_pattern = re.compile(r'__i_modular_c_item_(\d+)')
-        simple_items_pattern = re.compile(r'__i_modular_nc_item_(\d+)')
         complex_items_numbers = helper.item_numbers(news_section,complex_items_pattern)
         simple_items_numbers = helper.item_numbers(news_section,simple_items_pattern)
         complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
@@ -306,20 +288,20 @@ def news_module(news_section, project_path):
             news_replacement_data = {
                 "__link__": '''{$item['link']}''',
             }
-            simple_element = news_section.find(class_="__i_modular_nc_item_" + num)
+            simple_element = news_section.find(class_=simple_items_class + num)
             if num == simple_items_numbers[0]:
                 for tag in news_section.find_all():
                     if tag.decode() == simple_element.decode():
                         new_tag = BeautifulSoup(f'{before_foreach}\n{simple_element}\n{after_foreach}')
                         simple_element.replace_with(new_tag)
-                simple_element = news_section.find(class_="__i_modular_nc_item_" + num)
+                simple_element = news_section.find(class_=simple_items_class + num)
                 simple_element = helper.replace_placeholders(simple_element, news_replacement_data)
-                simple_element = news_section.find(class_="__i_modular_nc_item_" + num)
-                helper.replace_attribute(simple_element, '__image__', 'src','{$item["image"]}')
-                helper.replace_attribute(simple_element, '__image__', 'alt','{$item["alt"]}')
-                helper.replace_attribute(simple_element, '__title__', 'string','{$item["title"]}')
-                helper.replace_attribute(simple_element, '__heading__', 'string','{$item["heading"]}')
-                helper.replace_attribute(simple_element, '__description__', 'string','{$item["description"]}')
+                simple_element = news_section.find(class_=simple_items_class + num)
+                helper.replace_attribute(simple_element, '__image_class__', 'src','{$item["image"]}')
+                helper.replace_attribute(simple_element, '__image_class__', 'alt','{$item["alt"]}')
+                helper.replace_attribute(simple_element, '__title_class__', 'string','{$item["title"]}')
+                helper.replace_attribute(simple_element, '__heading_class__', 'string','{$item["heading"]}')
+                helper.replace_attribute(simple_element, '__description_class__', 'string','{$item["description"]}')
 
             else:
                 simple_element.decompose()
@@ -335,20 +317,20 @@ def news_module(news_section, project_path):
                 '<span class="__date__">5 بهمن 1402</span>': '''{{$othe_itmes[{0}]['created_at']}}'''.format(num),
                 '<span class="__comments_number__">450</span>': '''{{$othe_itmes[{0}]['comments_count']['comments_count']}}'''.format(num)
             }
-            complex_element = news_section.find(class_="__i_modular_c_item_" + num)
+            complex_element = news_section.find(class_=complex_items_class + num)
             for tag in news_section.find_all():
                 if tag.decode() == complex_element.decode():
                     new_tag = BeautifulSoup(f'{before_if}\n{complex_element}\n{after_if}')
                     complex_element.replace_with(new_tag)
 
-            complex_element = news_section.find(class_="__i_modular_c_item_" + num)
+            complex_element = news_section.find(class_=complex_items_class + num)
             complex_element_final = helper.replace_placeholders(complex_element, news_complex_replacement_data)
-            complex_element = news_section.find(class_="__i_modular_c_item_" + num)
-            helper.replace_attribute(complex_element, '__image__', 'src', '''{{$othe_itmes[{0}]['image']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__image__', 'alt', '''{{$othe_itmes[{0}]['alt']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__title__', 'string', '''{{$othe_itmes[{0}]['title']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__heading__', 'string', '''{{$othe_itmes[{0}]['heading']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__description__', 'string', '''{{$othe_itmes[{0}]['description']}}'''.format(num))
+            complex_element = news_section.find(class_=complex_items_class + num)
+            helper.replace_attribute(complex_element, '__image_class__', 'src', '''{{$othe_itmes[{0}]['image']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__image_class__', 'alt', '''{{$othe_itmes[{0}]['alt']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__title_class__', 'string', '''{{$othe_itmes[{0}]['title']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__heading_class__', 'string', '''{{$othe_itmes[{0}]['heading']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__description_class__', 'string', '''{{$othe_itmes[{0}]['description']}}'''.format(num))
 
 
         news_final_content = f'{before_html}\n{news_section}\n{after_html}'
@@ -362,21 +344,21 @@ def news_module(news_section, project_path):
         return str(e)  # Return the exception message for now
 
 
-def newsletter_module(newsletter_section, project_path):
+def newsletter_module(newsletter_section, project_path , lang = 'fa'):
     try:
-        helper.replace_attribute(newsletter_section, '__name__', 'name','NameSms')
-        helper.replace_attribute(newsletter_section, '__email__', 'name','EmailSms')
-        helper.replace_attribute(newsletter_section, '__phone__', 'name','CellSms')
+        helper.replace_attribute(newsletter_section, '__name_class__', 'name','NameSms')
+        helper.replace_attribute(newsletter_section, '__email_class__', 'name','EmailSms')
+        helper.replace_attribute(newsletter_section, '__phone_class__', 'name','CellSms')
 
-        helper.replace_attribute(newsletter_section, '__name__', 'id','NameSms')
-        helper.replace_attribute(newsletter_section, '__email__', 'id','EmailSms')
-        helper.replace_attribute(newsletter_section, '__phone__', 'id','CellSms')
+        helper.replace_attribute(newsletter_section, '__name_class__', 'id','NameSms')
+        helper.replace_attribute(newsletter_section, '__email_class__', 'id','EmailSms')
+        helper.replace_attribute(newsletter_section, '__phone_class__', 'id','CellSms')
 
-        helper.replace_attribute(newsletter_section, '__name__', 'class','full-name-js')
-        helper.replace_attribute(newsletter_section, '__email__', 'class','email-js')
-        helper.replace_attribute(newsletter_section, '__phone__', 'class','mobile-js')
+        helper.replace_attribute(newsletter_section, '__name_class__', 'class','full-name-js')
+        helper.replace_attribute(newsletter_section, '__email_class__', 'class','email-js')
+        helper.replace_attribute(newsletter_section, '__phone_class__', 'class','mobile-js')
 
-        helper.replace_attribute(newsletter_section, '__submit__', 'onclick','submitNewsLetter()')
+        helper.replace_attribute(newsletter_section, '__submit_class__', 'onclick','submitNewsLetter()')
 
 
         newsletter_final_content = f'{newsletter_section}'
@@ -390,7 +372,7 @@ def newsletter_module(newsletter_section, project_path):
         return str(e)  # Return the exception message for now
 
 
-def menu_module(menu_section, project_path):
+def menu_module(menu_section, project_path , lang = 'fa'):
     try:
 
         repeatable_links = {
@@ -405,15 +387,15 @@ def menu_module(menu_section, project_path):
             'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
         }
         helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
-        helper.replace_attribute(menu_section, '__login_register__2', 'class','__login_register__2 main-navigation__button2 show-box-login-js')
-        helper.replace_attribute(menu_section, '__login_register__', 'class','__login_register__ main-navigation__button2 show-box-login-js button_header logIn d-flex d-lg-none')
+        helper.replace_attribute(menu_section, '__login_register_class__2', 'class','__login_register_class__2 main-navigation__button2 show-box-login-js')
+        helper.replace_attribute(menu_section, '__login_register_class__', 'class','__login_register_class__ main-navigation__button2 show-box-login-js button_header logIn d-flex d-lg-none')
 
 
         after_login = '''<div class="main-navigation__sub-menu2 arrow-up show-content-box-login-js" style="display: none">
                             {include file="`$smarty.const.FRONT_CURRENT_THEME`topBar.tpl"}
                         </div>'''
 
-        simple_element = menu_section.find(class_=lambda classes: classes and '__login_register__' in classes)
+        simple_element = menu_section.find(class_=lambda classes: classes and '__login_register_class__' in classes)
         for tag in menu_section.find_all():
             if tag.decode() == simple_element.decode():
                 new_tag = BeautifulSoup(f'{simple_element}\n{after_login}')
@@ -438,7 +420,7 @@ def menu_module(menu_section, project_path):
         return str(e)  # Return the exception message for now
 
 
-def footer_module(footer_section, project_path):
+def footer_module(footer_section, project_path , lang = 'fa'):
     try:
         before_html = '''{load_presentation_object filename="aboutUs" assign="objAbout"}
                             {assign var="about"  value=$objAbout->getData()}
@@ -461,14 +443,14 @@ def footer_module(footer_section, project_path):
                                         {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}
                                 {/foreach}'''
         befor_social_media_soup = BeautifulSoup(befor_social_media, "html.parser")
-        social_element = footer_section.find(class_=lambda classes: classes and '__social__' in classes)
+        social_element = footer_section.find(class_=lambda classes: classes and '__social_class__' in classes)
         social_element.insert_before(befor_social_media_soup)
 
-        social_element = footer_section.find(class_=lambda classes: classes and '__social__' in classes)
+        social_element = footer_section.find(class_=lambda classes: classes and '__social_class__' in classes)
         repeatable_social_links = {
-            '__telegram__': '{if $telegramHref}{$telegramHref}{/if}',
-            '__whatsapp__': '{if $telegramHref}{$whatsappHref}{/if}',
-            '__instagram__': '{if $telegramHref}{$instagramHref}{/if}',
+            '__telegram_class__': '{if $telegramHref}{$telegramHref}{/if}',
+            '__whatsapp_class__': '{if $telegramHref}{$whatsappHref}{/if}',
+            '__instagram_class__': '{if $telegramHref}{$instagramHref}{/if}',
         }
 
         for key, val in repeatable_social_links.items():
@@ -490,10 +472,10 @@ def footer_module(footer_section, project_path):
         for key, val in repeatable_links.items():
             helper.replace_attribute_by_text(footer_section, key, 'href', val)
 
-        helper.replace_attribute(footer_section, '__aboutUs__', 'string', '''{$htmlContent = $about['body']|strip_tags}{$htmlContent|truncate:300}''')
-        helper.replace_attribute(footer_section, '__address__', 'string', ''' آدرس :  {$smarty.const.CLIENT_ADDRESS} ''')
-        helper.replace_attribute(footer_section, '__mobile__', 'string', '''{$smarty.const.CLIENT_MOBILE}''')
-        helper.replace_attribute(footer_section, '__mobile__', 'href', '''tel:{$smarty.const.CLIENT_MOBILE}''')
+        helper.replace_attribute(footer_section, '__aboutUs_class__', 'string', '''{$htmlContent = $about['body']|strip_tags}{$htmlContent|truncate:300}''')
+        helper.replace_attribute(footer_section, '__address_class__', 'string', ''' آدرس :  {$smarty.const.CLIENT_ADDRESS} ''')
+        helper.replace_attribute(footer_section, '__mobile_class__', 'string', '''{$smarty.const.CLIENT_MOBILE}''')
+        helper.replace_attribute(footer_section, '__mobile_class__', 'href', '''tel:{$smarty.const.CLIENT_MOBILE}''')
         footer_section = helper.replace_placeholders(footer_section, {'__aboutUsLink__':'{$smarty.const.ROOT_ADDRESS}/aboutUs'})
         footer_final_content = f'{before_html}\n{footer_section}\n{after_html}'
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory

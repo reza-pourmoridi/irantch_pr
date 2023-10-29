@@ -1,0 +1,48 @@
+hooks:
+    global:
+        __i_modular_nc_item_class_0 : آیتم های ساده
+        __i_modular_c_item_class_0 : آیتم های پیچیده
+        i_modular_modulation : باید در یک تگ متا در هدر نوشته شود
+
+    menu : i_modular_menu
+        __main_link_href_ : لینک اصلی
+        __login_register_class_ : کلاس دکمه لاگین
+        __login_register_class_2 :کلاس دکمه لاگین دوم
+        __login_register_class_2 :کلاس دکمه لاگین دوم
+
+    banner: i_modular_banner_gallery
+        __link__       : لینک
+        __title__      :  عنوان
+        __title_class__: کلاس عنوان
+        __image_class__: کلاس عکس
+
+    blog: i_modular_blog
+        __link__            : لینک
+        __heading_class__   : کلاس توضیحات مختصر بلاگ
+        __title_class__     : کلاس تایتل
+        __image_class__     : کلاس عکس
+
+
+    news: i_modular_news
+        __link__            : لینک
+        __heading_class__   : کلاس توضیحات مختصر اخبار
+        __title_class__     : کلاس تایتل
+        __image_class__     : کلاس عکس
+        __description_class__     : کلاس توضیحات
+
+
+    newsletter: i_modular_newsletter
+        __name_class__            : کلاس اسم
+        __email_class__   : کلاس ایمیل
+        __phone_class__     : کلاس موبایل
+        __submit_class__     : کلاس سابمیت
+
+    footer: i_modular_footer
+        __address_class__ : کلاس آدرس در فوتر
+        __aboutUs_class__ : کلاس درباره ما
+        __mobile_class__ : کلاس شماره موبایل فوتر
+        __social_class__ : کلاس پرنت شبکه های اجتماعی
+        __aboutUsLink__ :   لینک درباره ما
+        __instagram_class__ :   کلاس اینستاگرام
+        __whatsapp_class__ :    کلاس واتساپ
+        __telegram_class__ :    کلاس تلگرام
