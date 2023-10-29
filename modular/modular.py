@@ -64,12 +64,12 @@ def initiation_progress():
                 'modular': footer_module,
                 'test_function': unit_test.unit_test_footer
             },
-            'banner_gallery': {
-                'class': 'i_modular_banner_gallery',
-                'name': 'گالری بنر',
-                'modular': banner_gallery_module,
-                'test_function': unit_test.unit_test_blog
-            },
+            # 'banner_gallery': {
+            #     'class': 'i_modular_banner_gallery',
+            #     'name': 'گالری بنر',
+            #     'modular': banner_gallery_module,
+            #     'test_function': unit_test.unit_test_blog
+            # },
 
         }
 
@@ -425,9 +425,11 @@ def menu_module(menu_section, project_path):
             helper.replace_attribute_by_text(menu_section, key, 'href', val)
 
 
+
         menu_final_content = f'{menu_section}'
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         # helper.write_text_in_path(project_path, "{inclued 'include_files/menu.tpl'}")
+        menu_final_content = menu_final_content.replace("__main_link__", "https://{$smarty.const.CLIENT_MAIN_DOMAIN}")
         menu_final_content = menu_final_content.replace("&gt;", ">")
         menu_final_content = menu_final_content.replace("&lt;", "<")
 
