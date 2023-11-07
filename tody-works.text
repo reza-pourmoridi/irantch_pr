@@ -1,0 +1,33 @@
+
+updating data
+debug and cleaning unit test code.
+writing main page, based on html.
+
+
+
+
+
+
+
+
+
+
+
+
+
+hint: for writhing mainpage.tpl , use hom.html
+hint: for writhing unit test monitoring, use hom.html
+hint: for writhing unit test , thir modular functions
+warning: don't forget for writing the test , check the links and images.
+
+
+
+
+final fast cleaning and speration of concerns
+
+    type of current functions:
+        replace_placeholders
+        replace_attribute and string
+        add_before_after
+        direct_string
+        final_content.replace

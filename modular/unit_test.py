@@ -113,6 +113,69 @@ def unit_test_blog(blog_section, blog_section_online , lang = 'fa'):
     except requests.exceptions.RequestException as e:
         return f"خطایی در ماژول گذار پیش آمد.: {e}"
 
+def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_online, lang='fa'):
+    try:
+        script_directory = os.path.dirname(__file__)  # Get the directory of the script
+        unit_test_files_directory = os.path.join(script_directory, 'unit_test_fles')
+        json_file_path = os.path.join(unit_test_files_directory, 'banner_test_data.json')
+
+        complex_items_numbers = []
+        simple_items_numbers = []
+
+        complex_items_numbers = helper.item_numbers(banner_gallery_section, complex_items_pattern)
+        simple_items_numbers = helper.item_numbers(banner_gallery_section, simple_items_pattern)
+        complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
+        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
+        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
+        max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
+
+        # Initialize an empty list to store the data
+        banner_data = []
+        json_string = codecs.open(json_file_path, 'r', encoding='utf-8').read()
+        banner_data = json.loads(json_string)
+
+        for num in simple_items_numbers:
+            banner_gallery_replacement_data = {
+                "__title__": banner_data[int(num)]['title'],
+                "__link__": banner_data[int(num)]['link']
+            }
+            simple_element = banner_gallery_section.find(class_=simple_items_class + num)
+            if num == simple_items_numbers[0]:
+                simple_element = banner_gallery_section.find(class_=simple_items_class + num)
+                simple_element = helper.replace_placeholders(simple_element, banner_gallery_replacement_data)
+                simple_element = banner_gallery_section.find(class_=simple_items_class + num)
+                helper.replace_attribute(simple_element, '__image_class__', 'src', banner_data[int(num)]['pic'])
+                helper.replace_attribute(simple_element, '__image_class__', 'alt', banner_data[int(num)]['title'])
+
+            else:
+                simple_element.decompose()
+        for num in complex_items_numbers:
+            before_if = '''{if banners[{0}] }'''
+            before_if = before_if.replace("{0}", num)
+            after_if = '''{/if}'''
+
+            banner_gallery_complex_replacement_data = {
+                "__link__": banner_data[int(num)]['link'],
+                "__title__": banner_data[int(num)]['title'],
+            }
+            complex_element = banner_gallery_section.find(class_=complex_items_class + num)
+            complex_element_final = helper.replace_placeholders(complex_element,
+                                                                banner_gallery_complex_replacement_data)
+            complex_element = banner_gallery_section.find(class_=complex_items_class + num)
+            helper.replace_attribute(complex_element, '__image_class__', 'src',
+                                     banner_data[int(num)]['pic'].format(num))
+            helper.replace_attribute(complex_element, '__title_class__', 'alt',
+                                     banner_data[int(num)]['title'].format(num))
+
+        banner_gallery_section = f'{banner_gallery_section}'
+        banner_gallery_section_online = f'{banner_gallery_section_online}'
+
+        if compare_html_strings(banner_gallery_section_online, banner_gallery_section):
+            return '<div style="background: green;padding: 15px;">' + "تست سکشن بنر موفقیت آمیز بود." + "</div>"
+
+        return '<div style="background: red;padding: 15px;">سکشن بنر خطا دارد..<section class="debug" style="display:none;"><div class="unit-test-section" >' + banner_gallery_section + '</div><div class="online section"> ' + banner_gallery_section_online + '</div></section></div>'
+    except requests.exceptions.RequestException as e:
+        return f"خطایی در ماژول گذار پیش آمد.: {e}"
 
 def unit_test_news(news_section, news_section_online , lang = 'fa'):
     try:
@@ -202,6 +265,39 @@ def unit_test_news(news_section, news_section_online , lang = 'fa'):
     except requests.exceptions.RequestException as e:
         return f"خطایی در ماژول گذار پیش آمد.: {e}"
 
+def unit_test_newsletter(newsletter_section, newsletter_section_online, lang='fa'):
+    try:
+        helper.replace_attribute(newsletter_section, '__name_class__', 'name', 'NameSms')
+        helper.replace_attribute(newsletter_section, '__email_class__', 'name', 'EmailSms')
+        helper.replace_attribute(newsletter_section, '__phone_class__', 'name', 'CellSms')
+
+        helper.replace_attribute(newsletter_section, '__name_class__', 'id', 'NameSms')
+        helper.replace_attribute(newsletter_section, '__email_class__', 'id', 'EmailSms')
+        helper.replace_attribute(newsletter_section, '__phone_class__', 'id', 'CellSms')
+
+        helper.replace_attribute(newsletter_section, '__name_class__', 'class', 'full-name-js')
+        helper.replace_attribute(newsletter_section, '__email_class__', 'class', 'email-js')
+        helper.replace_attribute(newsletter_section, '__phone_class__', 'class', 'mobile-js')
+
+        helper.replace_attribute(newsletter_section, '__submit_class__', 'onclick', 'submitNewsLetter()')
+
+        newsletter_final_content = f'{newsletter_section}'
+        newsletter_final_content = newsletter_final_content.replace("&gt;", ">")
+        newsletter_final_content = newsletter_final_content.replace("&lt;", "<")
+
+        newsletter_section_online = newsletter_section_online.prettify()
+        newsletter_section = newsletter_section.prettify()
+        newsletter_section = f'{newsletter_section}'
+        newsletter_section_online = newsletter_section_online.replace("</img>", "")
+        newsletter_section = newsletter_section.replace("/>", ">")
+
+        # Usage
+        if compare_html_strings(newsletter_section_online, newsletter_section):
+            return '<div style="background: green;padding: 15px;">' + "تست سکشن خبرنامه موفقیت آمیز بود." + "</div>"
+
+        return '<div style="background: red;padding: 15px;">سکشن خبرنامه خطا دارد..<section class="debug" style="display:none;"><div class="unit-test-section" >' + newsletter_section + '</div><div class="online section"> ' + newsletter_section_online + '</div></section></div>'
+    except requests.exceptions.RequestException as e:
+        return f"خطایی در ماژول گذار پیش آمد.: {e}"
 
 def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
     try:
@@ -298,7 +394,6 @@ def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
     except requests.exceptions.RequestException as e:
         return f"خطایی در ماژول گذار پیش آمد.: {e}"
 
-
 def unit_test_footer(footer_section, footer_section_online , lang = 'fa'):
     try:
 
@@ -389,111 +484,6 @@ def unit_test_footer(footer_section, footer_section_online , lang = 'fa'):
         return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="unit-test-section" >' + footer_section + '</div><div class="online section"> ' + footer_section_online +'</div></section></div>'
     except requests.exceptions.RequestException as e:
         return f"خطایی در ماژول گذار پیش آمد.: {e}"
-
-
-def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_online , lang = 'fa'):
-    try:
-        script_directory = os.path.dirname(__file__)  # Get the directory of the script
-        unit_test_files_directory = os.path.join(script_directory, 'unit_test_fles')
-        json_file_path = os.path.join(unit_test_files_directory, 'banner_test_data.json')
-
-
-        complex_items_numbers = []
-        simple_items_numbers = []
-
-        complex_items_numbers = helper.item_numbers(banner_gallery_section, complex_items_pattern)
-        simple_items_numbers = helper.item_numbers(banner_gallery_section, simple_items_pattern)
-        complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
-        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
-        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
-        max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
-
-        # Initialize an empty list to store the data
-        banner_data = []
-        json_string = codecs.open(json_file_path, 'r', encoding='utf-8').read()
-        banner_data = json.loads(json_string)
-
-
-        for num in simple_items_numbers:
-            banner_gallery_replacement_data = {
-                "__title__": banner_data[int(num)]['title'] ,
-                "__link__": banner_data[int(num)]['link']
-            }
-            simple_element = banner_gallery_section.find(class_=simple_items_class + num)
-            if num == simple_items_numbers[0]:
-                simple_element = banner_gallery_section.find(class_=simple_items_class + num)
-                simple_element = helper.replace_placeholders(simple_element, banner_gallery_replacement_data)
-                simple_element = banner_gallery_section.find(class_=simple_items_class + num)
-                helper.replace_attribute(simple_element, '__image_class__', 'src',banner_data[int(num)]['pic'])
-                helper.replace_attribute(simple_element, '__image_class__', 'alt',banner_data[int(num)]['title'])
-
-            else:
-                simple_element.decompose()
-        for num in complex_items_numbers:
-            before_if = '''{if banners[{0}] }'''
-            before_if = before_if.replace("{0}", num)
-            after_if = '''{/if}'''
-
-            banner_gallery_complex_replacement_data = {
-                "__link__": banner_data[int(num)]['link'],
-                "__title__": banner_data[int(num)]['title'],
-            }
-            complex_element = banner_gallery_section.find(class_=complex_items_class + num)
-            complex_element_final = helper.replace_placeholders(complex_element, banner_gallery_complex_replacement_data)
-            complex_element = banner_gallery_section.find(class_=complex_items_class + num)
-            helper.replace_attribute(complex_element, '__image_class__', 'src', banner_data[int(num)]['pic'].format(num))
-            helper.replace_attribute(complex_element, '__title_class__', 'alt', banner_data[int(num)]['title'].format(num))
-
-        banner_gallery_section = f'{banner_gallery_section}'
-        banner_gallery_section_online = f'{banner_gallery_section_online}'
-
-
-        if compare_html_strings(banner_gallery_section_online, banner_gallery_section):
-            return '<div style="background: green;padding: 15px;">' + "تست سکشن بنر موفقیت آمیز بود." + "</div>"
-
-        return '<div style="background: red;padding: 15px;">سکشن بنر خطا دارد..<section class="debug" style="display:none;"><div class="unit-test-section" >' + banner_gallery_section + '</div><div class="online section"> ' + banner_gallery_section_online + '</div></section></div>'
-    except requests.exceptions.RequestException as e:
-        return f"خطایی در ماژول گذار پیش آمد.: {e}"
-
-
-def unit_test_newsletter(newsletter_section, newsletter_section_online , lang = 'fa'):
-    try:
-        helper.replace_attribute(newsletter_section, '__name_class__', 'name','NameSms')
-        helper.replace_attribute(newsletter_section, '__email_class__', 'name','EmailSms')
-        helper.replace_attribute(newsletter_section, '__phone_class__', 'name','CellSms')
-
-        helper.replace_attribute(newsletter_section, '__name_class__', 'id','NameSms')
-        helper.replace_attribute(newsletter_section, '__email_class__', 'id','EmailSms')
-        helper.replace_attribute(newsletter_section, '__phone_class__', 'id','CellSms')
-
-        helper.replace_attribute(newsletter_section, '__name_class__', 'class','full-name-js')
-        helper.replace_attribute(newsletter_section, '__email_class__', 'class','email-js')
-        helper.replace_attribute(newsletter_section, '__phone_class__', 'class','mobile-js')
-
-        helper.replace_attribute(newsletter_section, '__submit_class__', 'onclick','submitNewsLetter()')
-
-
-        newsletter_final_content = f'{newsletter_section}'
-        newsletter_final_content = newsletter_final_content.replace("&gt;", ">")
-        newsletter_final_content = newsletter_final_content.replace("&lt;", "<")
-
-
-        newsletter_section_online = newsletter_section_online.prettify()
-        newsletter_section = newsletter_section.prettify()
-        newsletter_section = f'{newsletter_section}'
-        newsletter_section_online = newsletter_section_online.replace("</img>", "")
-        newsletter_section = newsletter_section.replace("/>", ">")
-
-        # Usage
-        if compare_html_strings(newsletter_section_online, newsletter_section):
-            return '<div style="background: green;padding: 15px;">' + "تست سکشن خبرنامه موفقیت آمیز بود." + "</div>"
-
-        return '<div style="background: red;padding: 15px;">سکشن خبرنامه خطا دارد..<section class="debug" style="display:none;"><div class="unit-test-section" >' + newsletter_section + '</div><div class="online section"> ' + newsletter_section_online +'</div></section></div>'
-    except requests.exceptions.RequestException as e:
-        return f"خطایی در ماژول گذار پیش آمد.: {e}"
-
-
-from bs4 import BeautifulSoup
 
 def compare_html_strings(html1, html2):
     # Parse the HTML strings

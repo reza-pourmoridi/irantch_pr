@@ -25,7 +25,7 @@ def initiation_progress():
     if file.filename == '':
         return jsonify({"message": "No selected file"})
 
-    lang = 'ar'
+    lang = 'fa'
 
     project_path = helper.create_folder(request.form['project_name'])
     copy_repeated_file_folders_massage = helper.copy_repeated_file_folders(request.form['project_name'])
@@ -83,29 +83,28 @@ def initiation_progress():
         section = soup.find(class_=module_info['class'])
         if section:
             module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name'] + " = " + module_info['modular'](section, project_path , lang))
-    # Combine the module messages into a single string
     summary_message = '\n'.join(module_messages)
 
-    # # UNIT TEST
-    # soup = BeautifulSoup(html_content, 'html.parser')
-    # if not soup:
-    #     return jsonify({"message": "testing html = " + f'{soup}'})
-    #
-    # soup_online = unit_test.get_online_html()
-    # if 'خطایی' in soup_online:
-    #     return jsonify({"message": "testing local connection = " + f'{soup_online}'})
-    # module_test_messages = []
-    #
-    # for module_name, module_info in moduls_array.items():
-    #     section = soup.find(class_=module_info['class'])
-    #     if section:
-    #         module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online ,lang))
-    # # Combine the module messages into a single string
-    # summary_test_message = '\n'.join(module_test_messages)
+
+
+    # UNIT TEST
+    soup = BeautifulSoup(html_content, 'html.parser')
+    if not soup:
+        return jsonify({"message": "testing html = " + f'{soup}'})
+
+    soup_online = unit_test.get_online_html()
+    if 'خطایی' in soup_online:
+        return jsonify({"message": "testing local connection = " + f'{soup_online}'})
+    module_test_messages = []
+
+    for module_name, module_info in moduls_array.items():
+        section = soup.find(class_=module_info['class'])
+        if section:
+            module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online ,lang))
+    summary_test_message = '\n'.join(module_test_messages)
 
     return jsonify({"message": f'{summary_message}'
-                               # +  '<br><br><br>' + f'{summary_test_message}'
-                    })
+           +  '<br><br><br>' + f'{summary_test_message}'})
 
 def initiation_test(class_name, module_name, module_test_function, soup, soup_online , lang):
     section = soup.find(class_=class_name)
@@ -124,6 +123,8 @@ def initiation_modulation(class_name, module_name, modular_function, soup, soup_
         return module_test_function(section, section_online)
 
     return f'ماژول {module_name} بازگذاری نشد'
+
+
 
 
 def blog_module(blog_section, project_path , lang = 'fa'):
@@ -338,7 +339,6 @@ def news_module(news_section, project_path , lang = 'fa'):
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-
 def newsletter_module(newsletter_section, project_path , lang = 'fa'):
     try:
         helper.replace_attribute(newsletter_section, '__name_class__', 'name','NameSms')
@@ -365,7 +365,6 @@ def newsletter_module(newsletter_section, project_path , lang = 'fa'):
         return helper.create_file(newsletter_final_content, include_files_directory, 'newsletter', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
-
 
 def menu_module(menu_section, project_path , lang = 'fa'):
     try:
@@ -433,7 +432,6 @@ def menu_module(menu_section, project_path , lang = 'fa'):
         return helper.create_file(menu_final_content, include_files_directory, 'menu', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
-
 
 def footer_module(footer_section, project_path , lang = 'fa'):
     try:
