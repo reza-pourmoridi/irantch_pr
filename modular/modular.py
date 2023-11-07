@@ -25,7 +25,7 @@ def initiation_progress():
     if file.filename == '':
         return jsonify({"message": "No selected file"})
 
-    lang = 'fa'
+    lang = 'ar'
 
     project_path = helper.create_folder(request.form['project_name'])
     copy_repeated_file_folders_massage = helper.copy_repeated_file_folders(request.form['project_name'])
@@ -72,7 +72,7 @@ def initiation_progress():
                 'class': 'i_modular_banner_gallery',
                 'name': 'گالری بنر',
                 'modular': banner_gallery_module,
-                'test_function': unit_test.unit_test_blog
+                'test_function': unit_test.unit_test_banner_gallery
             },
 
         }
@@ -86,24 +86,26 @@ def initiation_progress():
     # Combine the module messages into a single string
     summary_message = '\n'.join(module_messages)
 
-    # UNIT TEST
-    soup = BeautifulSoup(html_content, 'html.parser')
-    if not soup:
-        return jsonify({"message": "testing html = " + f'{soup}'})
+    # # UNIT TEST
+    # soup = BeautifulSoup(html_content, 'html.parser')
+    # if not soup:
+    #     return jsonify({"message": "testing html = " + f'{soup}'})
+    #
+    # soup_online = unit_test.get_online_html()
+    # if 'خطایی' in soup_online:
+    #     return jsonify({"message": "testing local connection = " + f'{soup_online}'})
+    # module_test_messages = []
+    #
+    # for module_name, module_info in moduls_array.items():
+    #     section = soup.find(class_=module_info['class'])
+    #     if section:
+    #         module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online ,lang))
+    # # Combine the module messages into a single string
+    # summary_test_message = '\n'.join(module_test_messages)
 
-    soup_online = unit_test.get_online_html()
-    if 'خطایی' in soup_online:
-        return jsonify({"message": "testing local connection = " + f'{soup_online}'})
-    module_test_messages = []
-
-    for module_name, module_info in moduls_array.items():
-        section = soup.find(class_=module_info['class'])
-        if section:
-            module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online ,lang))
-    # Combine the module messages into a single string
-    summary_test_message = '\n'.join(module_test_messages)
-
-    return jsonify({"message": f'{summary_message}'+ '<br><br><br>' + f'{summary_test_message}'})
+    return jsonify({"message": f'{summary_message}'
+                               # +  '<br><br><br>' + f'{summary_test_message}'
+                    })
 
 def initiation_test(class_name, module_name, module_test_function, soup, soup_online , lang):
     section = soup.find(class_=class_name)
@@ -290,10 +292,7 @@ def news_module(news_section, project_path , lang = 'fa'):
             }
             simple_element = news_section.find(class_=simple_items_class + num)
             if num == simple_items_numbers[0]:
-                for tag in news_section.find_all():
-                    if tag.decode() == simple_element.decode():
-                        new_tag = BeautifulSoup(f'{before_foreach}\n{simple_element}\n{after_foreach}')
-                        simple_element.replace_with(new_tag)
+                helper.add_before_after(news_section, simple_items_class + num, before_foreach, after_foreach)
                 simple_element = news_section.find(class_=simple_items_class + num)
                 simple_element = helper.replace_placeholders(simple_element, news_replacement_data)
                 simple_element = news_section.find(class_=simple_items_class + num)
@@ -318,11 +317,7 @@ def news_module(news_section, project_path , lang = 'fa'):
                 '<span class="__comments_number__">450</span>': '''{{$othe_itmes[{0}]['comments_count']['comments_count']}}'''.format(num)
             }
             complex_element = news_section.find(class_=complex_items_class + num)
-            for tag in news_section.find_all():
-                if tag.decode() == complex_element.decode():
-                    new_tag = BeautifulSoup(f'{before_if}\n{complex_element}\n{after_if}')
-                    complex_element.replace_with(new_tag)
-
+            helper.add_before_after(news_section, complex_items_class + num, before_if, after_if)
             complex_element = news_section.find(class_=complex_items_class + num)
             complex_element_final = helper.replace_placeholders(complex_element, news_complex_replacement_data)
             complex_element = news_section.find(class_=complex_items_class + num)
@@ -375,18 +370,38 @@ def newsletter_module(newsletter_section, project_path , lang = 'fa'):
 def menu_module(menu_section, project_path , lang = 'fa'):
     try:
 
+
         repeatable_links = {
-            'پرواز': '{$smarty.const.ROOT_ADDRESS}/page/flight',
-            'پیگیری خرید': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
-            'وبلاگ': '{$smarty.const.ROOT_ADDRESS}/mag',
-            'اخبار سایت': '{$smarty.const.ROOT_ADDRESS}/news',
-            'معرفی ايران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
-            'قوانین و مقررات': '{$smarty.const.ROOT_ADDRESS}/rules',
-            'درباره ما': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
-            'تماس با ما': '{$smarty.const.ROOT_ADDRESS}/contactUs',
-            'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
+            'fa':{
+                'پرواز': '{$smarty.const.ROOT_ADDRESS}/page/flight',
+                'پیگیری خرید': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
+                'وبلاگ': '{$smarty.const.ROOT_ADDRESS}/mag',
+                'اخبار سایت': '{$smarty.const.ROOT_ADDRESS}/news',
+                'معرفی ايران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
+                'قوانین و مقررات': '{$smarty.const.ROOT_ADDRESS}/rules',
+                'درباره ما': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
+                'تماس با ما': '{$smarty.const.ROOT_ADDRESS}/contactUs',
+                'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
+            },
+            'ar' : {
+                'رحلة جوية': '{$smarty.const.ROOT_ADDRESS}/page/flight',
+                'ترتيب المسار': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
+                'مدونة': '{$smarty.const.ROOT_ADDRESS}/mag',
+                'الخدمات السياحية': '{$smarty.const.ROOT_ADDRESS}/orderServices',
+                'مقدمة عن إيران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
+                'الفندق إيران': '{$smarty.const.ROOT_ADDRESS}/hotel',
+                'تأشيرة إيران': '{$smarty.const.ROOT_ADDRESS}/iran-visa',
+                'شبكة': '{$smarty.const.ROOT_ADDRESS}/tour',
+                'الأحكام والشروط': '{$smarty.const.ROOT_ADDRESS}/rules',
+                'ساعة البلدان': '{$smarty.const.ROOT_ADDRESS}/worldclock',
+                'معلومات عنا': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
+                'اتصل بنا': '{$smarty.const.ROOT_ADDRESS}/contactUs',
+                'علم الارصاد الجوية': '{$smarty.const.ROOT_ADDRESS}/weather',
+            }
         }
+
         helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
+        helper.replace_attribute_by_text(menu_section, 'الدخول / يسجل' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
         helper.replace_attribute(menu_section, '__login_register_class__2', 'class','__login_register_class__2 main-navigation__button2 show-box-login-js')
         helper.replace_attribute(menu_section, '__login_register_class__', 'class','__login_register_class__ main-navigation__button2 show-box-login-js button_header logIn d-flex d-lg-none')
 
@@ -403,7 +418,7 @@ def menu_module(menu_section, project_path , lang = 'fa'):
 
         # return f'{menu_section}'
 
-        for key, val in repeatable_links.items():
+        for key, val in repeatable_links[lang].items():
             helper.replace_attribute_by_text(menu_section, key, 'href', val)
 
 
@@ -459,17 +474,35 @@ def footer_module(footer_section, project_path , lang = 'fa'):
 
 
         repeatable_links = {
-            'پرواز': '{$smarty.const.ROOT_ADDRESS}/page/flight',
-            'پیگیری خرید': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
-            'وبلاگ': '{$smarty.const.ROOT_ADDRESS}/mag',
-            'اخبار سایت': '{$smarty.const.ROOT_ADDRESS}/news',
-            'معرفی ايران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
-            'قوانین و مقررات': '{$smarty.const.ROOT_ADDRESS}/rules',
-            'درباره ما': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
-            'تماس با ما': '{$smarty.const.ROOT_ADDRESS}/contactUs',
-            'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
+            'fa':{
+                'پرواز': '{$smarty.const.ROOT_ADDRESS}/page/flight',
+                'پیگیری خرید': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
+                'وبلاگ': '{$smarty.const.ROOT_ADDRESS}/mag',
+                'اخبار سایت': '{$smarty.const.ROOT_ADDRESS}/news',
+                'معرفی ايران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
+                'قوانین و مقررات': '{$smarty.const.ROOT_ADDRESS}/rules',
+                'درباره ما': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
+                'تماس با ما': '{$smarty.const.ROOT_ADDRESS}/contactUs',
+                'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
+            },
+            'ar' : {
+                'رحلة جوية': '{$smarty.const.ROOT_ADDRESS}/page/flight',
+                'ترتيب المسار': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
+                'مدونة': '{$smarty.const.ROOT_ADDRESS}/mag',
+                'الخدمات السياحية': '{$smarty.const.ROOT_ADDRESS}/orderServices',
+                'مقدمة عن إيران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
+                'الفندق إيران': '{$smarty.const.ROOT_ADDRESS}/hotel',
+                'تأشيرة إيران': '{$smarty.const.ROOT_ADDRESS}/iran-visa',
+                'شبكة': '{$smarty.const.ROOT_ADDRESS}/tour',
+                'الأحكام والشروط': '{$smarty.const.ROOT_ADDRESS}/rules',
+                'ساعة البلدان': '{$smarty.const.ROOT_ADDRESS}/worldclock',
+                'معلومات عنا': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
+                'اتصل بنا': '{$smarty.const.ROOT_ADDRESS}/contactUs',
+                'علم الارصاد الجوية': '{$smarty.const.ROOT_ADDRESS}/weather',
+            }
         }
-        for key, val in repeatable_links.items():
+
+        for key, val in repeatable_links[lang].items():
             helper.replace_attribute_by_text(footer_section, key, 'href', val)
 
         helper.replace_attribute(footer_section, '__aboutUs_class__', 'string', '''{$htmlContent = $about['body']|strip_tags}{$htmlContent|truncate:300}''')

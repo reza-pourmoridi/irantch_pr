@@ -105,7 +105,6 @@ def unit_test_blog(blog_section, blog_section_online , lang = 'fa'):
         blog_section_online = blog_section_online.replace("</img>", "")
         blog_section = blog_section.replace("/>", ">")
 
-
         if compare_html_strings(blog_section_online, blog_section):
             return '<div style="background: green;padding: 15px;">' + "تست سکشن خبرنامه موفقیت آمیز بود." + "</div>"
 
@@ -218,17 +217,36 @@ def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
         menu_data = json.loads(json_string)
 
         repeatable_links = {
-            'پرواز': 'https://192.168.1.100/gds/fa/page/flight',
-            'پیگیری خرید': 'https://192.168.1.100/gds/fa/UserTracking',
-            'وبلاگ': 'https://192.168.1.100/gds/fa/mag',
-            'اخبار سایت': 'https://192.168.1.100/gds/fa/news',
-            'معرفی ايران': 'https://192.168.1.100/gds/fa/aboutIran',
-            'قوانین و مقررات': 'https://192.168.1.100/gds/fa/rules',
-            'درباره ما': 'https://192.168.1.100/gds/fa/aboutUs',
-            'تماس با ما': 'https://192.168.1.100/gds/fa/contactUs',
-            'پرداخت آنلاین': 'https://192.168.1.100/gds/fa/pay',
+            'fa':{
+                'پرواز': '{$smarty.const.ROOT_ADDRESS}/page/flight',
+                'پیگیری خرید': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
+                'وبلاگ': '{$smarty.const.ROOT_ADDRESS}/mag',
+                'اخبار سایت': '{$smarty.const.ROOT_ADDRESS}/news',
+                'معرفی ايران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
+                'قوانین و مقررات': '{$smarty.const.ROOT_ADDRESS}/rules',
+                'درباره ما': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
+                'تماس با ما': '{$smarty.const.ROOT_ADDRESS}/contactUs',
+                'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
+            },
+            'ar' : {
+                'رحلة جوية': '{$smarty.const.ROOT_ADDRESS}/page/flight',
+                'ترتيب المسار': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
+                'مدونة': '{$smarty.const.ROOT_ADDRESS}/mag',
+                'الخدمات السياحية': '{$smarty.const.ROOT_ADDRESS}/orderServices',
+                'مقدمة عن إيران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
+                'الفندق إيران': '{$smarty.const.ROOT_ADDRESS}/hotel',
+                'تأشيرة إيران': '{$smarty.const.ROOT_ADDRESS}/iran-visa',
+                'شبكة': '{$smarty.const.ROOT_ADDRESS}/tour',
+                'الأحكام والشروط': '{$smarty.const.ROOT_ADDRESS}/rules',
+                'ساعة البلدان': '{$smarty.const.ROOT_ADDRESS}/worldclock',
+                'معلومات عنا': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
+                'اتصل بنا': '{$smarty.const.ROOT_ADDRESS}/contactUs',
+                'علم الارصاد الجوية': '{$smarty.const.ROOT_ADDRESS}/weather',
+            }
         }
+
         helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', "<span class='logined-name'>ورود / ثبت نام</span>")
+        helper.replace_attribute_by_text(menu_section, 'الدخول / يسجل' , 'string', "<span class='logined-name'>الدخول / يسجل</span>")
         helper.replace_attribute(menu_section, '__login_register_class__', 'class','__login_register_class__ main-navigation__button2 show-box-login-js button_header logIn d-flex d-lg-none')
         helper.replace_attribute(menu_section, '__login_register_class__2', 'class','__login_register_class__2 main-navigation__button2 show-box-login-js')
 
@@ -244,7 +262,7 @@ def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
 
         # return f'{menu_section}'
 
-        for key, val in repeatable_links.items():
+        for key, val in repeatable_links[lang].items():
             helper.replace_attribute_by_text(menu_section, key, 'href', val)
 
 
@@ -289,28 +307,46 @@ def unit_test_footer(footer_section, footer_section_online , lang = 'fa'):
 
 
 
-        social_element = footer_section.find(class_=lambda classes: classes and '__social__' in classes)
+        social_element = footer_section.find(class_=lambda classes: classes and '__social_class__' in classes)
         repeatable_social_links = {
-            '__telegram__': 'ssssss',
-            '__whatsapp__': 'https://web.whatsapp.com/send?phone=09195972979',
-            '__instagram__': 'https://instagram.com/mizbanfly',
+            '__telegram_class__': 'ssssss',
+            '__whatsapp_class__': 'https://web.whatsapp.com/send?phone=09195972979',
+            '__instagram_class__': 'https://instagram.com/mizbanfly',
         }
         if social_element:
             for key, val in repeatable_social_links.items():
                 helper.replace_attribute(social_element, key, 'href', val)
 
         repeatable_links = {
-            'پرواز': 'https://192.168.1.100/gds/fa/page/flight',
-            'پیگیری خرید': 'https://192.168.1.100/gds/fa/UserTracking',
-            'وبلاگ': 'https://192.168.1.100/gds/fa/mag',
-            'اخبار سایت': 'https://192.168.1.100/gds/fa/news',
-            'معرفی ايران': 'https://192.168.1.100/gds/fa/aboutIran',
-            'قوانین و مقررات': 'https://192.168.1.100/gds/fa/rules',
-            'درباره ما': 'https://192.168.1.100/gds/fa/aboutUs',
-            'تماس با ما': 'https://192.168.1.100/gds/fa/contactUs',
-            'پرداخت آنلاین': 'https://192.168.1.100/gds/fa/pay',
+            'fa':{
+                'پرواز': '{$smarty.const.ROOT_ADDRESS}/page/flight',
+                'پیگیری خرید': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
+                'وبلاگ': '{$smarty.const.ROOT_ADDRESS}/mag',
+                'اخبار سایت': '{$smarty.const.ROOT_ADDRESS}/news',
+                'معرفی ايران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
+                'قوانین و مقررات': '{$smarty.const.ROOT_ADDRESS}/rules',
+                'درباره ما': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
+                'تماس با ما': '{$smarty.const.ROOT_ADDRESS}/contactUs',
+                'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
+            },
+            'ar' : {
+                'رحلة جوية': '{$smarty.const.ROOT_ADDRESS}/page/flight',
+                'ترتيب المسار': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
+                'مدونة': '{$smarty.const.ROOT_ADDRESS}/mag',
+                'الخدمات السياحية': '{$smarty.const.ROOT_ADDRESS}/orderServices',
+                'مقدمة عن إيران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
+                'الفندق إيران': '{$smarty.const.ROOT_ADDRESS}/hotel',
+                'تأشيرة إيران': '{$smarty.const.ROOT_ADDRESS}/iran-visa',
+                'شبكة': '{$smarty.const.ROOT_ADDRESS}/tour',
+                'الأحكام والشروط': '{$smarty.const.ROOT_ADDRESS}/rules',
+                'ساعة البلدان': '{$smarty.const.ROOT_ADDRESS}/worldclock',
+                'معلومات عنا': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
+                'اتصل بنا': '{$smarty.const.ROOT_ADDRESS}/contactUs',
+                'علم الارصاد الجوية': '{$smarty.const.ROOT_ADDRESS}/weather',
+            }
         }
-        for key, val in repeatable_links.items():
+
+        for key, val in repeatable_links[lang].items():
             helper.replace_attribute_by_text(footer_section, key, 'href', val)
 
         helper.replace_attribute(footer_section, '__aboutUs_class__', 'string',"تست میکنیم 1 2 3")
@@ -355,6 +391,69 @@ def unit_test_footer(footer_section, footer_section_online , lang = 'fa'):
         return f"خطایی در ماژول گذار پیش آمد.: {e}"
 
 
+def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_online , lang = 'fa'):
+    try:
+        script_directory = os.path.dirname(__file__)  # Get the directory of the script
+        unit_test_files_directory = os.path.join(script_directory, 'unit_test_fles')
+        json_file_path = os.path.join(unit_test_files_directory, 'banner_test_data.json')
+
+
+        complex_items_numbers = []
+        simple_items_numbers = []
+
+        complex_items_numbers = helper.item_numbers(banner_gallery_section, complex_items_pattern)
+        simple_items_numbers = helper.item_numbers(banner_gallery_section, simple_items_pattern)
+        complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
+        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
+        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
+        max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
+
+        # Initialize an empty list to store the data
+        banner_data = []
+        json_string = codecs.open(json_file_path, 'r', encoding='utf-8').read()
+        banner_data = json.loads(json_string)
+
+
+        for num in simple_items_numbers:
+            banner_gallery_replacement_data = {
+                "__title__": banner_data[int(num)]['title'] ,
+                "__link__": banner_data[int(num)]['link']
+            }
+            simple_element = banner_gallery_section.find(class_=simple_items_class + num)
+            if num == simple_items_numbers[0]:
+                simple_element = banner_gallery_section.find(class_=simple_items_class + num)
+                simple_element = helper.replace_placeholders(simple_element, banner_gallery_replacement_data)
+                simple_element = banner_gallery_section.find(class_=simple_items_class + num)
+                helper.replace_attribute(simple_element, '__image_class__', 'src',banner_data[int(num)]['pic'])
+                helper.replace_attribute(simple_element, '__image_class__', 'alt',banner_data[int(num)]['title'])
+
+            else:
+                simple_element.decompose()
+        for num in complex_items_numbers:
+            before_if = '''{if banners[{0}] }'''
+            before_if = before_if.replace("{0}", num)
+            after_if = '''{/if}'''
+
+            banner_gallery_complex_replacement_data = {
+                "__link__": banner_data[int(num)]['link'],
+                "__title__": banner_data[int(num)]['title'],
+            }
+            complex_element = banner_gallery_section.find(class_=complex_items_class + num)
+            complex_element_final = helper.replace_placeholders(complex_element, banner_gallery_complex_replacement_data)
+            complex_element = banner_gallery_section.find(class_=complex_items_class + num)
+            helper.replace_attribute(complex_element, '__image_class__', 'src', banner_data[int(num)]['pic'].format(num))
+            helper.replace_attribute(complex_element, '__title_class__', 'alt', banner_data[int(num)]['title'].format(num))
+
+        banner_gallery_section = f'{banner_gallery_section}'
+        banner_gallery_section_online = f'{banner_gallery_section_online}'
+
+
+        if compare_html_strings(banner_gallery_section_online, banner_gallery_section):
+            return '<div style="background: green;padding: 15px;">' + "تست سکشن بنر موفقیت آمیز بود." + "</div>"
+
+        return '<div style="background: red;padding: 15px;">سکشن بنر خطا دارد..<section class="debug" style="display:none;"><div class="unit-test-section" >' + banner_gallery_section + '</div><div class="online section"> ' + banner_gallery_section_online + '</div></section></div>'
+    except requests.exceptions.RequestException as e:
+        return f"خطایی در ماژول گذار پیش آمد.: {e}"
 
 
 def unit_test_newsletter(newsletter_section, newsletter_section_online , lang = 'fa'):
@@ -394,15 +493,16 @@ def unit_test_newsletter(newsletter_section, newsletter_section_online , lang = 
         return f"خطایی در ماژول گذار پیش آمد.: {e}"
 
 
+from bs4 import BeautifulSoup
+
 def compare_html_strings(html1, html2):
     # Parse the HTML strings
     soup1 = BeautifulSoup(html1, 'html.parser')
     soup2 = BeautifulSoup(html2, 'html.parser')
 
+    soup1 = soup1.prettify()
+    soup2 = soup2.prettify()
 
-    # Normalize the HTML by converting it back to strings
-    cleaned_html1 = soup1.prettify()
-    cleaned_html2 = soup2.prettify()
+    # Compare the serialized HTML strings
+    return soup1 == soup2
 
-    # Compare the cleaned HTML strings
-    return cleaned_html1 == cleaned_html2

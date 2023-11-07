@@ -6,9 +6,9 @@ hooks:
 
     menu : i_modular_menu
         __main_link_href_ : لینک اصلی
-        __login_register_class_ : کلاس دکمه لاگین
-        __login_register_class_2 :کلاس دکمه لاگین دوم
-        __login_register_class_2 :کلاس دکمه لاگین دوم
+        __login_register_class__ : کلاس دکمه لاگین
+        __login_register_class__2 :کلاس دکمه لاگین دوم
+        __login_register_class__2 :کلاس دکمه لاگین دوم
 
     banner: i_modular_banner_gallery
         __link__       : لینک
