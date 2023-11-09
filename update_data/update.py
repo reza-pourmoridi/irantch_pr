@@ -72,13 +72,13 @@ def extract_json_data_from_url(url):
 
         delete_result = delete_folder('unit_test_data')
         print(delete_result)
-        # unit_test_data_path = create_folder('unit_test_data')
-        # for class_name in class_names:
-        #     json = send_request_with_error_handling(class_name,url)
-        #     if json is not None and json:
-        #
-        #         test = create_file(json, unit_test_data_path, class_name, 'json')
-        #         print(test)
+        unit_test_data_path = create_folder('unit_test_data')
+        for class_name in class_names:
+            json = send_request_with_error_handling(class_name,url)
+            if json is not None and json:
+
+                test = create_file(json, unit_test_data_path, class_name, 'json')
+                print(test)
 
 
         return test

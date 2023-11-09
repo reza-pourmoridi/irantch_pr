@@ -79,13 +79,22 @@ def initiation_progress():
 
     module_messages = []
 
+
+
+    main_page_array = {}
     for module_name, module_info in moduls_array.items():
         section = soup.find(class_=module_info['class'])
         if section:
+            main_page_array[f'{section}'] = "{" + module_info['name'] + ".tpl}"
             module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name'] + " = " + module_info['modular'](section, project_path , lang))
+
     summary_message = '\n'.join(module_messages)
 
 
+    #creation of mainPage
+    main_page = helper.replace_placeholders(soup, main_page_array)
+    soup_str = f'{main_page}'
+    main_page = helper.create_file(soup_str, project_path, 'mainPage2', 'tpl')
 
     # UNIT TEST
     soup = BeautifulSoup(html_content, 'html.parser')
@@ -104,6 +113,7 @@ def initiation_progress():
     summary_test_message = '\n'.join(module_test_messages)
 
     return jsonify({"message": f'{summary_message}'
+           +  '<br><br><br>' 'main_page_creation' + f'{main_page}'
            +  '<br><br><br>' + f'{summary_test_message}'})
 
 def initiation_test(class_name, module_name, module_test_function, soup, soup_online , lang):
@@ -123,9 +133,6 @@ def initiation_modulation(class_name, module_name, modular_function, soup, soup_
         return module_test_function(section, section_online)
 
     return f'ماژول {module_name} بازگذاری نشد'
-
-
-
 
 def blog_module(blog_section, project_path , lang = 'fa'):
     try:
@@ -194,7 +201,7 @@ def blog_module(blog_section, project_path , lang = 'fa'):
 
         blog_final_content = f'{before_html}\n{blog_section}\n{after_html}'
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        # helper.write_text_in_path(project_path, "{inclued 'include_files/blog.tpl'}")
+        helper.write_text_in_path(project_path, "{inclued 'include_files/blog.tpl'}")
         blog_final_content = blog_final_content.replace("&gt;", ">")
         blog_final_content = blog_final_content.replace("&lt;", "<")
 

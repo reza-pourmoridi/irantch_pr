@@ -120,10 +120,6 @@ def unit_test_blog(blog_section, blog_section_online , lang = 'fa'):
 
 def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_online, lang='fa'):
     try:
-        script_directory = os.path.dirname(__file__)  # Get the directory of the script
-        unit_test_files_directory = os.path.join(script_directory, 'unit_test_fles')
-        json_file_path = os.path.join(unit_test_files_directory, 'banner_test_data.json')
-
         complex_items_numbers = []
         simple_items_numbers = []
 
@@ -136,7 +132,9 @@ def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_onli
 
         # Initialize an empty list to store the data
         banner_data = []
+        json_file_path = os.path.join(unit_test_json_files_directory, 'banners_data.json')
         json_string = codecs.open(json_file_path, 'r', encoding='utf-8').read()
+
         banner_data = json.loads(json_string)
 
         for num in simple_items_numbers:
