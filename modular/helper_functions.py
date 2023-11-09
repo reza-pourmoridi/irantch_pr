@@ -182,3 +182,20 @@ def add_before_after(section, class_name, before, after):
     if complex_element:
         inner_html = f'{before}\n{complex_element}\n{after}'
         complex_element.replace_with(BeautifulSoup(inner_html, 'html.parser'))
+
+def clean_serialize_string(string):
+    string = string.replace("https://192.168.1.100/gds/view/WW12/", "")
+    string = string.replace("http://192.168.1.100/gds/view/WW12/", "")
+    string = string.replace("http://192.168.1.100/gds/view/WW12/", "")
+    string = BeautifulSoup(string, 'html.parser')
+    string = string.prettify()
+    string = string.replace("https", "")
+    string = string.replace("http", "")
+    string = string.replace("/>", ">")
+    string = string.replace("  ", "")
+    string = string.replace("", "")
+    string = string.replace("</img>", "")
+    string = string.replace("/>", ">")
+    string = string.replace("&gt;", ">")
+    string = string.replace("&lt;", "<")
+    return string

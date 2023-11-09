@@ -14,6 +14,9 @@ complex_items_pattern = re.compile(r'__i_modular_c_item_class_(\d+)')
 simple_items_pattern = re.compile(r'__i_modular_nc_item_class_(\d+)')
 complex_items_class = "__i_modular_c_item_class_"
 simple_items_class = "__i_modular_nc_item_class_"
+script_directory = os.path.dirname(__file__)  # Get the directory of the script
+unit_test_json_files_directory = os.path.join(script_directory, '../update_data/unit_test_data')
+
 
 def get_online_html():
     url = "http://192.168.1.100/"
@@ -39,9 +42,7 @@ def get_online_html():
 
 def unit_test_blog(blog_section, blog_section_online , lang = 'fa'):
     try:
-        script_directory = os.path.dirname(__file__)  # Get the directory of the script
-        unit_test_files_directory = os.path.join(script_directory, 'unit_test_fles')
-        json_file_path = os.path.join(unit_test_files_directory, 'blog_test_data.json')
+        json_file_path = os.path.join(unit_test_json_files_directory, 'article_data.json')
 
 
         complex_items_numbers = []
@@ -76,39 +77,43 @@ def unit_test_blog(blog_section, blog_section_online , lang = 'fa'):
 
 
         for num in complex_items_numbers:
-            blog_complex_replacement_data = {
-                "__airline__": blog_data[int(num)]['link'],
-                "__link__": blog_data[int(num)]['link'],
-                "__image__": blog_data[int(num)]['image'],
-                "__alt_article__": blog_data[int(num)]['title']
-            }
+            complex_element = blog_section.find(class_=complex_items_class + num)
+            num = int(num)  # Convert 'num' to an integer
+            if 0 <= num < len(blog_data) and blog_data[num]:
+                blog_complex_replacement_data = {
+                    "__airline__": blog_data[int(num)]['link'],
+                    "__link__": blog_data[int(num)]['link'],
+                    "__image__": blog_data[int(num)]['image'],
+                    "__alt_article__": blog_data[int(num)]['title']
+                }
+                num = str(num)
+                helper.replace_attribute(complex_element, '__image_class__', 'src', blog_data[int(num)]['image'])
+                helper.replace_attribute(complex_element, '__title_class__', 'string', blog_data[int(num)]['title'])
+                helper.replace_attribute(complex_element, '__heading_class__', 'string', blog_data[int(num)]['heading'])
+                complex_element = blog_section.find(class_=complex_items_class + num)
+                complex_element_final = helper.replace_placeholders(complex_element, blog_complex_replacement_data)
+            else:
+                complex_element.decompose()
 
-            complex_element = blog_section.find(class_=complex_items_class + num)
-            helper.replace_attribute(complex_element, '__image_class__', 'src', blog_data[int(num)]['image'])
-            helper.replace_attribute(complex_element, '__title_class__', 'string', blog_data[int(num)]['title'])
-            helper.replace_attribute(complex_element, '__heading_class__', 'string', blog_data[int(num)]['heading'])
-            complex_element = blog_section.find(class_=complex_items_class + num)
-            complex_element_final = helper.replace_placeholders(complex_element, blog_complex_replacement_data)
 
 
         blog_section_online = blog_section_online.prettify()
         blog_section = blog_section.prettify()
 
         blog_section = f'{blog_section}'
+        blog_section_online = f'{blog_section_online}'
 
 
         for num in simple_items_numbers:
             blog_section = blog_section.replace(simple_items_class + num,simple_items_class + simple_items_numbers[0])
 
-
-
-        blog_section_online = blog_section_online.replace("</img>", "")
-        blog_section = blog_section.replace("/>", ">")
+        blog_section_online = helper.clean_serialize_string(blog_section_online)
+        blog_section = helper.clean_serialize_string(blog_section)
 
         if compare_html_strings(blog_section_online, blog_section):
             return '<div style="background: green;padding: 15px;">' + "تست سکشن خبرنامه موفقیت آمیز بود." + "</div>"
 
-        return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="unit-test-section" >' + blog_section + '</div><div class="online section"> ' + blog_section_online +'</div></section></div>'
+        return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="unit-test-section" > ' + blog_section + ' </div><div class="online section"> ' + blog_section_online +' </div></section></div>'
         return 'طرح و سکشن بلاگ ماژول گذاری شده هماهنگ نیستند.'
     except requests.exceptions.RequestException as e:
         return f"خطایی در ماژول گذار پیش آمد.: {e}"
@@ -179,9 +184,7 @@ def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_onli
 
 def unit_test_news(news_section, news_section_online , lang = 'fa'):
     try:
-        script_directory = os.path.dirname(__file__)  # Get the directory of the script
-        unit_test_files_directory = os.path.join(script_directory, 'unit_test_fles')
-        json_file_path = os.path.join(unit_test_files_directory, 'news_test_data.json')
+        json_file_path = os.path.join(unit_test_json_files_directory, 'news_data.json')
 
         complex_items_numbers = []
         simple_items_numbers = []
@@ -199,6 +202,7 @@ def unit_test_news(news_section, news_section_online , lang = 'fa'):
         news_data = json.loads(json_string)
 
         for num in simple_items_numbers:
+            simple_element = news_section.find(class_=simple_items_class + num)
             numInt = int(num)  # Convert the string to an integer
             if 0 <= numInt < len(news_data):
                 news_complex_replacement_data = {
@@ -208,7 +212,6 @@ def unit_test_news(news_section, news_section_online , lang = 'fa'):
                     simple_items_class + num: simple_items_class + simple_items_numbers[0],
                     "__link__": news_data[int(numInt)]['link'],
                 }
-                simple_element = news_section.find(class_=simple_items_class + num)
                 helper.replace_attribute(simple_element, '__image_class__', 'src', news_data[int(numInt)]['image'])
                 helper.replace_attribute(simple_element, '__image_class__', 'alt', news_data[int(numInt)]['title'])
                 helper.replace_attribute(simple_element, '__title_class__', 'string', news_data[int(numInt)]['title'])
@@ -220,12 +223,12 @@ def unit_test_news(news_section, news_section_online , lang = 'fa'):
                 simple_element.decompose()
 
         for num in complex_items_numbers:
+            complex_element = news_section.find(class_=complex_items_class + num)
             numInt = int(num)  # Convert the string to an integer
             if 0 <= numInt < len(news_data):
                 news_complex_replacement_data = {
                     "__link__": news_data[numInt]['link'],
                 }
-                complex_element = news_section.find(class_=complex_items_class + num)
                 helper.replace_attribute(complex_element, '__image_class__', 'src', news_data[int(numInt)]['image'])
                 helper.replace_attribute(complex_element, '__image_class__', 'alt', news_data[int(numInt)]['alt'])
                 helper.replace_attribute(complex_element, '__title_class__', 'string', news_data[int(numInt)]['title'])
@@ -301,10 +304,7 @@ def unit_test_newsletter(newsletter_section, newsletter_section_online, lang='fa
 
 def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
     try:
-
-        script_directory = os.path.dirname(__file__)  # Get the directory of the script
-        unit_test_files_directory = os.path.join(script_directory, 'unit_test_fles')
-        json_file_path = os.path.join(unit_test_files_directory, 'menu_test_data.json')
+        json_file_path = os.path.join(unit_test_json_files_directory, 'menu_data.json')
 
 
         # Initialize an empty list to store the data
@@ -313,32 +313,15 @@ def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
         menu_data = json.loads(json_string)
 
         repeatable_links = {
-            'fa':{
-                'پرواز': '{$smarty.const.ROOT_ADDRESS}/page/flight',
-                'پیگیری خرید': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
-                'وبلاگ': '{$smarty.const.ROOT_ADDRESS}/mag',
-                'اخبار سایت': '{$smarty.const.ROOT_ADDRESS}/news',
-                'معرفی ايران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
-                'قوانین و مقررات': '{$smarty.const.ROOT_ADDRESS}/rules',
-                'درباره ما': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
-                'تماس با ما': '{$smarty.const.ROOT_ADDRESS}/contactUs',
-                'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
-            },
-            'ar' : {
-                'رحلة جوية': '{$smarty.const.ROOT_ADDRESS}/page/flight',
-                'ترتيب المسار': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
-                'مدونة': '{$smarty.const.ROOT_ADDRESS}/mag',
-                'الخدمات السياحية': '{$smarty.const.ROOT_ADDRESS}/orderServices',
-                'مقدمة عن إيران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
-                'الفندق إيران': '{$smarty.const.ROOT_ADDRESS}/hotel',
-                'تأشيرة إيران': '{$smarty.const.ROOT_ADDRESS}/iran-visa',
-                'شبكة': '{$smarty.const.ROOT_ADDRESS}/tour',
-                'الأحكام والشروط': '{$smarty.const.ROOT_ADDRESS}/rules',
-                'ساعة البلدان': '{$smarty.const.ROOT_ADDRESS}/worldclock',
-                'معلومات عنا': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
-                'اتصل بنا': '{$smarty.const.ROOT_ADDRESS}/contactUs',
-                'علم الارصاد الجوية': '{$smarty.const.ROOT_ADDRESS}/weather',
-            }
+                'پرواز': 'http://192.168.1.100/gds/'+ lang +'/page/flight',
+                'پیگیری خرید': 'http://192.168.1.100/gds/'+ lang +'/UserTracking',
+                'وبلاگ': 'http://192.168.1.100/gds/'+ lang +'/mag',
+                'اخبار سایت': 'http://192.168.1.100/gds/'+ lang +'/news',
+                'معرفی ايران': 'http://192.168.1.100/gds/'+ lang +'/aboutIran',
+                'قوانین و مقررات': 'http://192.168.1.100/gds/'+ lang +'/rules',
+                'درباره ما': 'http://192.168.1.100/gds/'+ lang +'/aboutUs',
+                'تماس با ما': 'http://192.168.1.100/gds/'+ lang +'/contactUs',
+                'پرداخت آنلاین': 'http://192.168.1.100/gds/'+ lang +'/pay',
         }
 
         helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', "<span class='logined-name'>ورود / ثبت نام</span>")
@@ -358,7 +341,7 @@ def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
 
         # return f'{menu_section}'
 
-        for key, val in repeatable_links[lang].items():
+        for key, val in repeatable_links.items():
             helper.replace_attribute_by_text(menu_section, key, 'href', val)
 
 
@@ -368,23 +351,8 @@ def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
         menu_section = f'{menu_section}'
         menu_section = menu_section.replace("__main_link__", "http://192.168.1.100")
 
-        menu_section_online = menu_section_online.replace("https://192.168.1.100/gds/view/WW12/", "")
-        menu_section_online = menu_section_online.replace("http://192.168.1.100/gds/view/WW12/", "")
-        menu_section_online = menu_section_online.replace("https", "")
-        menu_section_online = menu_section_online.replace("http", "")
-
-        menu_section = menu_section.replace("https://192.168.1.100/gds/view/WW12/", "")
-        menu_section = menu_section.replace("http://192.168.1.100/gds/view/WW12/", "")
-        menu_section = menu_section.replace("https", "")
-        menu_section = menu_section.replace("http", "")
-
-        menu_section = menu_section.replace("&gt;", ">")
-        menu_section = menu_section.replace("&lt;", "<")
-
-
-
-        menu_section_online = menu_section_online.replace("</img>", "")
-        menu_section = menu_section.replace("/>", ">")
+        menu_section_online = helper.clean_serialize_string(menu_section_online)
+        menu_section = helper.clean_serialize_string(menu_section)
 
 
         if compare_html_strings(menu_section_online, menu_section):
@@ -413,35 +381,19 @@ def unit_test_footer(footer_section, footer_section_online , lang = 'fa'):
                 helper.replace_attribute(social_element, key, 'href', val)
 
         repeatable_links = {
-            'fa':{
-                'پرواز': '{$smarty.const.ROOT_ADDRESS}/page/flight',
-                'پیگیری خرید': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
-                'وبلاگ': '{$smarty.const.ROOT_ADDRESS}/mag',
-                'اخبار سایت': '{$smarty.const.ROOT_ADDRESS}/news',
-                'معرفی ايران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
-                'قوانین و مقررات': '{$smarty.const.ROOT_ADDRESS}/rules',
-                'درباره ما': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
-                'تماس با ما': '{$smarty.const.ROOT_ADDRESS}/contactUs',
-                'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
-            },
-            'ar' : {
-                'رحلة جوية': '{$smarty.const.ROOT_ADDRESS}/page/flight',
-                'ترتيب المسار': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
-                'مدونة': '{$smarty.const.ROOT_ADDRESS}/mag',
-                'الخدمات السياحية': '{$smarty.const.ROOT_ADDRESS}/orderServices',
-                'مقدمة عن إيران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
-                'الفندق إيران': '{$smarty.const.ROOT_ADDRESS}/hotel',
-                'تأشيرة إيران': '{$smarty.const.ROOT_ADDRESS}/iran-visa',
-                'شبكة': '{$smarty.const.ROOT_ADDRESS}/tour',
-                'الأحكام والشروط': '{$smarty.const.ROOT_ADDRESS}/rules',
-                'ساعة البلدان': '{$smarty.const.ROOT_ADDRESS}/worldclock',
-                'معلومات عنا': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
-                'اتصل بنا': '{$smarty.const.ROOT_ADDRESS}/contactUs',
-                'علم الارصاد الجوية': '{$smarty.const.ROOT_ADDRESS}/weather',
-            }
+                'پرواز': 'http://192.168.1.100/gds/'+ lang + '/page/flight',
+                'پیگیری خرید': 'http://192.168.1.100/gds/'+ lang + '/UserTracking',
+                'وبلاگ': 'http://192.168.1.100/gds/'+ lang + '/mag',
+                'اخبار سایت': 'http://192.168.1.100/gds/'+ lang + '/news',
+                'معرفی ايران': 'http://192.168.1.100/gds/'+ lang + '/aboutIran',
+                'قوانین و مقررات': 'http://192.168.1.100/gds/'+ lang + '/rules',
+                'درباره ما': 'http://192.168.1.100/gds/'+ lang + '/aboutUs',
+                'تماس با ما': 'http://192.168.1.100/gds/'+ lang + '/contactUs',
+                'پرداخت آنلاین': 'http://192.168.1.100/gds/'+ lang + '/pay',
+
         }
 
-        for key, val in repeatable_links[lang].items():
+        for key, val in repeatable_links.items():
             helper.replace_attribute_by_text(footer_section, key, 'href', val)
 
         helper.replace_attribute(footer_section, '__aboutUs_class__', 'string',"تست میکنیم 1 2 3")
@@ -458,24 +410,9 @@ def unit_test_footer(footer_section, footer_section_online , lang = 'fa'):
         footer_section_online = f'{footer_section_online}'
         footer_section = f'{footer_section}'
 
+        footer_section_online = helper.clean_serialize_string(footer_section_online)
+        footer_section = helper.clean_serialize_string(footer_section)
 
-        footer_section_online = footer_section_online.replace("https://192.168.1.100/gds/view/WW12/", "")
-        footer_section_online = footer_section_online.replace("http://192.168.1.100/gds/view/WW12/", "")
-        footer_section_online = footer_section_online.replace("://192.168.1.100/gds/view/WW12/", "")
-        footer_section_online = footer_section_online.replace("https", "")
-        footer_section_online = footer_section_online.replace("http", "")
-
-        footer_section = footer_section.replace("https://192.168.1.100/gds/view/WW12/", "")
-        footer_section = footer_section.replace("http://192.168.1.100/gds/view/WW12/", "")
-        footer_section = footer_section.replace("://192.168.1.100/gds/view/WW12/", "")
-        footer_section = footer_section.replace("https", "")
-        footer_section = footer_section.replace("http", "")
-
-        footer_section = footer_section.replace("&gt;", ">")
-        footer_section = footer_section.replace("&lt;", "<")
-
-        footer_section_online = footer_section_online.replace("</img>", "")
-        footer_section = footer_section.replace("/>", ">")
 
 
         if compare_html_strings(footer_section_online, footer_section):
