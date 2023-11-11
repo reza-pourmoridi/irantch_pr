@@ -158,7 +158,25 @@ def add_value_to_attribute(section, class_name, attr, value):
             if tag.string is not None:
                 tag.string += value
 
+def comapre_append_list(editing_array, compare_array):
+    result = []
+    for item in editing_array:
+        if item in compare_array:
+            result.append(item)
+    return result
 
+def delete_assames(editing_array, compare_array):
+    result = []
+    for item in editing_array:
+        if item not in compare_array:
+            result.append(item)
+    return result
+
+def turn_to_styl_links_assames(links):
+    result = ''
+    for item in inside_assets:
+        result = result + '<link rel="stylesheet" href="project_files/' + item + '">'
+    return result
 
 
 
@@ -182,6 +200,7 @@ def add_before_after(section, class_name, before, after):
     if complex_element:
         inner_html = f'{before}\n{complex_element}\n{after}'
         complex_element.replace_with(BeautifulSoup(inner_html, 'html.parser'))
+
 
 def clean_serialize_string(string):
     string = string.replace("https://192.168.1.100/gds/view/WW12/", "")

@@ -65,27 +65,32 @@ def send_request_with_error_handling(class_name,url):
     except requests.exceptions.RequestException as req_err:
         print(f"Request exception occurred for class {class_name}: {req_err}")
 
-def extract_json_data_from_url(url):
+def extract_json_data_from_url(url, text):
     try:
-        # Find all div elements and extract their class names
-        class_names = ['top_bar_data', 'top_bar_name_data', 'menu_data','banners_data','article_data','news_data','social_data','about_data','address_data','mobile_data']
+        if text == 'update':
+            # Find all div elements and extract their class names
+            class_names = ['top_bar_data', 'top_bar_name_data', 'menu_data','banners_data','article_data','news_data','social_data','about_data','address_data','mobile_data']
 
-        delete_result = delete_folder('unit_test_data')
-        print(delete_result)
-        unit_test_data_path = create_folder('unit_test_data')
-        for class_name in class_names:
-            json = send_request_with_error_handling(class_name,url)
-            if json is not None and json:
+            delete_result = delete_folder('unit_test_data')
+            print(delete_result)
+            unit_test_data_path = create_folder('unit_test_data')
+            for class_name in class_names:
+                json = send_request_with_error_handling(class_name,url)
+                if json is not None and json:
 
-                test = create_file(json, unit_test_data_path, class_name, 'json')
-                print(test)
+                    test = create_file(json, unit_test_data_path, class_name, 'json')
+                    print(test)
 
 
-        return test
+            if test:
+                return test
+            else:
+                return 'error for updating unit_test_data folder'
+        else:
+            return 'command is invalid'
 
     except Exception as e:
         return str(e) + 'sdjfkl2'
 
-extract_json_data_from_url('https://192.168.1.100/')
 
 

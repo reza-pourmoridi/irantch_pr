@@ -40,6 +40,7 @@ def initiation_progress():
     moduls_array = {
             'blog': {
                 'class': 'i_modular_blog',
+                'file': 'blog.tpl',
                 'name': 'وبلاگ',
                 'modular': blog_module,
                 'test_function': unit_test.unit_test_blog
@@ -47,32 +48,43 @@ def initiation_progress():
             'newsletter': {
                 'class': 'i_modular_newsletter',
                 'name': 'خبرنامه',
+                'file': 'newsletter.tpl',
                 'modular': newsletter_module,
                 'test_function': unit_test.unit_test_newsletter
             },
             'news': {
                 'class': 'i_modular_news',
                 'name': 'اخبار',
+                'file': 'news.tpl',
                 'modular': news_module,
                 'test_function': unit_test.unit_test_news
             },
             'menu': {
                 'class': 'i_modular_menu',
                 'name': 'منو',
+                'file': 'menu.tpl',
                 'modular': menu_module,
                 'test_function': unit_test.unit_test_menu
             },
             'footer': {
                 'class': 'i_modular_footer',
                 'name': 'فوتر',
+                'file': 'footer.tpl',
                 'modular': footer_module,
                 'test_function': unit_test.unit_test_footer
             },
             'banner_gallery': {
                 'class': 'i_modular_banner_gallery',
                 'name': 'گالری بنر',
+                'file': 'banner.tpl',
                 'modular': banner_gallery_module,
                 'test_function': unit_test.unit_test_banner_gallery
+            },
+            'header': {
+                'class': 'i_modular_header',
+                'name': 'هدر',
+                'file': 'header.tpl',
+                'modular': header_module
             },
 
         }
@@ -81,19 +93,35 @@ def initiation_progress():
 
 
 
-    main_page_array = {}
-    for module_name, module_info in moduls_array.items():
-        section = soup.find(class_=module_info['class'])
-        if section:
-            main_page_array[f'{section}'] = "{" + module_info['name'] + ".tpl}"
-            module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name'] + " = " + module_info['modular'](section, project_path , lang))
+    # main_page_array = {}
+    # for module_name, module_info in moduls_array.items():
+    #     section = soup.find(class_=module_info['class'])
+    #     if section:
+    #         main_page_array[f'{section}'] = "{" + module_info['name'] + ".tpl}"
+    #         module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name'] + " = " + module_info['modular'](section, project_path , lang))
 
+    section = soup.find(class_='i_modular_header')
+    module_messages.append("<br><br> تست ماژول گذاری بخش هدر = " + header_module(section, project_path, lang))
     summary_message = '\n'.join(module_messages)
+
+    return jsonify({"message": f'{summary_message}'})
+
 
 
     #creation of mainPage
-    main_page = helper.replace_placeholders(soup, main_page_array)
-    soup_str = f'{main_page}'
+    soup = BeautifulSoup(html_content, 'html.parser')
+
+    for module_key, module_info in moduls_array.items():
+        class_name = module_info['class']
+        file_name = '{include file="include_files/' + module_info['file'] + '"}'
+        elements = soup.find_all(class_=class_name)
+
+        for element in elements:
+            # Replace the old element with the 'file' string
+            element.replace_with(file_name)
+
+    modified_html_content = str(soup)
+    soup_str = f'{modified_html_content}'
     main_page = helper.create_file(soup_str, project_path, 'mainPage2', 'tpl')
 
     # UNIT TEST
@@ -440,6 +468,168 @@ def menu_module(menu_section, project_path , lang = 'fa'):
     except Exception as e:
         return str(e)  # Return the exception message for now
 
+def header_module(header_section, project_path , lang = 'fa'):
+    try:
+        style_links = [link.get('href') for link in header_section.find_all('link', rel='stylesheet')]
+
+        before_html = '''
+                    {load_presentation_object filename="avaParvaz" assign="obj_main_page" subName="customers"}
+                    {load_presentation_object filename="Session" assign="objSession" }
+                    {load_presentation_object filename="functions" assign="objFunctions"}
+                    {load_presentation_object filename="frontMaster" assign="obj"}
+                    {load_presentation_object filename="dateTimeSetting" assign="objDate"}
+                    {assign var="objFunctions" value=$objFunctions scope=parent}
+                    {assign var="obj" value=$obj scope=parent}
+                    {assign var="objDate" value=$objDate scope=parent}
+                    {assign var="obj_main_page" value=$obj_main_page scope=parent}
+                    {assign var="info_access_client_to_service" value=$obj_main_page->getInfoAuthClient() scope=parent}
+
+                    {assign var='StyleSheetMain' value="StyleSheet" }'''
+        header_contents = '''
+        
+        <head class="i_modular_header">
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+                <meta http-equiv="X-UA-Compatible" content="ie=edge">
+            
+                {include file="`$smarty.const.FRONT_CURRENT_CLIENT`modules/rich/pageInfo/main.tpl" obj_main_page=$obj_main_page}
+            
+                {if isset($info_page['all_meta_tags']) && $info_page['all_meta_tags']}
+                    {assign var="meta_tags" value=$info_page['all_meta_tags']}
+                    {foreach $meta_tags as $key=>$tag}
+                        {if $tag['name'] neq ''}
+                            <meta name="{$tag['name']}" content="{$tag['content']}">
+                        {/if}
+                    {/foreach}
+                {/if}
+            
+                <base href="{$smarty.const.CLIENT_DOMAIN}" />
+                <link rel="shortcut icon" href="project_files/images/favicon.png" type="image/x-icon">
+            
+            
+                {* todo: this use in all page and all of them are necessary*}
+            
+                <link rel="stylesheet" href="project_files/css/header.css">
+                <link rel="stylesheet" href="project_files/css/bootstrap.min.css">
+            
+                <meta class='__befor_all__' test="test">
+            
+            
+            
+                {* todo: this use only in main-page*}
+                <script type="text/javascript" src="project_files/js/jquery-3.4.1.min.js"></script>
+                {*    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>*}
+            
+                {if $smarty.const.GDS_SWITCH eq 'mainPage' || $smarty.const.GDS_SWITCH eq 'page'}
+                    <link rel="stylesheet" href="assets/main-asset/css/main.css">
+                    <meta class='__inside_assets__' test="test">
+            
+                    <link rel="stylesheet" href="project_files/css/tabs.css">
+                    <link rel="stylesheet" href="project_files/css/select2.css">
+                    <link rel="stylesheet" href="project_files/css/owl.carousel.min.css">
+                    <link rel="stylesheet" href="assets/css/jquery-confirm.min.css"/>
+                    <link type="text/css" rel="stylesheet" href="assets/datepicker/jquery-ui.min.css"/>
+                    <link rel="stylesheet" type="text/css" href="{$smarty.const.ROOT_LIBRARY}/{$StyleSheetMain}.php" media="screen"/>
+                    <script type="text/javascript">
+                      var rootMainPath = '{$smarty.const.SERVER_HTTP}{$smarty.const.CLIENT_DOMAIN}';
+                      var clientMainDomain = '{$smarty.const.SERVER_HTTP}{$smarty.const.CLIENT_MAIN_DOMAIN}';
+                      var libraryPath = '{$smarty.const.ROOT_LIBRARY}/';
+                      var gdsSwitch = '{$smarty.const.GDS_SWITCH}';
+                      var amadeusPath = '{$smarty.const.SERVER_HTTP}{$smarty.const.CLIENT_DOMAIN}/gds/';
+                      var amadeusPathByLang = '{$smarty.const.SERVER_HTTP}{$smarty.const.CLIENT_DOMAIN}/gds/{$smarty.const.SOFTWARE_LANG}/';
+                      var lang = '{$smarty.const.SOFTWARE_LANG}';
+                      var main_color = '{$smarty.const.COLOR_MAIN_BG}';
+                      var main_dir_customer = '{$smarty.const.FRONT_TEMPLATE_NAME}';
+                      var refer_url = '{if isset($smarty.session.refer_url)} {$smarty.session.refer_url} {else} "" {/if}';
+                      var query_param_get = JSON.parse('{$smarty.get|json_encode}');
+                    </script>
+            
+                    <script type="text/javascript" src="assets/js/jquery-ui.min.js"></script>
+            
+                    <!-- datepicker calendar -->
+                    <script type="text/javascript" src="assets/datepicker/jquery.cookie.min.js"></script>
+                    <script type="text/javascript" src="assets/datepicker/jquery.ui.core.js"></script>
+                    <script type="text/javascript" src="assets/datepicker/jquery.ui.datepicker-cc.js"></script>
+                    <script type="text/javascript" src="assets/datepicker/datepicker-scripts.js"></script>
+                    <script type="text/javascript" src="assets/datepicker/datepicker-declarations.js"></script>
+                {/if}
+                <meta class='__between_mainPage_assets__' test="test">
+            
+                <link rel="stylesheet" href="project_files/css/style.css">
+            
+            
+            
+                {if $smarty.const.GDS_SWITCH neq 'mainPage'}
+                    <meta class='__inside_mainPage__' test="test">
+            
+                    <link rel="stylesheet" href="project_files/css/{$StyleSheetHeader}">
+                    {include file="`$smarty.const.FRONT_CURRENT_CLIENT`contentHead.tpl"}
+                {/if}
+            
+                <link rel="stylesheet" href="project_files/css/all.min.css">
+                <link rel="stylesheet" href="project_files/css/register.css">
+                <meta class='__after__all__' test="test">
+            
+            
+            </head>
+
+
+                        '''
+        header_section = header_contents
+
+        befor_all = ['css/header.css', 'css/bootstrap.min.css' ]
+        between_mainPage_assets = ['css/style.css']
+        inside_mainPage = []
+        after__all = ['css/all.min.css', 'css/register.css']
+
+        befor_all = helper.comapre_append_list(befor_all, style_links)
+        style_links = helper.delete_assames(style_links, befor_all)
+
+        between_mainPage_assets = helper.comapre_append_list(between_mainPage_assets, style_links)
+        style_links = helper.delete_assames(style_links, between_mainPage_assets)
+
+        inside_mainPage = helper.comapre_append_list(inside_mainPage, style_links)
+        style_links = helper.delete_assames(style_links, inside_mainPage)
+
+        after__all = helper.comapre_append_list(after__all, style_links)
+        style_links = helper.delete_assames(style_links, after__all)
+
+        # inside_assets = style_links
+        header_section = BeautifulSoup(header_section, "html.parser")
+        elements = header_section.find_all(class_='__befor_all__')
+        for element in elements:
+            element.replace_with(helper.turn_to_styl_links_assames(befor_all))
+
+        elements = header_section.find_all(class_='__between_mainPage_assets__')
+        for element in elements:
+            element.replace_with(helper.turn_to_styl_links_assames(between_mainPage_assets))
+
+        elements = header_section.find_all(class_='__inside_mainPage__')
+        for element in elements:
+            element.replace_with(helper.turn_to_styl_links_assames(inside_mainPage))
+
+        elements = header_section.find_all(class_='__after__all__')
+        for element in elements:
+            element.replace_with(helper.turn_to_styl_links_assames(after__all))
+
+        # elements = header_section.find_all(class_='__inside_assets__')
+        # for element in elements:
+        #     element.replace_with(helper.turn_to_styl_links_assames(inside_assets))
+
+        header_section = f'{header_section}'
+
+
+
+
+        header_final_content = f'{before_html}\n{header_section}'
+
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        return helper.create_file(header_final_content, include_files_directory, 'header', 'tpl')
+    except Exception as e:
+        return str(e)  # Return the exception message for now
+
+
+
 def footer_module(footer_section, project_path , lang = 'fa'):
     try:
         before_html = '''{load_presentation_object filename="aboutUs" assign="objAbout"}
@@ -523,6 +713,22 @@ def footer_module(footer_section, project_path , lang = 'fa'):
 
 
         return helper.create_file(footer_final_content, include_files_directory, 'footer', 'tpl')
+    except Exception as e:
+        return str(e)  # Return the exception message for now
+
+def new_module(new_section, project_path, lang='fa'):
+    try:
+
+        # type  of current functions:
+
+        # replace_placeholders
+        # replace_attribute and string
+        # add_before_after
+        # direct_string
+        # final_content.replace
+
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        return helper.create_file(new_final_content, include_files_directory, 'new', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
