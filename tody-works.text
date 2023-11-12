@@ -1,18 +1,16 @@
-
-troubleshooting the json data problem.+
-debuging main page writer.+
-writing header modular and test.
-writing footer-script modular and test.
-
-
-
-compliting , multi lang bases.
-modlation of darya gasht.
+modulation of darya:
+modulation of darya html.
+checking for modules that need to be creat and separating them in two list
+creating and checking those separate of rest of the code
+final test
 
 
 
 
+list , those who needs to creat function for.
 
+
+list , those who doesn't need.
 
 
 
@@ -21,13 +19,9 @@ modlation of darya gasht.
 
 
 
-
-
-
-hint: for writhing mainpage.tpl , use hom.html
-hint: for writhing unit test monitoring, use hom.html
-hint: for writhing unit test , thir modular functions
 warning: don't forget for writing the test , check the links and images.
+warning: creating an test for scripts and links.
+warning: creating an test for images.
 
 
 

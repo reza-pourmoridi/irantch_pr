@@ -109,7 +109,7 @@ def initiation_progress():
     section = soup.find(class_='i_modular_header')
     module_messages.append("<br><br> تست ماژول گذاری بخش هدر = " + header_module(section, project_path, lang))
 
-    section = soup.find(class_='i_modular_footer')
+    section = soup.find(class_='i_modular_footer_script')
     module_messages.append("<br><br> تست ماژول گذاری بخش اسکریپت فوتر = " + footer_script_module(section, project_path, lang))
 
     summary_message = '\n'.join(module_messages)
@@ -477,6 +477,94 @@ def menu_module(menu_section, project_path , lang = 'fa'):
     except Exception as e:
         return str(e)  # Return the exception message for now
 
+
+def footer_module(footer_section, project_path, lang='fa'):
+    try:
+        return 'lsdfj'
+        before_html = '''{load_presentation_object filename="aboutUs" assign="objAbout"}
+                            {assign var="about"  value=$objAbout->getData()}
+                            {assign var="socialLinks"  value=$about['social_links']|json_decode:true}
+
+
+                            {if $smarty.session.layout neq 'pwa'}
+                                {if $smarty.const.GDS_SWITCH neq $smarty.const.ConstPrintHotel && $smarty.const.GDS_SWITCH neq $smarty.const.ConstPrintTicket && $smarty.const.GDS_SWITCH neq $smarty.const.ConstPrintHotelReservation && $smarty.const.GDS_SWITCH neq $smarty.const.ConstPrintHotelReservationAhuan}
+                                   '''
+        after_html = '''    {/if}
+                            {else}
+                                {include file="`$smarty.const.FRONT_CURRENT_CLIENT`pwaFooter.tpl"}
+                            {/if}'''
+
+        befor_social_media = '''{assign var="socialLinks"  value=$about['social_links']|json_decode:true}
+                                {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref']}
+
+                                {foreach $socialLinks as $key => $val}
+                                        {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}
+                                {/foreach}'''
+        befor_social_media_soup = BeautifulSoup(befor_social_media, "html.parser")
+        social_element = footer_section.find(class_=lambda classes: classes and '__social_class__' in classes)
+        social_element.insert_before(befor_social_media_soup)
+
+        social_element = footer_section.find(class_=lambda classes: classes and '__social_class__' in classes)
+        repeatable_social_links = {
+            '__telegram_class__': '{if $telegramHref}{$telegramHref}{/if}',
+            '__whatsapp_class__': '{if $telegramHref}{$whatsappHref}{/if}',
+            '__instagram_class__': '{if $telegramHref}{$instagramHref}{/if}',
+        }
+
+        for key, val in repeatable_social_links.items():
+            helper.replace_attribute(social_element, key, 'href', val)
+
+        repeatable_links = {
+            'fa': {
+                'پرواز': '{$smarty.const.ROOT_ADDRESS}/page/flight',
+                'پیگیری خرید': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
+                'وبلاگ': '{$smarty.const.ROOT_ADDRESS}/mag',
+                'اخبار سایت': '{$smarty.const.ROOT_ADDRESS}/news',
+                'معرفی ايران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
+                'قوانین و مقررات': '{$smarty.const.ROOT_ADDRESS}/rules',
+                'درباره ما': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
+                'تماس با ما': '{$smarty.const.ROOT_ADDRESS}/contactUs',
+                'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
+            },
+            'ar': {
+                'رحلة جوية': '{$smarty.const.ROOT_ADDRESS}/page/flight',
+                'ترتيب المسار': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
+                'مدونة': '{$smarty.const.ROOT_ADDRESS}/mag',
+                'الخدمات السياحية': '{$smarty.const.ROOT_ADDRESS}/orderServices',
+                'مقدمة عن إيران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
+                'الفندق إيران': '{$smarty.const.ROOT_ADDRESS}/hotel',
+                'تأشيرة إيران': '{$smarty.const.ROOT_ADDRESS}/iran-visa',
+                'شبكة': '{$smarty.const.ROOT_ADDRESS}/tour',
+                'الأحكام والشروط': '{$smarty.const.ROOT_ADDRESS}/rules',
+                'ساعة البلدان': '{$smarty.const.ROOT_ADDRESS}/worldclock',
+                'معلومات عنا': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
+                'اتصل بنا': '{$smarty.const.ROOT_ADDRESS}/contactUs',
+                'علم الارصاد الجوية': '{$smarty.const.ROOT_ADDRESS}/weather',
+            }
+        }
+
+        for key, val in repeatable_links[lang].items():
+            helper.replace_attribute_by_text(footer_section, key, 'href', val)
+
+        helper.replace_attribute(footer_section, '__aboutUs_class__', 'string',
+                                 '''{$htmlContent = $about['body']|strip_tags}{$htmlContent|truncate:300}''')
+        helper.replace_attribute(footer_section, '__address_class__', 'string',
+                                 ''' آدرس :  {$smarty.const.CLIENT_ADDRESS} ''')
+        helper.replace_attribute(footer_section, '__mobile_class__', 'string', '''{$smarty.const.CLIENT_MOBILE}''')
+        helper.replace_attribute(footer_section, '__mobile_class__', 'href', '''tel:{$smarty.const.CLIENT_MOBILE}''')
+        footer_section = helper.replace_placeholders(footer_section,
+                                                     {'__aboutUsLink__': '{$smarty.const.ROOT_ADDRESS}/aboutUs'})
+        footer_final_content = f'{before_html}\n{footer_section}\n{after_html}'
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        # helper.write_text_in_path(project_path, "{inclued 'include_files/footer.tpl'}")
+        footer_final_content = footer_final_content.replace("&gt;", ">")
+        footer_final_content = footer_final_content.replace("&lt;", "<")
+
+        return helper.create_file(footer_final_content, include_files_directory, 'footer', 'tpl')
+    except Exception as e:
+        return str(e)  # Return the exception message for now
+
+
 def header_module(header_section, project_path , lang = 'fa'):
     try:
         style_links = [link.get('href') for link in header_section.find_all('link', rel='stylesheet')]
@@ -539,7 +627,7 @@ def header_module(header_section, project_path , lang = 'fa'):
 
     {if $smarty.const.GDS_SWITCH eq 'mainPage' || $smarty.const.GDS_SWITCH eq 'page'}
         <link rel="stylesheet" href="assets/main-asset/css/main.css">
-        <meta class='__inside_assets_mainpage_page__' test="test">
+        <meta class='__inside_assets__' test="test">
 
         <link rel="stylesheet" href="assets/css/jquery-confirm.min.css"/>
         <link type="text/css" rel="stylesheet" href="assets/datepicker/jquery-ui.min.css"/>
@@ -629,101 +717,90 @@ def header_module(header_section, project_path , lang = 'fa'):
         for element in elements:
             element.replace_with(helper.turn_to_styl_links_assames(inside_assets))
 
-
-
         header_final_content = f'{header_section}'
+        header_final_content = header_final_content.replace("&gt;", ">")
+        header_final_content = header_final_content.replace("&lt;", "<")
 
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         return helper.create_file(header_final_content, include_files_directory, 'header', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-
-
-def footer_module(footer_section, project_path , lang = 'fa'):
+def footer_script_module(footer_script_section, project_path, lang='fa'):
     try:
-        return 'lsdfj'
-        before_html = '''{load_presentation_object filename="aboutUs" assign="objAbout"}
-                            {assign var="about"  value=$objAbout->getData()}
-                            {assign var="socialLinks"  value=$about['social_links']|json_decode:true}
-                            
-                            
-                            {if $smarty.session.layout neq 'pwa'}
-                                {if $smarty.const.GDS_SWITCH neq $smarty.const.ConstPrintHotel && $smarty.const.GDS_SWITCH neq $smarty.const.ConstPrintTicket && $smarty.const.GDS_SWITCH neq $smarty.const.ConstPrintHotelReservation && $smarty.const.GDS_SWITCH neq $smarty.const.ConstPrintHotelReservationAhuan}
-                                   '''
-        after_html = '''    {/if}
+        script_links = [link.get('src') for link in footer_script_section.find_all('script')]
+
+        befor_all = [ 'js/bootstrap.min.js', 'js/bootstrap.js', 'js/mega-menu.js' ]
+        between_mainPage_assets = []
+        inside_mainPage = []
+        remove_assets = ['js/jquery-3.4.1.min.js']
+        after__all = ['js/mega-menu.js', 'js/script.js']
+
+        footer_script_content = '''
+                            <div class='__befor_all__'></div>
+                            {if $smarty.const.GDS_SWITCH eq 'mainPage' || $smarty.const.GDS_SWITCH eq 'page'}
+                                <div class='__inside_assets__'></div>
+                                <script type="text/javascript" src="assets/js/jquery-confirm.min.js"></script>
+                                {include file="`$smarty.const.FRONT_CURRENT_CLIENT`content-main-page-footer.tpl" info_access_client_to_service=$info_access_client_to_service}
                             {else}
-                                {include file="`$smarty.const.FRONT_CURRENT_CLIENT`pwaFooter.tpl"}
-                            {/if}'''
+                                {if $smarty.const.GDS_SWITCH neq 'app'}
+                                    {include file="`$smarty.const.FRONT_CURRENT_CLIENT`contentFooter.tpl"}
+                                {/if}
+                            {/if}
+                            <div class='after__all'></div>
+                            <script src="project_files/js/mega-menu.js"></script>
+                            <script type="text/javascript" src="project_files/js/script.js"></script>
+                            
+                            <script type="text/javascript" src="assets/main-asset/js/public-main.js"></script>
+                        '''
+        footer_script_section = footer_script_content
 
 
-        befor_social_media = '''{assign var="socialLinks"  value=$about['social_links']|json_decode:true}
-                                {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref']}
-    
-                                {foreach $socialLinks as $key => $val}
-                                        {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}
-                                {/foreach}'''
-        befor_social_media_soup = BeautifulSoup(befor_social_media, "html.parser")
-        social_element = footer_section.find(class_=lambda classes: classes and '__social_class__' in classes)
-        social_element.insert_before(befor_social_media_soup)
+        script_links = helper.delete_assames(script_links, remove_assets)
 
-        social_element = footer_section.find(class_=lambda classes: classes and '__social_class__' in classes)
-        repeatable_social_links = {
-            '__telegram_class__': '{if $telegramHref}{$telegramHref}{/if}',
-            '__whatsapp_class__': '{if $telegramHref}{$whatsappHref}{/if}',
-            '__instagram_class__': '{if $telegramHref}{$instagramHref}{/if}',
-        }
+        befor_all = helper.comapre_append_list(befor_all, script_links)
+        script_links = helper.delete_assames(script_links, befor_all)
 
-        for key, val in repeatable_social_links.items():
-            helper.replace_attribute(social_element, key, 'href', val)
+        between_mainPage_assets = helper.comapre_append_list(between_mainPage_assets, script_links)
+        script_links = helper.delete_assames(script_links, between_mainPage_assets)
 
+        inside_mainPage = helper.comapre_append_list(inside_mainPage, script_links)
+        script_links = helper.delete_assames(script_links, inside_mainPage)
 
+        after__all = helper.comapre_append_list(after__all, script_links)
+        script_links = helper.delete_assames(script_links, after__all)
 
-        repeatable_links = {
-            'fa':{
-                'پرواز': '{$smarty.const.ROOT_ADDRESS}/page/flight',
-                'پیگیری خرید': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
-                'وبلاگ': '{$smarty.const.ROOT_ADDRESS}/mag',
-                'اخبار سایت': '{$smarty.const.ROOT_ADDRESS}/news',
-                'معرفی ايران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
-                'قوانین و مقررات': '{$smarty.const.ROOT_ADDRESS}/rules',
-                'درباره ما': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
-                'تماس با ما': '{$smarty.const.ROOT_ADDRESS}/contactUs',
-                'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
-            },
-            'ar' : {
-                'رحلة جوية': '{$smarty.const.ROOT_ADDRESS}/page/flight',
-                'ترتيب المسار': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
-                'مدونة': '{$smarty.const.ROOT_ADDRESS}/mag',
-                'الخدمات السياحية': '{$smarty.const.ROOT_ADDRESS}/orderServices',
-                'مقدمة عن إيران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
-                'الفندق إيران': '{$smarty.const.ROOT_ADDRESS}/hotel',
-                'تأشيرة إيران': '{$smarty.const.ROOT_ADDRESS}/iran-visa',
-                'شبكة': '{$smarty.const.ROOT_ADDRESS}/tour',
-                'الأحكام والشروط': '{$smarty.const.ROOT_ADDRESS}/rules',
-                'ساعة البلدان': '{$smarty.const.ROOT_ADDRESS}/worldclock',
-                'معلومات عنا': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
-                'اتصل بنا': '{$smarty.const.ROOT_ADDRESS}/contactUs',
-                'علم الارصاد الجوية': '{$smarty.const.ROOT_ADDRESS}/weather',
-            }
-        }
+        inside_assets = script_links
 
-        for key, val in repeatable_links[lang].items():
-            helper.replace_attribute_by_text(footer_section, key, 'href', val)
+        after__all = helper.comapre_append_list(after__all, script_links)
+        script_links = helper.delete_assames(script_links, after__all)
 
-        helper.replace_attribute(footer_section, '__aboutUs_class__', 'string', '''{$htmlContent = $about['body']|strip_tags}{$htmlContent|truncate:300}''')
-        helper.replace_attribute(footer_section, '__address_class__', 'string', ''' آدرس :  {$smarty.const.CLIENT_ADDRESS} ''')
-        helper.replace_attribute(footer_section, '__mobile_class__', 'string', '''{$smarty.const.CLIENT_MOBILE}''')
-        helper.replace_attribute(footer_section, '__mobile_class__', 'href', '''tel:{$smarty.const.CLIENT_MOBILE}''')
-        footer_section = helper.replace_placeholders(footer_section, {'__aboutUsLink__':'{$smarty.const.ROOT_ADDRESS}/aboutUs'})
-        footer_final_content = f'{before_html}\n{footer_section}\n{after_html}'
+        footer_script_section = BeautifulSoup(footer_script_section, "html.parser")
+        elements = footer_script_section.find_all(class_='__befor_all__')
+        for element in elements:
+            element.replace_with(helper.turn_to_script_links_assames(befor_all))
+
+        elements = footer_script_section.find_all(class_='__between_mainPage_assets__')
+        for element in elements:
+            element.replace_with(helper.turn_to_script_links_assames(between_mainPage_assets))
+
+        elements = footer_script_section.find_all(class_='__inside_mainPage__')
+        for element in elements:
+            element.replace_with(helper.turn_to_script_links_assames(inside_mainPage))
+
+        elements = footer_script_section.find_all(class_='__after__all__')
+        for element in elements:
+            element.replace_with(helper.turn_to_script_links_assames(after__all))
+
+        elements = footer_script_section.find_all(class_='__inside_assets__')
+        for element in elements:
+            element.replace_with(helper.turn_to_script_links_assames(inside_assets))
+
+        footer_script_final_content = f'{footer_script_section}'
+        footer_script_final_content = footer_script_final_content.replace("&gt;", ">")
+        footer_script_final_content = footer_script_final_content.replace("&lt;", "<")
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        # helper.write_text_in_path(project_path, "{inclued 'include_files/footer.tpl'}")
-        footer_final_content = footer_final_content.replace("&gt;", ">")
-        footer_final_content = footer_final_content.replace("&lt;", "<")
-
-
-        return helper.create_file(footer_final_content, include_files_directory, 'footer', 'tpl')
+        return helper.create_file(footer_script_final_content, include_files_directory, 'footer_script', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
@@ -744,51 +821,6 @@ def new_module(new_section, project_path, lang='fa'):
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def footer_script_module(new_section, project_path, lang='fa'):
-    try:
-
-        befor_all = ['css/header.css', 'css/bootstrap.min.css' ]
-        between_mainPage_assets = ['css/style.css']
-        inside_mainPage = []
-        after__all = ['css/all.min.css', 'css/register.css']
-
-        footer_content = '''
-                            <script type="text/javascript" src="project_files/js/bootstrap.min.js"></script>
-                            <div class='__befor_all__'></div>
-                            {if $smarty.const.GDS_SWITCH eq 'mainPage' || $smarty.const.GDS_SWITCH eq 'page'}
-                                <div class='__befor_all__'></div>
-                            
-                                <script src="project_files/js/bootstrap.bundle.min.js"></script>
-                                <script src="project_files/js/owl.carousel.min.js"></script>
-                            
-                                <script type="text/javascript" src="project_files/js/select2.min.js"></script>
-                            
-                                <script type="text/javascript" src="assets/js/jquery-confirm.min.js"></script>
-                                {include file="`$smarty.const.FRONT_CURRENT_CLIENT`content-main-page-footer.tpl" info_access_client_to_service=$info_access_client_to_service}
-                            {else}
-                                {if $smarty.const.GDS_SWITCH neq 'app'}
-                                    {include file="`$smarty.const.FRONT_CURRENT_CLIENT`contentFooter.tpl"}
-                                {/if}
-                            {/if}
-                            <script src="project_files/js/mega-menu.js"></script>
-                            <script type="text/javascript" src="project_files/js/script.js"></script>
-                            
-                            <script type="text/javascript" src="assets/main-asset/js/public-main.js"></script>
-                            </html>
-
-                        '''
-        # type  of current functions:
-
-        # replace_placeholders
-        # replace_attribute and string
-        # add_before_after
-        # direct_string
-        # final_content.replace
-
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(new_final_content, include_files_directory, 'new', 'tpl')
-    except Exception as e:
-        return str(e)  # Return the exception message for now
 
 
 

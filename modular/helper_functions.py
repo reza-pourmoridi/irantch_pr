@@ -178,6 +178,12 @@ def turn_to_styl_links_assames(links):
         result = result + '<link rel="stylesheet" href="project_files/' + item + '">'
     return result
 
+def turn_to_script_links_assames(links):
+    result = ''
+    for item in links:
+        result = result + '<script src="project_files/' + item + '"></script>'
+    return result
+
 
 
 def replace_attribute_by_text(section, target_text, attr, value):
