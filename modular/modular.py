@@ -84,38 +84,82 @@ def initiation_progress():
                 'class': 'i_modular_header',
                 'name': 'هدر',
                 'file': 'header.tpl',
-                'modular': header_module
+                'modular': header_module,
+                'test_function': unit_test.test_unit_test
+
             },
             'footer_script': {
                 'class': 'i_modular_footer_script',
                 'name': 'اسکریپت فوتر',
                 'file': 'footer-script.tpl',
-                'modular': footer_script_module
-            },
+                'modular': footer_script_module,
+                'test_function': unit_test.test_unit_test
 
+            },
+            'fast_search_flight': {
+                'class': 'i_modular_fast_search_flight',
+                'name': 'جستجوی سریع پرواز',
+                'file': 'fast_search_flight.tpl',
+                'modular': fast_search_flight_module,
+                'test_function': unit_test.test_unit_test
+
+            },
+        }
+
+    moduls_array = {
+            # 'menu': {
+            #     'class': 'i_modular_menu',
+            #     'name': 'منو',
+            #     'file': 'menu.tpl',
+            #     'modular': menu_module,
+            #     'test_function': unit_test.unit_test_menu
+            # },
+            # 'header': {
+            #     'class': 'i_modular_header',
+            #     'name': 'هدر',
+            #     'file': 'header.tpl',
+            #     'modular': header_module,
+            #     'test_function': unit_test.test_unit_test
+            #
+            # },
+            # 'footer_script': {
+            #     'class': 'i_modular_footer_script',
+            #     'name': 'اسکریپت فوتر',
+            #     'file': 'footer-script.tpl',
+            #     'modular': footer_script_module,
+            #     'test_function': unit_test.test_unit_test
+            #
+            # },
+            # 'fast_search_flight': {
+            #     'class': 'i_modular_fast_search_flight',
+            #     'name': 'جستجوی سریع پرواز',
+            #     'file': 'fast_search_flight.tpl',
+            #     'modular': fast_search_flight_module,
+            #     'test_function': unit_test.test_unit_test
+            #
+            # },
+            'i_modular_tours': {
+                'class': 'i_modular_tours',
+                'name': 'تور',
+                'file': 'tours.tpl',
+                'modular': tours_module,
+                'test_function': unit_test.test_unit_test
+
+            },
         }
 
     module_messages = []
 
 
 
-    # main_page_array = {}
-    # for module_name, module_info in moduls_array.items():
-    #     section = soup.find(class_=module_info['class'])
-    #     if section:
-    #         main_page_array[f'{section}'] = "{" + module_info['name'] + ".tpl}"
-    #         module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name'] + " = " + module_info['modular'](section, project_path , lang))
-
-    section = soup.find(class_='i_modular_header')
-    module_messages.append("<br><br> تست ماژول گذاری بخش هدر = " + header_module(section, project_path, lang))
-
-    section = soup.find(class_='i_modular_footer_script')
-    module_messages.append("<br><br> تست ماژول گذاری بخش اسکریپت فوتر = " + footer_script_module(section, project_path, lang))
+    main_page_array = {}
+    for module_name, module_info in moduls_array.items():
+        section = soup.find(class_=module_info['class'])
+        if section:
+            main_page_array[f'{section}'] = "{" + module_info['name'] + ".tpl}"
+            module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name'] + " = " + module_info['modular'](section, project_path , lang))
 
     summary_message = '\n'.join(module_messages)
-    return jsonify({"message": f'{summary_message}'})
-
-
 
     #creation of mainPage
     soup = BeautifulSoup(html_content, 'html.parser')
@@ -170,81 +214,6 @@ def initiation_modulation(class_name, module_name, modular_function, soup, soup_
         return module_test_function(section, section_online)
 
     return f'ماژول {module_name} بازگذاری نشد'
-
-def blog_module(blog_section, project_path , lang = 'fa'):
-    try:
-        # create regex objects containing patterns of items classes
-        complex_items_numbers = helper.item_numbers(blog_section,complex_items_pattern)
-        simple_items_numbers = helper.item_numbers(blog_section,simple_items_pattern)
-        complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
-        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
-        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
-        max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
-
-        before_html = '''{assign var="data_search_blog" value=['service'=>'Public','section'=>'article', 'limit' =>1i_modular__max_limit]}
-                        {assign var='articles' value=$obj_main_page->articlesPosition($data_search_blog)}
-                        {assign var='counter' value=0}
-                        {assign var="article_count" value=$articles|count}
-                        {if $articles}'''
-        before_html = before_html.replace("i_modular__max_limit", max_item_number)
-        after_html = '{/if}'
-
-        before_foreach = '''{foreach $articles as $key => $article} {if $counter >= i_modular__min_for_limit and $counter <= i_modular__max_for_limit}'''
-        before_foreach = before_foreach.replace("i_modular__min_for_limit", simple_items_numbers_min)
-        before_foreach = before_foreach.replace("i_modular__max_for_limit", simple_items_numbers_max)
-        after_foreach = '''{/if}{$counter = $counter + 1}{/foreach}'''
-
-        for num in simple_items_numbers:
-            blog_replacement_data = {
-                "__airline__": '''{$article['link']}''',
-                "__link__": '''{$article['link']}''',
-            }
-            simple_element = blog_section.find(class_=simple_items_class + num)
-            if num == simple_items_numbers[0]:
-                helper.add_before_after(blog_section, simple_items_class + num, before_foreach, after_foreach)
-
-                simple_element = blog_section.find(class_=simple_items_class + num)
-                simple_element = helper.replace_placeholders(simple_element, blog_replacement_data)
-                simple_element = blog_section.find(class_=simple_items_class + num)
-                helper.replace_attribute(simple_element, '__image_class__', 'src','{$article["image"]}')
-                helper.replace_attribute(simple_element, '__image_class__', 'src','{$article["image"]}')
-                helper.replace_attribute(simple_element, '__title_class__', 'string','{$article["title"]}')
-                helper.replace_attribute(simple_element, '__heading_class__', 'string','{$article["heading"]}')
-
-            else:
-                simple_element.decompose()
-        for num in complex_items_numbers:
-            before_if = '''{if $articles[{0}] }'''
-            before_if = before_if.replace("{0}", num)
-            after_if = '''{/if}'''
-
-            blog_complex_replacement_data = {
-                "__link__": '''{{$articles[{0}]['link']}}'''.format(num),
-                "__alt_article__": '''{{$articles[{0}]['title']}}'''.format(num),
-                'images/5497750661271-6.jpg': '''{{$articles[{0}]['image']}}'''.format(num),
-                '<span class="__date__">5 بهمن 1402</span>': '''{{$articles[{0}]['created_at']}}'''.format(num),
-                '<span class="__comments_number__">450</span>': '''{{$articles[{0}]['comments_count']['comments_count']}}'''.format(num)
-            }
-            helper.add_before_after(blog_section, complex_items_class + num, before_if, after_if)
-
-
-            complex_element = blog_section.find(class_=complex_items_class + num)
-            complex_element_final = helper.replace_placeholders(complex_element, blog_complex_replacement_data)
-            complex_element = blog_section.find(class_=complex_items_class + num)
-            helper.replace_attribute(complex_element, '__image_class__', 'src', '''{{$articles[{0}]['image']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__title_class__', 'string', '''{{$articles[{0}]['title']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__heading_class__', 'string', '''{{$articles[{0}]['heading']}}'''.format(num))
-
-
-        blog_final_content = f'{before_html}\n{blog_section}\n{after_html}'
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        helper.write_text_in_path(project_path, "{inclued 'include_files/blog.tpl'}")
-        blog_final_content = blog_final_content.replace("&gt;", ">")
-        blog_final_content = blog_final_content.replace("&lt;", "<")
-
-        return helper.create_file(blog_final_content, include_files_directory, 'blog', 'tpl')
-    except Exception as e:
-        return str(e)  # Return the exception message for now
 
 def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa'):
     try:
@@ -417,8 +386,21 @@ def menu_module(menu_section, project_path , lang = 'fa'):
         repeatable_links = {
             'fa':{
                 'پرواز': '{$smarty.const.ROOT_ADDRESS}/page/flight',
+                'هتل': '{$smarty.const.ROOT_ADDRESS}/page/hotel',
+                'بیمه': '{$smarty.const.ROOT_ADDRESS}/page/insurance',
+                'انتقاد و پیشنهادات': '{$smarty.const.ROOT_ADDRESS}/feedback',
+                'نظر سنجی': '{$smarty.const.ROOT_ADDRESS}/vote',
+                'باشگاه مسافران': '{$smarty.const.ROOT_ADDRESS}/loginUser',
                 'پیگیری خرید': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
                 'وبلاگ': '{$smarty.const.ROOT_ADDRESS}/mag',
+                'ویدئو ها': '{$smarty.const.ROOT_ADDRESS}/video',
+                'نمایندگی ها': '{$smarty.const.ROOT_ADDRESS}/agencyList',
+                'همکاری با ما': '{$smarty.const.ROOT_ADDRESS}/همکاری با ما',
+                'نرخ ارز': '{$smarty.const.ROOT_ADDRESS}/currency',
+                'سفر نامه': '{$smarty.const.ROOT_ADDRESS}/recommendation',
+                'سفارت': '{$smarty.const.ROOT_ADDRESS}/embassies',
+                'پرسش و پاسخ': '{$smarty.const.ROOT_ADDRESS}/faq',
+                'دقیقه 90': '{$smarty.const.ROOT_ADDRESS}/lastMinute',
                 'اخبار سایت': '{$smarty.const.ROOT_ADDRESS}/news',
                 'معرفی ايران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
                 'قوانین و مقررات': '{$smarty.const.ROOT_ADDRESS}/rules',
@@ -443,6 +425,36 @@ def menu_module(menu_section, project_path , lang = 'fa'):
             }
         }
 
+        repeatable_lists = {
+            'fa':{
+                'تور داخلی' : ''' <a href="javascript:;"> تور داخلی </a>
+                                    <ul class="nav-dropdown submenu-child fadeIn animated">
+                                        {foreach key=key_tour item=item_tour from=$objResult->ReservationTourCities('=1', 'return')}
+                                            <li>
+                                                <a href="{$smarty.const.ROOT_ADDRESS}/resultTourLocal/1-all/1-{$item_tour.id}/{$objDate->jdate("Y-m-d", '', '', '', 'en')}/all">
+                                                    {($smarty.const.SOFTWARE_LANG == 'fa') ? $item_tour.name : $item_tour.name_en}
+                                                </a>
+                                            </li>
+                                        {/foreach}
+
+
+                                    </ul>
+                                ''',
+                'تور خارجی' : '''<a href="javascript:;"> تور خارجی </a>
+                                    <ul class="nav-dropdown submenu-child fadeIn animated">
+                                        {foreach key=key_tour item=item_tour from=$objResult->ReservationTourCountries('yes')}
+                                            <li>
+                                                <a href="{$smarty.const.ROOT_ADDRESS}/resultTourLocal/1-all/{$item_tour.id}-all/{$objDate->jdate("Y-m-d", '', '', '', 'en')}/all">
+                                                    {($smarty.const.SOFTWARE_LANG == 'fa') ? $item_tour.name : $item_tour.name_en}
+                                                </a>
+                                            </li>
+                                        {/foreach}
+                                    </ul>
+                                ''',
+
+            }
+        }
+
         helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
         helper.replace_attribute_by_text(menu_section, 'الدخول / يسجل' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
         helper.replace_attribute(menu_section, '__login_register_class__2', 'class','__login_register_class__2 main-navigation__button2 show-box-login-js')
@@ -463,6 +475,9 @@ def menu_module(menu_section, project_path , lang = 'fa'):
 
         for key, val in repeatable_links[lang].items():
             helper.replace_attribute_by_text(menu_section, key, 'href', val)
+
+        for key, val in repeatable_lists[lang].items():
+            helper.replace_attribute_by_text(menu_section, key, 'string', val)
 
 
 
@@ -820,6 +835,151 @@ def new_module(new_section, project_path, lang='fa'):
         return helper.create_file(new_final_content, include_files_directory, 'new', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
+
+def fast_search_flight_module(fast_search_flight_section, project_path, lang='fa'):
+    try:
+        return 'True'
+
+        # type  of current functions:
+
+        # replace_placeholders
+        # replace_attribute and string
+        # add_before_after
+        # direct_string
+        # final_content.replace
+        fast_search_flight_final_content = fast_search_flight_final_content.replace("&gt;", ">")
+        fast_search_flight_final_content = fast_search_flight_final_content.replace("&lt;", "<")
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        return helper.create_file(fast_search_flight_final_content, include_files_directory, 'fast_search_flight', 'tpl')
+    except Exception as e:
+        return str(e)  # Return the exception message for now
+
+def blog_module(blog_section, project_path , lang = 'fa'):
+    try:
+        # create regex objects containing patterns of items classes
+        complex_items_numbers = helper.item_numbers(blog_section,complex_items_pattern)
+        simple_items_numbers = helper.item_numbers(blog_section,simple_items_pattern)
+        complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
+        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
+        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
+        max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
+
+        before_html = '''{assign var="data_search_blog" value=['service'=>'Public','section'=>'article', 'limit' =>1i_modular__max_limit]}
+                        {assign var='articles' value=$obj_main_page->articlesPosition($data_search_blog)}
+                        {assign var='counter' value=0}
+                        {assign var="article_count" value=$articles|count}
+                        {if $articles}'''
+        before_html = before_html.replace("i_modular__max_limit", max_item_number)
+        after_html = '{/if}'
+
+        before_foreach = '''{foreach $articles as $key => $article} {if $counter >= i_modular__min_for_limit and $counter <= i_modular__max_for_limit}'''
+        before_foreach = before_foreach.replace("i_modular__min_for_limit", simple_items_numbers_min)
+        before_foreach = before_foreach.replace("i_modular__max_for_limit", simple_items_numbers_max)
+        after_foreach = '''{/if}{$counter = $counter + 1}{/foreach}'''
+
+        for num in simple_items_numbers:
+            blog_replacement_data = {
+                "__airline__": '''{$article['link']}''',
+                "__link__": '''{$article['link']}''',
+            }
+            simple_element = blog_section.find(class_=simple_items_class + num)
+            if num == simple_items_numbers[0]:
+                helper.add_before_after(blog_section, simple_items_class + num, before_foreach, after_foreach)
+
+                simple_element = blog_section.find(class_=simple_items_class + num)
+                simple_element = helper.replace_placeholders(simple_element, blog_replacement_data)
+                simple_element = blog_section.find(class_=simple_items_class + num)
+                helper.replace_attribute(simple_element, '__image_class__', 'src','{$article["image"]}')
+                helper.replace_attribute(simple_element, '__image_class__', 'src','{$article["image"]}')
+                helper.replace_attribute(simple_element, '__title_class__', 'string','{$article["title"]}')
+                helper.replace_attribute(simple_element, '__heading_class__', 'string','{$article["heading"]}')
+
+            else:
+                simple_element.decompose()
+        for num in complex_items_numbers:
+            before_if = '''{if $articles[{0}] }'''
+            before_if = before_if.replace("{0}", num)
+            after_if = '''{/if}'''
+
+            blog_complex_replacement_data = {
+                "__link__": '''{{$articles[{0}]['link']}}'''.format(num),
+                "__alt_article__": '''{{$articles[{0}]['title']}}'''.format(num),
+                'images/5497750661271-6.jpg': '''{{$articles[{0}]['image']}}'''.format(num),
+                '<span class="__date__">5 بهمن 1402</span>': '''{{$articles[{0}]['created_at']}}'''.format(num),
+                '<span class="__comments_number__">450</span>': '''{{$articles[{0}]['comments_count']['comments_count']}}'''.format(num)
+            }
+            helper.add_before_after(blog_section, complex_items_class + num, before_if, after_if)
+
+
+            complex_element = blog_section.find(class_=complex_items_class + num)
+            complex_element_final = helper.replace_placeholders(complex_element, blog_complex_replacement_data)
+            complex_element = blog_section.find(class_=complex_items_class + num)
+            helper.replace_attribute(complex_element, '__image_class__', 'src', '''{{$articles[{0}]['image']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__title_class__', 'string', '''{{$articles[{0}]['title']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__heading_class__', 'string', '''{{$articles[{0}]['heading']}}'''.format(num))
+
+
+        blog_final_content = f'{before_html}\n{blog_section}\n{after_html}'
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        helper.write_text_in_path(project_path, "{inclued 'include_files/blog.tpl'}")
+        blog_final_content = blog_final_content.replace("&gt;", ">")
+        blog_final_content = blog_final_content.replace("&lt;", "<")
+
+        return helper.create_file(blog_final_content, include_files_directory, 'blog', 'tpl')
+    except Exception as e:
+        return str(e)  # Return the exception message for now
+
+def tours_module(tours_section, project_path, lang='fa'):
+    try:
+        check_local = False
+        check_portal = False
+        before_html = '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}'''
+        before_html_local = '''{assign var="special_internal_tour_params" value=['type'=>'','limit'=> '10','dateNow' => $dateNow, 'country' =>'internal']}
+                                {assign var='internal_tours' value=$obj_main_page->getToursReservation($special_internal_tour_params)}
+                                {if $internal_tours}
+                                    {assign var='check_tour' value=true}
+                                {/if}
+                            '''
+        before_html_portal = '''{assign var="foreging_external_tour_params" value=['type'=>'','limit'=> '10','dateNow' => $dateNow, 'country' =>'external']}
+                                {assign var='external_tours' value=$obj_main_page->getToursReservation($foreging_external_tour_params)}
+                                {if $external_tours}
+                                    {assign var='check_tour' value=true}
+                                {/if}
+                                '''
+        after_html = '''{/if}'''
+        local_section = tours_section.find(class_='__tour_local__')
+        if section:
+            check_local = True
+        portal_section = tours_section.find(class_='__tour_portal__')
+        if section:
+            check_portal = True
+
+        if check_local:
+            before_html = before_html + '\n' + before_html_local
+            internal_tours_modular_string(local_section, project_path,lang)
+
+        if check_portal:
+            before_html = before_html + '\n' + before_html_portal
+            internal_tours_modular_string(portal_section, project_path,'fa')
+
+
+        before_html = before_html + '\n' + '''{if $check_tour}'''
+
+        # type  of current functions:
+        # replace_placeholders
+        # replace_attribute and string
+        # add_before_after
+        # direct_string
+        # final_content.replace
+        blog_final_content = f'{before_html}\n{blog_section}\n{after_html}'
+
+        tours_final_content = tours_final_content.replace("&gt;", ">")
+        tours_final_content = tours_final_content.replace("&lt;", "<")
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        return helper.create_file(tours_final_content, include_files_directory, 'tours', 'tpl')
+    except Exception as e:
+        return str(e)  # Return the exception message for now
+
 
 
 

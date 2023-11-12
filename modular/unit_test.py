@@ -312,8 +312,22 @@ def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
 
         repeatable_links = {
                 'پرواز': 'http://192.168.1.100/gds/'+ lang +'/page/flight',
+                'پرواز': 'http://192.168.1.100/gds/'+ lang +'/page/flight',
+                'هتل': 'http://192.168.1.100/gds/'+ lang +'/page/hotel',
+                'بیمه': 'http://192.168.1.100/gds/'+ lang +'/page/insurance',
+                'انتقاد و پیشنهادات': 'http://192.168.1.100/gds/'+ lang +'/feedback',
+                'نظر سنجی': 'http://192.168.1.100/gds/'+ lang +'/vote',
+                'باشگاه مسافران': 'http://192.168.1.100/gds/'+ lang +'/loginUser',
                 'پیگیری خرید': 'http://192.168.1.100/gds/'+ lang +'/UserTracking',
                 'وبلاگ': 'http://192.168.1.100/gds/'+ lang +'/mag',
+                'ویدئو ها': 'http://192.168.1.100/gds/'+ lang +'/video',
+                'نمایندگی ها': 'http://192.168.1.100/gds/'+ lang +'/agencyList',
+                'همکاری با ما': 'http://192.168.1.100/gds/'+ lang +'/همکاری با ما',
+                'نرخ ارز': 'http://192.168.1.100/gds/'+ lang +'/currency',
+                'سفر نامه': 'http://192.168.1.100/gds/'+ lang +'/recommendation',
+                'سفارت': 'http://192.168.1.100/gds/'+ lang +'/embassies',
+                'پرسش و پاسخ': 'http://192.168.1.100/gds/'+ lang +'/faq',
+                'دقیقه 90': 'http://192.168.1.100/gds/'+ lang +'/lastMinute',
                 'اخبار سایت': 'http://192.168.1.100/gds/'+ lang +'/news',
                 'معرفی ايران': 'http://192.168.1.100/gds/'+ lang +'/aboutIran',
                 'قوانین و مقررات': 'http://192.168.1.100/gds/'+ lang +'/rules',
@@ -431,3 +445,5 @@ def compare_html_strings(html1, html2):
     # Compare the serialized HTML strings
     return soup1 == soup2
 
+def test_unit_test():
+    return 'test'

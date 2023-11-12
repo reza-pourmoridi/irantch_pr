@@ -1,6 +1,6 @@
 modulation of darya:
-modulation of darya html.
-checking for modules that need to be creat and separating them in two list
+modulation of darya html.+
+checking for modules that need to be creat and separating them in two list+
 creating and checking those separate of rest of the code
 final test
 
@@ -8,16 +8,26 @@ final test
 
 
 list , those who needs to creat function for.
+menu ,++
+
+i_modular_tours,
+i_modular_tours2,
+i_modular_other,
+i_modular_app
+i_modular_follow_us,
+i_modular_banner_tabs,
+i_modular_fast_search_flight,
 
 
 list , those who doesn't need.
+i_modular_info,
 
 
 
 
 
 
-
+warning: dynamic menus like tour.
 
 warning: don't forget for writing the test , check the links and images.
 warning: creating an test for scripts and links.
