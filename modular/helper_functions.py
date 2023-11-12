@@ -174,7 +174,7 @@ def delete_assames(editing_array, compare_array):
 
 def turn_to_styl_links_assames(links):
     result = ''
-    for item in inside_assets:
+    for item in links:
         result = result + '<link rel="stylesheet" href="project_files/' + item + '">'
     return result
 
