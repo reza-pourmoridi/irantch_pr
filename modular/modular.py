@@ -161,6 +161,9 @@ def initiation_progress():
 
     summary_message = '\n'.join(module_messages)
 
+    return jsonify({"message": f'{summary_message}'
+})
+
     #creation of mainPage
     soup = BeautifulSoup(html_content, 'html.parser')
 
@@ -492,7 +495,6 @@ def menu_module(menu_section, project_path , lang = 'fa'):
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-
 def footer_module(footer_section, project_path, lang='fa'):
     try:
         return 'lsdfj'
@@ -578,7 +580,6 @@ def footer_module(footer_section, project_path, lang='fa'):
         return helper.create_file(footer_final_content, include_files_directory, 'footer', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
-
 
 def header_module(header_section, project_path , lang = 'fa'):
     try:
@@ -819,23 +820,6 @@ def footer_script_module(footer_script_section, project_path, lang='fa'):
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def new_module(new_section, project_path, lang='fa'):
-    try:
-
-        # type  of current functions:
-
-        # replace_placeholders
-        # replace_attribute and string
-        # add_before_after
-        # direct_string
-        # final_content.replace
-        new_final_content = new_final_content.replace("&gt;", ">")
-        new_final_content = new_final_content.replace("&lt;", "<")
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(new_final_content, include_files_directory, 'new', 'tpl')
-    except Exception as e:
-        return str(e)  # Return the exception message for now
-
 def fast_search_flight_module(fast_search_flight_section, project_path, lang='fa'):
     try:
         return 'True'
@@ -931,47 +915,128 @@ def blog_module(blog_section, project_path , lang = 'fa'):
 
 def tours_module(tours_section, project_path, lang='fa'):
     try:
-        check_local = False
-        check_portal = False
         before_html = '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}'''
-        before_html_local = '''{assign var="special_internal_tour_params" value=['type'=>'','limit'=> '10','dateNow' => $dateNow, 'country' =>'internal']}
-                                {assign var='internal_tours' value=$obj_main_page->getToursReservation($special_internal_tour_params)}
-                                {if $internal_tours}
+        before_html_local = '''{assign var="__params_var__" value=['type'=>'__type__','limit'=> '__local_max_limit__','dateNow' => $dateNow, 'country' =>'__country__']}
+                                {assign var='__tour_var__' value=$obj_main_page->getToursReservation($__params_var__)}
+                                {if $__tour_var__}
                                     {assign var='check_tour' value=true}
                                 {/if}
+                                {assign var="local_min" value=__local_min__}
+                                {assign var="local_max" value=__local_max__}
                             '''
-        before_html_portal = '''{assign var="foreging_external_tour_params" value=['type'=>'','limit'=> '10','dateNow' => $dateNow, 'country' =>'external']}
-                                {assign var='external_tours' value=$obj_main_page->getToursReservation($foreging_external_tour_params)}
-                                {if $external_tours}
-                                    {assign var='check_tour' value=true}
-                                {/if}
+        before_foreach_local = '''
+                                {foreach $__tour_var__ as $item}
+                                    {if $local_min <= $local_max}
                                 '''
+        after_foreach_local = '''
+                                    {$local_min = $local_min + 1}
+                                    {/if}
+                                {/foreach}
+                                '''
+        replace_classes_local = {
+            '___price_class__': {'string': '''{$item['min_price']['discountedMinPriceR']|number_format}'''} ,
+        '__title_class__': {'string': '''{$item['tour_name']}'''},
+        '__night_class__': {'string': '''{$item['night']}'''},
+        '__image_class__': {'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$item['tour_pic']}''','alt' : '''{$item['tour_name']}'''},
+        '__date_class__': {'string': '''{assign var="year" value=substr($item['start_date'], 0, 4)}
+                                        {assign var="month" value=substr($item['start_date'], 4, 2)}
+                                        {assign var="day" value=substr($item['start_date'], 6)}
+                                        {$year}/{$month}/{$day}
+                                        '''},
+        }
+
+
         after_html = '''{/if}'''
-        local_section = tours_section.find(class_='__tour_local__')
-        if section:
-            check_local = True
-        portal_section = tours_section.find(class_='__tour_portal__')
-        if section:
-            check_portal = True
 
-        if check_local:
-            before_html = before_html + '\n' + before_html_local
-            internal_tours_modular_string(local_section, project_path,lang)
+        tour_region_array = ['internal', 'external', '']
+        tour_type_array = ['', 'special']
 
-        if check_portal:
-            before_html = before_html + '\n' + before_html_portal
-            internal_tours_modular_string(portal_section, project_path,'fa')
+        for region in tour_region_array:
+            for type in tour_type_array:
+                section_class= '__tour__'
+                section_var= 'tour'
+                if region:
+                    section_class =  section_class + region + '__'
+                    section_var =  section_class + '_' + region
+                if type:
+                    section_class = section_class + type + '__'
+                    section_var =  section_class + '_' + type
+
+
+                local_section = tours_section.find(class_=section_class)
+                if local_section:
+                    before_html = before_html.replace("__type__", region)
+                    before_html = before_html.replace("__country__", type)
+                    before_html = before_html.replace("__tour_var__", section_var)
+
+                    before_html = before_html + '\n' + before_html_local
+                    complex_items_numbers = helper.item_numbers(local_section, complex_items_pattern)
+                    simple_items_numbers = helper.item_numbers(local_section, simple_items_pattern)
+                    complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
+                    simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
+                    simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
+                    max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
+                    before_html = before_html.replace("__local_min__", simple_items_numbers_min)
+                    before_html = before_html.replace("__local_max__", simple_items_numbers_max)
+                    before_html = before_html.replace("__local_max_limit__", max_item_number)
+                    for num in simple_items_numbers:
+                        tours_simple_replacements = {
+                            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$item['id']}/{$item['tour_slug']}''',
+                        }
+                        simple_element = local_section.find(class_=simple_items_class + num)
+                        if num == simple_items_numbers[0]:
+                            simple_element = helper.replace_placeholders(simple_element, tours_simple_replacements)
+                            simple_element = local_section.find(class_=simple_items_class + num)
+                            helper.add_before_after(local_section, simple_items_class + num, before_foreach_local, after_foreach_local)
+                            simple_element = local_section.find(class_=simple_items_class + num)
+                            for class_name, val in replace_classes_local.items():
+                                for atr, value in val.items():
+                                    helper.replace_attribute(simple_element, class_name, atr, value)
+                        else:
+                            simple_element.decompose()
+
+
+
+                    for num in complex_items_numbers:
+                        tours_complex_replacements = {
+                            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$__tour_var__[{0}]['id']}/{$__tour_var__[{0}]['tour_slug']}'''  ,
+                        }
+                        replace_comlex_classes_local = {
+                            '___price_class__': {'string': '''{$__tour_var__[{0}]['min_price']['discountedMinPriceR']|number_format}'''},
+                            '__title_class__': {'string': '''{$__tour_var__[{0}]['tour_name']}'''},
+                            '__night_class__': {'string': '''{$__tour_var__[{0}]['night']}'''},
+                            '__image_class__': {
+                                'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$__tour_var__[{0}['tour_pic']}''',
+                                'alt': '''{$__tour_var__[{0}]['tour_name']}'''},
+                            '__date_class__': {'string': '''{assign var="year" value=substr($__tour_var__[{0}]['start_date'], 0, 4)}
+                                                        {assign var="month" value=substr($__tour_var__[{0}]['start_date'], 4, 2)}
+                                                        {assign var="day" value=substr($__tour_var__[{0}]['start_date'], 6)}
+                                                        {$year}/{$month}/{$day}
+                                                        '''},
+                        }
+                        before_c_item_local = '''{if $__tour_var__[{0}]}'''
+                        after_c_item_local = '''{/if}'''
+
+                        before_c_item_local = before_c_item_local.replace("{0}", f'{num}')
+                        tours_complex_replacements['__link__'] = tours_complex_replacements['__link__'].replace("{0}", f'{num}')
+
+
+                        complex_element = local_section.find(class_=complex_items_class + num)
+                        complex_element = helper.replace_placeholders(complex_element, tours_complex_replacements)
+
+                        complex_element = local_section.find(class_=complex_items_class + num)
+                        helper.add_before_after(local_section, complex_items_class + num, before_c_item_local, after_c_item_local)
+                        complex_element = local_section.find(class_=complex_items_class + num)
+                        for class_name, val in replace_comlex_classes_local.items():
+                            for atr, value in val.items():
+                                value = value.replace("{0}", f'{num}')
+                                value = value.replace("__tour_var__", section_var)
+                                helper.replace_attribute(complex_element, class_name, atr, value)
 
 
         before_html = before_html + '\n' + '''{if $check_tour}'''
 
-        # type  of current functions:
-        # replace_placeholders
-        # replace_attribute and string
-        # add_before_after
-        # direct_string
-        # final_content.replace
-        blog_final_content = f'{before_html}\n{blog_section}\n{after_html}'
+        tours_final_content = f'{before_html}\n{tours_section}\n{after_html}'
 
         tours_final_content = tours_final_content.replace("&gt;", ">")
         tours_final_content = tours_final_content.replace("&lt;", "<")
@@ -980,6 +1045,22 @@ def tours_module(tours_section, project_path, lang='fa'):
     except Exception as e:
         return str(e)  # Return the exception message for now
 
+def new_module(new_section, project_path, lang='fa'):
+    try:
+
+        # type  of current functions:
+
+        # replace_placeholders
+        # replace_attribute and string
+        # add_before_after
+        # direct_string
+        # final_content.replace
+        new_final_content = new_final_content.replace("&gt;", ">")
+        new_final_content = new_final_content.replace("&lt;", "<")
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        return helper.create_file(new_final_content, include_files_directory, 'new', 'tpl')
+    except Exception as e:
+        return str(e)  # Return the exception message for now
 
 
 

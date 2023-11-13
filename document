@@ -30,6 +30,13 @@ hooks:
         __image_class__     : کلاس عکس
         __description_class__     : کلاس توضیحات
 
+    tour: i_modular_news
+        __link__            : لینک
+        ___price_class__   : کلاس قیمت
+        __title_class__     : کلاس تایتل
+        __image_class__     : کلاس عکس
+        __date_class__     : کلاس توضیحات
+
 
     newsletter: i_modular_newsletter
         __name_class__            : کلاس اسم
