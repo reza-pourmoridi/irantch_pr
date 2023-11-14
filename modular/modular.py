@@ -138,11 +138,12 @@ def initiation_progress():
             #     'test_function': unit_test.test_unit_test
             #
             # },
-            'i_modular_tours': {
-                'class': 'i_modular_tours',
-                'name': 'تور',
-                'file': 'tours.tpl',
-                'modular': tours_module,
+
+            'hotels_webservice': {
+                'class': 'i_modular_hotels_webservice',
+                'name': 'هتل وب سرویس',
+                'file': 'hotels-webservice.tpl',
+                'modular': hotels_webservice_module,
                 'test_function': unit_test.test_unit_test
 
             },
@@ -916,34 +917,6 @@ def blog_module(blog_section, project_path , lang = 'fa'):
 def tours_module(tours_section, project_path, lang='fa'):
     try:
         before_html = '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}'''
-        before_html_local = '''{assign var="__params_var__" value=['type'=>'__type__','limit'=> '__local_max_limit__','dateNow' => $dateNow, 'country' =>'__country__']}
-                                {assign var='__tour_var__' value=$obj_main_page->getToursReservation($__params_var__)}
-                                {if $__tour_var__}
-                                    {assign var='check_tour' value=true}
-                                {/if}
-                                {assign var="local_min" value=__local_min__}
-                                {assign var="local_max" value=__local_max__}
-                            '''
-        before_foreach_local = '''
-                                {foreach $__tour_var__ as $item}
-                                    {if $local_min <= $local_max}
-                                '''
-        after_foreach_local = '''
-                                    {$local_min = $local_min + 1}
-                                    {/if}
-                                {/foreach}
-                                '''
-        replace_classes_local = {
-            '___price_class__': {'string': '''{$item['min_price']['discountedMinPriceR']|number_format}'''} ,
-        '__title_class__': {'string': '''{$item['tour_name']}'''},
-        '__night_class__': {'string': '''{$item['night']}'''},
-        '__image_class__': {'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$item['tour_pic']}''','alt' : '''{$item['tour_name']}'''},
-        '__date_class__': {'string': '''{assign var="year" value=substr($item['start_date'], 0, 4)}
-                                        {assign var="month" value=substr($item['start_date'], 4, 2)}
-                                        {assign var="day" value=substr($item['start_date'], 6)}
-                                        {$year}/{$month}/{$day}
-                                        '''},
-        }
 
 
         after_html = '''{/if}'''
@@ -953,21 +926,67 @@ def tours_module(tours_section, project_path, lang='fa'):
 
         for region in tour_region_array:
             for type in tour_type_array:
+                before_html_local = '''{assign var="__params_var__" value=['type'=>'__type__','limit'=> '__local_max_limit__','dateNow' => $dateNow, 'country' =>'__country__']}
+                                        {assign var='__tour_var__' value=$obj_main_page->getToursReservation($__params_var__)}
+                                        {if $__tour_var__}
+                                            {assign var='check_tour' value=true}
+                                        {/if}
+                                        {assign var="__local_min_var__" value=__local_min__}
+                                        {assign var="__local_max_var__" value=__local_max__}
+                                    '''
+                before_foreach_local = '''
+                                        {foreach $__tour_var__ as $item}
+                                            {if $__local_min_var__ <= $__local_max_var__}
+                                        '''
+                after_foreach_local = '''
+                                            {$__local_min_var__ = $__local_min_var__ + 1}
+                                            {/if}
+                                        {/foreach}
+                                        '''
+                replace_classes_local = {
+                    '___price_class__': {'string': '''{$item['min_price']['discountedMinPriceR']|number_format}'''},
+                    '__title_class__': {'string': '''{$item['tour_name']}'''},
+                    '__night_class__': {'string': '''{$item['night']}'''},
+                    '__image_class__': {
+                        'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$item['tour_pic']}''',
+                        'alt': '''{$item['tour_name']}'''},
+                    '__date_class__': {'string': '''{assign var="year" value=substr($item['start_date'], 0, 4)}
+                                                {assign var="month" value=substr($item['start_date'], 4, 2)}
+                                                {assign var="day" value=substr($item['start_date'], 6)}
+                                                {$year}/{$month}/{$day}
+                                                '''},
+                }
+
                 section_class= '__tour__'
                 section_var= 'tour'
+                section_params= 'tour_params'
+                local_min_var = 'min'
+                local_max_var = 'max'
                 if region:
                     section_class =  section_class + region + '__'
-                    section_var =  section_class + '_' + region
+                    section_var =  section_var + '_' + region
+                    section_params =  section_params + '_' + region
+                    local_min_var =  local_min_var + '_' + region
+                    local_max_var =  local_max_var + '_' + region
                 if type:
                     section_class = section_class + type + '__'
-                    section_var =  section_class + '_' + type
+                    section_var =  section_var + '_' + type
+                    local_min_var =  local_min_var + '_' + region
+                    local_max_var =  local_max_var + '_' + region
 
 
                 local_section = tours_section.find(class_=section_class)
                 if local_section:
-                    before_html = before_html.replace("__type__", region)
-                    before_html = before_html.replace("__country__", type)
-                    before_html = before_html.replace("__tour_var__", section_var)
+                    before_html_local = before_html_local.replace("__type__", type)
+                    before_html_local = before_html_local.replace("__country__", region)
+                    before_html_local = before_html_local.replace("__tour_var__", section_var)
+                    before_html_local = before_html_local.replace("__params_var__", section_params)
+                    before_html_local = before_html_local.replace("__local_min_var__", local_min_var)
+                    before_html_local = before_html_local.replace("__local_max_var__", local_max_var)
+                    before_foreach_local = before_foreach_local.replace("__local_min_var__", local_min_var)
+                    before_foreach_local = before_foreach_local.replace("__local_max_var__", local_max_var)
+                    before_foreach_local = before_foreach_local.replace("__tour_var__", section_var)
+                    after_foreach_local = after_foreach_local.replace("__local_min_var__", local_min_var)
 
                     before_html = before_html + '\n' + before_html_local
                     complex_items_numbers = helper.item_numbers(local_section, complex_items_pattern)
@@ -1006,7 +1025,7 @@ def tours_module(tours_section, project_path, lang='fa'):
                             '__title_class__': {'string': '''{$__tour_var__[{0}]['tour_name']}'''},
                             '__night_class__': {'string': '''{$__tour_var__[{0}]['night']}'''},
                             '__image_class__': {
-                                'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$__tour_var__[{0}['tour_pic']}''',
+                                'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$__tour_var__[{0}]['tour_pic']}''',
                                 'alt': '''{$__tour_var__[{0}]['tour_name']}'''},
                             '__date_class__': {'string': '''{assign var="year" value=substr($__tour_var__[{0}]['start_date'], 0, 4)}
                                                         {assign var="month" value=substr($__tour_var__[{0}]['start_date'], 4, 2)}
@@ -1018,7 +1037,9 @@ def tours_module(tours_section, project_path, lang='fa'):
                         after_c_item_local = '''{/if}'''
 
                         before_c_item_local = before_c_item_local.replace("{0}", f'{num}')
+                        before_c_item_local = before_c_item_local.replace("__tour_var__", section_var)
                         tours_complex_replacements['__link__'] = tours_complex_replacements['__link__'].replace("{0}", f'{num}')
+                        tours_complex_replacements['__link__'] = tours_complex_replacements['__link__'].replace("__tour_var__", section_var)
 
 
                         complex_element = local_section.find(class_=complex_items_class + num)
@@ -1042,6 +1063,173 @@ def tours_module(tours_section, project_path, lang='fa'):
         tours_final_content = tours_final_content.replace("&lt;", "<")
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         return helper.create_file(tours_final_content, include_files_directory, 'tours', 'tpl')
+    except Exception as e:
+        return str(e)  # Return the exception message for now
+
+def hotels_webservice_module(hotels_section, project_path, lang='fa'):
+    try:
+        before_html = '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}'''
+
+
+        after_html = '''{/if}'''
+
+        hotel_region_array = ['internal', 'external']
+        hotel_type_array = ['']
+
+        for region in hotel_region_array:
+            for type in hotel_type_array:
+                before_html_local = '''
+                                        {assign var="__params_var__" value=['Count'=> '__local_max_limit__', 'type' =>'__country__']}
+                                        {assign var='__hotel_var__' value=$obj_main_page->getHotelWebservice($__params_var__)}
+                                        {if $__hotel_var__}
+                                            {assign var='check_hotel' value=true}
+                                        {/if}
+                                        {assign var="__local_min_var__" value=__local_min__}
+                                        {assign var="__local_max_var__" value=__local_max__}
+                                    '''
+                before_foreach_local = '''
+                                        {foreach $__hotel_var__ as $item}
+                                            {if $__local_min_var__ <= $__local_max_var__}
+                                        '''
+                after_foreach_local = '''
+                                            {$__local_min_var__ = $__local_min_var__ + 1}
+                                            {/if}
+                                        {/foreach}
+                                        '''
+                replace_classes_local = {
+                    '__title_class__': {'string': '''{$item['Name']}'''},
+                    '__city_class__': {'string': '''{$item['City']}'''},
+                    '__image_class__': {
+                        'src': '''{$item['Picture']}''',
+                        'alt': '''{$item['City']}'''},
+                }
+
+                section_class= '__hotel__'
+                section_var= 'hotel'
+                section_params= 'hotel_params'
+                local_min_var = 'min'
+                local_max_var = 'max'
+                if region:
+                    section_class =  section_class + region + '__'
+                    section_var =  section_var + '_' + region
+                    section_params =  section_params + '_' + region
+                    local_min_var =  local_min_var + '_' + region
+                    local_max_var =  local_max_var + '_' + region
+                if type:
+                    section_class = section_class + type + '__'
+                    section_var =  section_var + '_' + type
+                    local_min_var =  local_min_var + '_' + region
+                    local_max_var =  local_max_var + '_' + region
+
+
+                local_section = hotels_section.find(class_=section_class)
+                if local_section:
+                    before_html_local = before_html_local.replace("__type__", type)
+                    before_html_local = before_html_local.replace("__country__", region)
+                    before_html_local = before_html_local.replace("__hotel_var__", section_var)
+                    before_html_local = before_html_local.replace("__params_var__", section_params)
+                    before_html_local = before_html_local.replace("__local_min_var__", local_min_var)
+                    before_html_local = before_html_local.replace("__local_max_var__", local_max_var)
+                    before_foreach_local = before_foreach_local.replace("__local_min_var__", local_min_var)
+                    before_foreach_local = before_foreach_local.replace("__local_max_var__", local_max_var)
+                    before_foreach_local = before_foreach_local.replace("__hotel_var__", section_var)
+                    after_foreach_local = after_foreach_local.replace("__local_min_var__", local_min_var)
+
+                    before_html = before_html + '\n' + before_html_local
+                    complex_items_numbers = helper.item_numbers(local_section, complex_items_pattern)
+                    simple_items_numbers = helper.item_numbers(local_section, simple_items_pattern)
+                    complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
+                    simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
+                    simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
+                    max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
+                    before_html = before_html.replace("__local_min__", simple_items_numbers_min)
+                    before_html = before_html.replace("__local_max__", simple_items_numbers_max)
+                    before_html = before_html.replace("__local_max_limit__", max_item_number)
+                    for num in simple_items_numbers:
+                        hotels_simple_replacements = {
+                            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailHotel/api/{$item['HotelIndex']}''',
+                        }
+                        simple_element = local_section.find(class_=simple_items_class + num)
+                        if num == simple_items_numbers[0]:
+                            simple_element = helper.replace_placeholders(simple_element, hotels_simple_replacements)
+                            simple_element = local_section.find(class_=simple_items_class + num)
+                            helper.add_before_after(local_section, simple_items_class + num, before_foreach_local, after_foreach_local)
+                            simple_element = local_section.find(class_=simple_items_class + num)
+                            for class_name, val in replace_classes_local.items():
+                                for atr, value in val.items():
+                                    helper.replace_attribute(simple_element, class_name, atr, value)
+
+                            for i in range(1, 6):
+                                light_star_elements = simple_element.find(class_='__star_class_light__' + str(i))
+                                dark_star_elements = simple_element.find(class_='__star_class_dark__' + str(i))
+                                if i == 1 and light_star_elements:
+                                    new_light_star = '''{for $i = 0; $i < count($item['StarCode']); $i++}''' + str(light_star_elements) + '''{/for}'''
+                                    new_light_star = BeautifulSoup(new_light_star, 'html.parser')
+                                    light_star_elements.replace_with(new_light_star)
+                                else:
+                                    if light_star_elements:
+                                        light_star_elements.decompose()
+
+                                if i == 1 and dark_star_elements:
+                                    new_dark_star = '''{for $i = 0; $i < count($item['StarCode']); $i++}''' + str(dark_star_elements) + '''{/for}'''
+                                    new_dark_star = BeautifulSoup(new_light_star, 'html.parser')
+                                    dark_star_elements.replace_with(new_dark_star)
+                                else:
+                                    if dark_star_elements:
+                                        dark_star_elements.decompose()
+
+
+
+
+
+
+
+                        else:
+                            simple_element.decompose()
+
+
+
+                    for num in complex_items_numbers:
+                        hotels_complex_replacements = {
+                            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailHotel/api/{$__hotel_var__[4]['HotelIndex']}'''  ,
+                        }
+                        replace_comlex_classes_local = {
+                            '__title_class__': {'string': '''{$internal_hotels[4]['Name']}'''},
+                            '__city_class__': {'string': '''{$internal_hotels[4]['City']}'''},
+                            '__image_class__': {
+                                'src': '''{$internal_hotels[4]['Picture']}''',
+                                'alt': '''{$internal_hotels[4]['City']}'''},
+                        }
+                        before_c_item_local = '''{if $__hotel_var__[{0}]}'''
+                        after_c_item_local = '''{/if}'''
+
+                        before_c_item_local = before_c_item_local.replace("{0}", f'{num}')
+                        before_c_item_local = before_c_item_local.replace("__hotel_var__", section_var)
+                        hotels_complex_replacements['__link__'] = hotels_complex_replacements['__link__'].replace("{0}", f'{num}')
+                        hotels_complex_replacements['__link__'] = hotels_complex_replacements['__link__'].replace("__hotel_var__", section_var)
+
+
+                        complex_element = local_section.find(class_=complex_items_class + num)
+                        complex_element = helper.replace_placeholders(complex_element, hotels_complex_replacements)
+
+                        complex_element = local_section.find(class_=complex_items_class + num)
+                        helper.add_before_after(local_section, complex_items_class + num, before_c_item_local, after_c_item_local)
+                        complex_element = local_section.find(class_=complex_items_class + num)
+                        for class_name, val in replace_comlex_classes_local.items():
+                            for atr, value in val.items():
+                                value = value.replace("{0}", f'{num}')
+                                value = value.replace("__hotel_var__", section_var)
+                                helper.replace_attribute(complex_element, class_name, atr, value)
+
+
+        before_html = before_html + '\n' + '''{if $check_hotel}'''
+
+        hotels_final_content = f'{before_html}\n{hotels_section}\n{after_html}'
+
+        hotels_final_content = hotels_final_content.replace("&gt;", ">")
+        hotels_final_content = hotels_final_content.replace("&lt;", "<")
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        return helper.create_file(hotels_final_content, include_files_directory, 'hotels', 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 

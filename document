@@ -31,9 +31,25 @@ hooks:
         __description_class__     : کلاس توضیحات
 
     tour: i_modular_news
+    __tour__
+    __tour__internal__
+    __tour__external__
+    __tour__internal__special__
+    __tour__external__special__
+
         __link__            : لینک
         ___price_class__   : کلاس قیمت
         __title_class__     : کلاس تایتل
+        __image_class__     : کلاس عکس
+        __date_class__     : کلاس تاریخ
+
+
+    hotel webservice: i_modular_news
+    __hotel__internal__
+    __hotel__external__
+        __link__            : لینک
+        __title_class__   : کلاس نام
+        __city_class__     : کلاس شهر
         __image_class__     : کلاس عکس
         __date_class__     : کلاس توضیحات
 
