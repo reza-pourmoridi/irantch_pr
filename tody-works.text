@@ -13,13 +13,16 @@ menu ,++
 i_modular_tours,+
 i_modular_tours2,+
 i_modular_hotel_webservice,+
-i_modular_hotel_city,
+i_modular_hotel_city,+
+
+i_modular_fast_search_flight,
+
 
 i_modular_other,
 i_modular_app
 i_modular_follow_us,
 i_modular_banner_tabs,
-i_modular_fast_search_flight,
+
 
 
 list , those who doesn't need.

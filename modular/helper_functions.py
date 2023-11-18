@@ -67,6 +67,10 @@ def create_folder(folder_name):
     except Exception as e:
         return f'Error creating folder: {str(e)}'
 
+def read_file(file_path):
+    with open(file_path, 'r') as file:
+        content = file.read()
+    return content
 
 def copy_directory_contents(source_directory, target_directory):
     try:

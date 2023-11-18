@@ -31,13 +31,13 @@ def get_online_html():
                 soup = BeautifulSoup(html_content_online, 'html.parser')
                 return soup
             else:
-                return "خطایی پیش آمده و دیتایی نمایش ندارد."
+                return "خطایی پیش آمده و دیتایی نمایش ندارد1."
 
         else:
-            return f"خطایی در گرفتن اطلاعات پیش آمده.{response.status_code}"
+            return f"خطایی در گرفتن اطلاعات پیش آمده2.{response.status_code}"
 
     except requests.exceptions.RequestException as e:
-        return f"خطایی در گرفتن اطلاعات پیش آمده.: {e}"
+        return f"خطایی در گرفتن اطلاعات پیش آمده3.: {e}"
 
 
 def unit_test_blog(blog_section, blog_section_online , lang = 'fa'):
@@ -445,5 +445,5 @@ def compare_html_strings(html1, html2):
     # Compare the serialized HTML strings
     return soup1 == soup2
 
-def test_unit_test():
+def test_unit_test(a, b, c):
     return 'test'

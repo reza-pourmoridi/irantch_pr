@@ -4,23 +4,32 @@ hooks:
         __i_modular_c_item_class_0 : آیتم های پیچیده
         i_modular_modulation : باید در یک تگ متا در هدر نوشته شود
 
+
+    head:i_modular_header
+
     menu : i_modular_menu
-        __main_link_href_ : لینک اصلی
-        __login_register_class__ : کلاس دکمه لاگین
-        __login_register_class__2 :کلاس دکمه لاگین دوم
-        __login_register_class__2 :کلاس دکمه لاگین دوم
+        __main_link_href__ : لینک اصلی
+        __login_register_class__ : کلاس دکمه لاگین,به لینک یا دکمه داده شود
+        __login_register_class__2 :کلاس دکمه لاگین دوم,به لینک یا دکمه داده شود
+        __login_register_class__2 :کلاس دکمه لاگین دوم,,به لینک یا دکمه داده شود
+
+
 
     banner: i_modular_banner_gallery
         __link__       : لینک
         __title__      :  عنوان
         __title_class__: کلاس عنوان
         __image_class__: کلاس عکس
+        __description_class__: کلاس توضیحات
+
 
     blog: i_modular_blog
         __link__            : لینک
+        __all_link_href__ : لینک همه وبلاگ ها
         __heading_class__   : کلاس توضیحات مختصر بلاگ
         __title_class__     : کلاس تایتل
         __image_class__     : کلاس عکس
+        __date_class__     : کلاس تاریخ
 
 
     news: i_modular_news
@@ -30,24 +39,39 @@ hooks:
         __image_class__     : کلاس عکس
         __description_class__     : کلاس توضیحات
 
-    tour: i_modular_news
+
+    tour: i_modular_tours
     __tour__
     __tour__internal__
     __tour__external__
     __tour__internal__special__
     __tour__external__special__
 
-        __link__            : لینک
+        `__link__`            : لینک
+        __all_link_href__ : لینک همه تور ها
         ___price_class__   : کلاس قیمت
         __title_class__     : کلاس تایتل
+        __city_class__     : کلاس شهر
         __image_class__     : کلاس عکس
         __date_class__     : کلاس تاریخ
+        __night_class__     : کلاس شب
+        __day_class__     : کلاس روز
 
 
-    hotel webservice: i_modular_news
+    hotel webservice: i_modular_hotels_webservice
     __hotel__internal__
     __hotel__external__
         __link__            : لینک
+        __title_class__   : کلاس نام
+        __city_class__     : کلاس شهر
+        __image_class__     : کلاس عکس
+        __date_class__     : کلاس توضیحات
+        __star_class_light__1     : کلاس ستاره ها(توضیح خواسته شود)
+
+    hotel external cities : i_modular_hotels_external_cities
+    __hotel_function__external__city__
+        __link__            : لینک
+        __all_link_href__ :  لینک همه
         __title_class__   : کلاس نام
         __city_class__     : کلاس شهر
         __image_class__     : کلاس عکس
@@ -59,13 +83,19 @@ hooks:
         __email_class__   : کلاس ایمیل
         __phone_class__     : کلاس موبایل
         __submit_class__     : کلاس سابمیت
+        __address_class__     : کلاس آدرس
 
     footer: i_modular_footer
         __address_class__ : کلاس آدرس در فوتر
         __aboutUs_class__ : کلاس درباره ما
+        __aboutUs_class_href__ : کلاس لینک درباره ما
         __mobile_class__ : کلاس شماره موبایل فوتر
+        __phone_class__ : کلاس شماره تلفن فوتر
+        __email_class__ : کلاس ایمیل
         __social_class__ : کلاس پرنت شبکه های اجتماعی
         __aboutUsLink__ :   لینک درباره ما
         __instagram_class__ :   کلاس اینستاگرام
         __whatsapp_class__ :    کلاس واتساپ
         __telegram_class__ :    کلاس تلگرام
+
+    script-footer:i_modular_footer_script
