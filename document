@@ -43,6 +43,7 @@ hooks:
     tour: i_modular_tours
     __tour__
     __tour__internal__
+    __tour__special__
     __tour__external__
     __tour__internal__special__
     __tour__external__special__
@@ -98,4 +99,4 @@ hooks:
         __whatsapp_class__ :    کلاس واتساپ
         __telegram_class__ :    کلاس تلگرام
 
-    script-footer:i_modular_footer_script
+    script-footer:i_modular_script_footer

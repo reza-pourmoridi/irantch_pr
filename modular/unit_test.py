@@ -61,19 +61,22 @@ def unit_test_blog(blog_section, blog_section_online , lang = 'fa'):
         blog_data = json.loads(json_string)
 
         for num in simple_items_numbers:
-            blog_replacement_data = {
-                simple_items_class + num: simple_items_class + simple_items_numbers[0],
-                "__airline__": blog_data[int(num)]['link'],
-                "__link__": blog_data[int(num)]['link'],
-                "__image__": blog_data[int(num)]['image'],
-                "__alt_article__": blog_data[int(num)]['title']
-            }
             simple_element = blog_section.find(class_=simple_items_class + num)
-            helper.replace_attribute(simple_element, '__image_class__', 'src', blog_data[int(num)]['image'])
-            helper.replace_attribute(simple_element, '__title_class__', 'string', blog_data[int(num)]['title'])
-            helper.replace_attribute(simple_element, '__heading_class__', 'string', blog_data[int(num)]['heading'])
-            simple_element = blog_section.find(class_=simple_items_class + num)
-            simple_element = helper.replace_placeholders(simple_element, blog_replacement_data)
+            if int(num) < len(blog_data):
+                blog_replacement_data = {
+                    simple_items_class + num: simple_items_class + simple_items_numbers[0],
+                    "__airline__": blog_data[int(num)]['link'],
+                    "__link__": blog_data[int(num)]['link'],
+                    "__image__": blog_data[int(num)]['image'],
+                    "__alt_article__": blog_data[int(num)]['title']
+                }
+                helper.replace_attribute(simple_element, '__image_class__', 'src', blog_data[int(num)]['image'])
+                helper.replace_attribute(simple_element, '__title_class__', 'string', blog_data[int(num)]['title'])
+                helper.replace_attribute(simple_element, '__heading_class__', 'string', blog_data[int(num)]['heading'])
+                simple_element = blog_section.find(class_=simple_items_class + num)
+                simple_element = helper.replace_placeholders(simple_element, blog_replacement_data)
+            else:
+                simple_element.decompose()
 
 
         for num in complex_items_numbers:

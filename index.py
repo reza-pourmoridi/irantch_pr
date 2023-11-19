@@ -53,6 +53,10 @@ def initiation_progress():
 def initiation_update():
     return up.initiation_update()
 
+@app.route('/upload_styles', methods=['POST'])
+def upload():
+    return modular_index.upload()
+
 
 if __name__ == '__main__':
     app.run(debug=True)

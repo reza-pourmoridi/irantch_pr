@@ -8,6 +8,8 @@ import json
 import codecs
 from modular import helper_functions as helper
 from modular import unit_test
+import zipfile
+
 
 complex_items_pattern = re.compile(r'__i_modular_c_item_class_(\d+)')
 simple_items_pattern = re.compile(r'__i_modular_nc_item_class_(\d+)')
@@ -42,7 +44,7 @@ def initiation_progress():
     moduls_array = {
             'blog': {
                 'class': 'i_modular_blog',
-                'file': 'blog.tpl',
+                'file': 'blog',
                 'name': 'وبلاگ',
                 'modular': blog_module,
                 'test_function': unit_test.unit_test_blog
@@ -50,50 +52,50 @@ def initiation_progress():
             'newsletter': {
                 'class': 'i_modular_newsletter',
                 'name': 'خبرنامه',
-                'file': 'newsletter.tpl',
+                'file': 'newsletter',
                 'modular': newsletter_module,
                 'test_function': unit_test.unit_test_newsletter
             },
             'news': {
                 'class': 'i_modular_news',
                 'name': 'اخبار',
-                'file': 'news.tpl',
+                'file': 'news',
                 'modular': news_module,
                 'test_function': unit_test.unit_test_news
             },
             'menu': {
                 'class': 'i_modular_menu',
                 'name': 'منو',
-                'file': 'menu.tpl',
+                'file': 'menu',
                 'modular': menu_module,
                 'test_function': unit_test.unit_test_menu
             },
             'footer': {
                 'class': 'i_modular_footer',
                 'name': 'فوتر',
-                'file': 'footer.tpl',
+                'file': 'footer',
                 'modular': footer_module,
                 'test_function': unit_test.unit_test_footer
             },
             'banner_gallery': {
                     'class': 'i_modular_banner_gallery',
                 'name': 'گالری بنر',
-                'file': 'search-box.tpl',
+                'file': 'search-box',
                 'modular': banner_gallery_module,
                 'test_function': unit_test.unit_test_banner_gallery
             },
             'header': {
                 'class': 'i_modular_header',
                 'name': 'هدر',
-                'file': 'header.tpl',
+                'file': 'header',
                 'modular': header_module,
                 'test_function': unit_test.test_unit_test
 
             },
             'footer_script': {
-                'class': 'i_modular_footer_script',
+                'class': 'i_modular_script_footer',
                 'name': 'اسکریپت فوتر',
-                'file': 'footer_script.tpl',
+                'file': 'footer_script',
                 'modular': footer_script_module,
                 'test_function': unit_test.test_unit_test
 
@@ -101,7 +103,7 @@ def initiation_progress():
             'tours': {
                 'class': 'i_modular_tours',
                 'name': 'تور',
-                'file': 'tours.tpl',
+                'file': 'tours',
                 'modular': tours_module,
                 'test_function': unit_test.test_unit_test
 
@@ -109,7 +111,7 @@ def initiation_progress():
             'hotels_webservice': {
                 'class': 'i_modular_hotels_webservice',
                 'name': 'هتل وب سرویس',
-                'file': 'hotels-webservice.tpl',
+                'file': 'hotels-webservice',
                 'modular': hotels_webservice_module,
                 'test_function': unit_test.test_unit_test
 
@@ -117,66 +119,25 @@ def initiation_progress():
             'hotels__external_cities': {
                 'class': 'i_modular_hotels_external_cities',
                 'name': 'هتل , شهرهای خارجی',
-                'file': 'hotels-webservice.tpl',
+                'file': 'hotels-webservice',
                 'modular': hotels_External_cities_module,
                 'test_function': unit_test.test_unit_test
 
             },
         }
 
-    # moduls_array = {
-    #         # 'menu': {
-    #         #     'class': 'i_modular_menu',
-    #         #     'name': 'منو',
-    #         #     'file': 'menu.tpl',
-    #         #     'modular': menu_module,
-    #         #     'test_function': unit_test.unit_test_menu
-    #         # },
-    #         # 'header': {
-    #         #     'class': 'i_modular_header',
-    #         #     'name': 'هدر',
-    #         #     'file': 'header.tpl',
-    #         #     'modular': header_module,
-    #         #     'test_function': unit_test.test_unit_test
-    #         #
-    #         # },
-    #         # 'footer_script': {
-    #         #     'class': 'i_modular_footer_script',
-    #         #     'name': 'اسکریپت فوتر',
-    #         #     'file': 'footer_script.tpl',
-    #         #     'modular': footer_script_module,
-    #         #     'test_function': unit_test.test_unit_test
-    #         #
-    #         # },
-    #         # 'fast_search_flight': {
-    #         #     'class': 'i_modular_fast_search_flight',
-    #         #     'name': 'جستجوی سریع پرواز',
-    #         #     'file': 'fast_search_flight.tpl',
-    #         #     'modular': fast_search_flight_module,
-    #         #     'test_function': unit_test.test_unit_test
-    #         #
-    #         # },
-    #
-    #         'fast_search_flight': {
-    #             'class': 'i_modular_fast_search_flight',
-    #             'name': 'جستجوی سریع پرواز',
-    #             'file': 'fast-search-flight.tpl',
-    #             'modular': fast_search_flight_module,
-    #             'test_function': unit_test.test_unit_test
-    #
-    #         },
-    #     }
 
     module_messages = []
 
 
 
-    main_page_array = {}
     for module_name, module_info in moduls_array.items():
-        section = soup.find(class_=module_info['class'])
-        if section:
-            main_page_array[f'{section}'] = "{" + module_info['name'] + ".tpl}"
-            module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name'] + " = " + module_info['modular'](section, project_path , lang))
+        sections = soup.find_all(class_=module_info['class'])
+        index = 1
+        for section in sections:
+            if section:
+                module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name'] + str(index) + " = " + module_info['modular'](section, project_path , lang , str(index)))
+                index = index + 1
 
     summary_message = '\n'.join(module_messages)
 
@@ -188,12 +149,13 @@ def initiation_progress():
 
     for module_key, module_info in moduls_array.items():
         class_name = module_info['class']
-        file_name = '{include file="include_files/' + module_info['file'] + '"}'
-        elements = soup.find_all(class_=class_name)
-
-        for element in elements:
+        sections = soup.find_all(class_=module_info['class'])
+        index = 1
+        for element in sections:
+            file_name = '{include file="include_files/' + module_info['file'] + '-' + str(index) + '.tpl' + '"}'
             # Replace the old element with the 'file' string
             element.replace_with(file_name)
+            index = index + 1
 
     modified_html_content = str(soup)
     soup_str = f'{modified_html_content}'
@@ -219,6 +181,26 @@ def initiation_progress():
            +  '<br><br><br>' 'main_page_creation' + f'{main_page}'
            +  '<br><br><br>' + f'{summary_test_message}'})
 
+def upload():
+    if 'file' not in request.files:
+        return jsonify({"message": "No file part"})
+
+
+    file = request.files['file']
+
+    if not helper.is_zip(file):
+        return jsonify({"message": "file format must be zip"})
+
+    if file.filename == '':
+        return jsonify({"message": "No selected file"})
+
+    files_directory = os.path.dirname(__file__)  # Get the directory of the script
+    files_directory = os.path.join(files_directory, 'files')  # Create a 'files' subdirectory
+    files_directory = os.path.join(files_directory, 'repeated_files')  # Create a 'files' subdirectory
+    files_directory = os.path.join(files_directory, 'project_files')  # Create a 'files' subdirectory
+    helper.unzip_to_folder(files_directory, file)
+    return jsonify({"message": 'استایل های پروژه بارگذاری شدند.'})
+
 def initiation_test(class_name, module_name, module_test_function, soup, soup_online , lang):
     section = soup.find(class_=class_name)
     section_online = soup_online.find(class_=class_name) if section else None
@@ -237,7 +219,7 @@ def initiation_modulation(class_name, module_name, modular_function, soup, soup_
 
     return f'ماژول {module_name} بازگذاری نشد'
 
-def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa'):
+def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa', index = '1'):
     try:
         # create regex objects containing patterns of items classes
         complex_items_numbers = helper.item_numbers(banner_gallery_section,complex_items_pattern)
@@ -307,11 +289,11 @@ def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa'):
         banner_gallery_final_content = banner_gallery_final_content.replace("&gt;", ">")
         banner_gallery_final_content = banner_gallery_final_content.replace("&lt;", "<")
 
-        return helper.create_file(banner_gallery_final_content, include_files_directory, 'search-box', 'tpl')
+        return helper.create_file(banner_gallery_final_content, include_files_directory, 'search-box'+ '-' + index, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def news_module(news_section, project_path , lang = 'fa'):
+def news_module(news_section, project_path , lang = 'fa', index = '1'):
     try:
         # create regex objects containing patterns of items classes
         complex_items_numbers = helper.item_numbers(news_section,complex_items_pattern)
@@ -381,11 +363,11 @@ def news_module(news_section, project_path , lang = 'fa'):
         news_final_content = news_final_content.replace("&gt;", ">")
         news_final_content = news_final_content.replace("&lt;", "<")
 
-        return helper.create_file(news_final_content, include_files_directory, 'news', 'tpl')
+        return helper.create_file(news_final_content, include_files_directory, 'news'+ '-' + index, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def newsletter_module(newsletter_section, project_path , lang = 'fa'):
+def newsletter_module(newsletter_section, project_path , lang = 'fa', index = '1'):
     try:
         helper.replace_attribute(newsletter_section, '__name_class__', 'name','NameSms')
         helper.replace_attribute(newsletter_section, '__email_class__', 'name','EmailSms')
@@ -408,11 +390,11 @@ def newsletter_module(newsletter_section, project_path , lang = 'fa'):
         newsletter_final_content = newsletter_final_content.replace("&gt;", ">")
         newsletter_final_content = newsletter_final_content.replace("&lt;", "<")
 
-        return helper.create_file(newsletter_final_content, include_files_directory, 'newsletter', 'tpl')
+        return helper.create_file(newsletter_final_content, include_files_directory, 'newsletter'+ '-' + index, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def menu_module(menu_section, project_path , lang = 'fa'):
+def menu_module(menu_section, project_path , lang = 'fa', index = '1'):
     try:
 
 
@@ -564,7 +546,7 @@ def menu_module(menu_section, project_path , lang = 'fa'):
         helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
         helper.replace_attribute_by_text(menu_section, 'الدخول / يسجل' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
         helper.replace_attribute(menu_section, '__login_register_class__2', 'class','__login_register_class__2 main-navigation__button2 show-box-login-js')
-        helper.replace_attribute(menu_section, '__login_register_class__', 'class','__login_register_class__ main-navigation__button2 show-box-login-js button_header logIn d-flex')
+        helper.replace_attribute(menu_section, '__login_register_class__', 'class','__login_register_class__ main-navigation__button2 show-box-login-js ')
 
 
         after_login = '''<div class="main-navigation__sub-menu2 arrow-up show-content-box-login-js" style="display: none">
@@ -594,11 +576,11 @@ def menu_module(menu_section, project_path , lang = 'fa'):
         menu_final_content = menu_final_content.replace("&gt;", ">")
         menu_final_content = menu_final_content.replace("&lt;", "<")
 
-        return helper.create_file(menu_final_content, include_files_directory, 'menu', 'tpl')
+        return helper.create_file(menu_final_content, include_files_directory, 'menu'+ '-' + index, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def footer_module(footer_section, project_path, lang='fa'):
+def footer_module(footer_section, project_path, lang = 'fa', index = '1'):
     try:
         before_html = '''{load_presentation_object filename="aboutUs" assign="objAbout"}
                             {assign var="about"  value=$objAbout->getData()}
@@ -720,17 +702,17 @@ def footer_module(footer_section, project_path, lang='fa'):
         footer_final_content = footer_final_content.replace("&gt;", ">")
         footer_final_content = footer_final_content.replace("&lt;", "<")
 
-        return helper.create_file(footer_final_content, include_files_directory, 'footer', 'tpl')
+        return helper.create_file(footer_final_content, include_files_directory, 'footer'+ '-' + index, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def header_module(header_section, project_path , lang = 'fa'):
+def header_module(header_section, project_path , lang = 'fa', index = '1'):
     try:
         style_links = [link.get('href') for link in header_section.find_all('link', rel='stylesheet')]
 
 
         header_contents = '''
-{load_presentation_object filename="avaParvaz" assign="obj_main_page" subName="customers"}
+{load_presentation_object filename="test" assign="obj_main_page" subName="customers"}
 {load_presentation_object filename="Session" assign="objSession" }
 {load_presentation_object filename="functions" assign="objFunctions"}
 {load_presentation_object filename="frontMaster" assign="obj"}
@@ -882,11 +864,11 @@ def header_module(header_section, project_path , lang = 'fa'):
         header_final_content = header_final_content.replace("&amp;", "&")
 
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(header_final_content, include_files_directory, 'header', 'tpl')
+        return helper.create_file(header_final_content, include_files_directory, 'header'+ '-' + index, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def footer_script_module(footer_script_section, project_path, lang='fa'):
+def footer_script_module(footer_script_section, project_path, lang = 'fa', index = '1'):
     try:
         script_links = [link.get('src') for link in footer_script_section.find_all('script')]
 
@@ -961,11 +943,11 @@ def footer_script_module(footer_script_section, project_path, lang='fa'):
         footer_script_final_content = footer_script_final_content.replace("&lt;", "<")
         footer_script_final_content = footer_script_final_content.replace("</html>", " ")
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(footer_script_final_content, include_files_directory, 'footer_script', 'tpl')
+        return helper.create_file(footer_script_final_content, include_files_directory, 'footer_script'+ '-' + index, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def blog_module(blog_section, project_path , lang = 'fa'):
+def blog_module(blog_section, project_path , lang = 'fa', index = '1'):
     try:
         # create regex objects containing patterns of items classes
         complex_items_numbers = helper.item_numbers(blog_section,complex_items_pattern)
@@ -1039,11 +1021,11 @@ def blog_module(blog_section, project_path , lang = 'fa'):
         blog_final_content = blog_final_content.replace("&gt;", ">")
         blog_final_content = blog_final_content.replace("&lt;", "<")
 
-        return helper.create_file(blog_final_content, include_files_directory, 'blog', 'tpl')
+        return helper.create_file(blog_final_content, include_files_directory, 'blog'+ '-' + index, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def tours_module(tours_section, project_path, lang='fa'):
+def tours_module(tours_section, project_path, lang = 'fa', index = '1'):
     try:
         before_html = '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}'''
 
@@ -1244,14 +1226,14 @@ def tours_module(tours_section, project_path, lang='fa'):
         tours_final_content = tours_final_content.replace("&gt;", ">")
         tours_final_content = tours_final_content.replace("&lt;", "<")
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(tours_final_content, include_files_directory, 'tours', 'tpl')
+        return helper.create_file(tours_final_content, include_files_directory, 'tours'+ '-' + index, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def hotels_webservice_module(hotels_section, project_path, lang='fa'):
+def hotels_webservice_module(hotels_section, project_path, lang = 'fa', index = '1'):
     try:
         if  os.path.exists(project_path + '/include_files/hotels.tpl'):
-            hotels_section = f"{helper.read_file(project_path + '/include_files/hotels.tpl')}"
+            hotels_section = f"{helper.read_file(project_path + '/include_files/hotels-webservice-1.tpl')}"
             hotels_section = BeautifulSoup(hotels_section, 'html.parser')
 
         before_html = '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}'''
@@ -1308,7 +1290,7 @@ def hotels_webservice_module(hotels_section, project_path, lang='fa'):
                     local_max_var =  local_max_var + '_' + region
 
 
-                sections = tours_section.find_all(class_=section_class)
+                sections = hotels_section.find_all(class_=section_class)
                 if sections:
                     for local_section in sections:
                         before_html_local = before_html_local.replace("__type__", type)
@@ -1444,14 +1426,14 @@ def hotels_webservice_module(hotels_section, project_path, lang='fa'):
         hotels_final_content = hotels_final_content.replace("&gt;", ">")
         hotels_final_content = hotels_final_content.replace("&lt;", "<")
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(hotels_final_content, include_files_directory, 'hotels-webservice', 'tpl')
+        return helper.create_file(hotels_final_content, include_files_directory, 'hotels-webservice'+ '-' + index, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def hotels_External_cities_module(hotels_section, project_path, lang='fa'):
+def hotels_External_cities_module(hotels_section, project_path, lang = 'fa', index = '1'):
     try:
         if  os.path.exists(project_path + '/include_files/hotels.tpl'):
-            hotels_section = f"{helper.read_file(project_path + '/include_files/hotels.tpl')}"
+            hotels_section = f"{helper.read_file(project_path + '/include_files/hotels-webservice-1.tpl')}"
             hotels_section = BeautifulSoup(hotels_section, 'html.parser')
 
         before_html = ''''''
@@ -1505,7 +1487,7 @@ def hotels_External_cities_module(hotels_section, project_path, lang='fa'):
                     local_max_var =  local_max_var + '_' + region
 
 
-                sections = tours_section.find_all(class_=section_class)
+                sections = hotels_section.find_all(class_=section_class)
                 if sections:
                     for local_section in sections:
                         before_html_local = before_html_local.replace("__type__", type)
@@ -1639,11 +1621,11 @@ def hotels_External_cities_module(hotels_section, project_path, lang='fa'):
         hotels_final_content = hotels_final_content.replace("&gt;", ">")
         hotels_final_content = hotels_final_content.replace("&lt;", "<")
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(hotels_final_content, include_files_directory, 'hotels', 'tpl')
+        return helper.create_file(hotels_final_content, include_files_directory, 'hotels-webservice'+ '-' + index, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def fast_search_flight_module(fast_search_flight_section, project_path, lang='fa'):
+def fast_search_flight_module(fast_search_flight_section, project_path, lang = 'fa', index = '1'):
     try:
         if  os.path.exists(project_path + '/include_files/fast-search-flight.tpl'):
             fast_search_flight_section = f"{helper.read_file(project_path + '/include_files/fast-search-flight.tpl')}"
@@ -1701,7 +1683,7 @@ def fast_search_flight_module(fast_search_flight_section, project_path, lang='fa
                     local_max_var =  local_max_var + '_' + region
 
 
-                sections = tours_section.find_all(class_=section_class)
+                sections = fast_search_flight_section.find_all(class_=section_class)
                 if sections:
                     for local_section in sections:
                         before_html_local = before_html_local.replace("__type__", type)
@@ -1835,11 +1817,11 @@ def fast_search_flight_module(fast_search_flight_section, project_path, lang='fa
         fast_search_flight_final_content = fast_search_flight_final_content.replace("&gt;", ">")
         fast_search_flight_final_content = fast_search_flight_final_content.replace("&lt;", "<")
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(fast_search_flight_final_content, include_files_directory, 'fast_search_flight', 'tpl')
+        return helper.create_file(fast_search_flight_final_content, include_files_directory, 'fast_search_flight'+ '-' + index, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def new_module(new_section, project_path, lang='fa'):
+def new_module(new_section, project_path, lang = 'fa', index = '1'):
     try:
 
         # type  of current functions:
@@ -1852,7 +1834,7 @@ def new_module(new_section, project_path, lang='fa'):
         new_final_content = new_final_content.replace("&gt;", ">")
         new_final_content = new_final_content.replace("&lt;", "<")
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(new_final_content, include_files_directory, 'new', 'tpl')
+        return helper.create_file(new_final_content, include_files_directory, 'new'+ '-' + index, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 

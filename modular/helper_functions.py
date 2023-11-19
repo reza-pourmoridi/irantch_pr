@@ -6,6 +6,7 @@ import re
 import requests
 import json
 import codecs
+import zipfile
 
 
 def item_numbers(section, pattern):
@@ -51,6 +52,29 @@ def replace_placeholders(section, replacement_data):
     section_final_content = section.prettify()
     return section_final_content
 
+def unzip_to_folder(folder_path, zip_path):
+    # Check if the folder exists
+    if not os.path.exists(folder_path):
+        return  f"The folder {folder_path} does not exist."
+
+    # Empty the folder
+    for filename in os.listdir(folder_path):
+        file_path = os.path.join(folder_path, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            return f'Failed to delete {file_path}. Reason: {e}'
+
+    # Unzip the file
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+       result = zip_ref.extractall(folder_path)
+    return result
+
+def is_zip(file_path):
+    return zipfile.is_zipfile(file_path)
 
 def create_folder(folder_name):
     try:
