@@ -7,6 +7,7 @@ import requests
 import json
 import codecs
 import zipfile
+from collections import OrderedDict
 
 
 def item_numbers(section, pattern):
@@ -18,7 +19,6 @@ def item_numbers(section, pattern):
             number = match.group(1)
             numbers.append(number)
     return numbers
-
 
 def replace_placeholders_recursive(tag, replacement_data):
     # Iterate over the tag's attributes
@@ -42,7 +42,6 @@ def replace_placeholders_recursive(tag, replacement_data):
     if tag.decode() in replacement_data:
         new_tag = BeautifulSoup(replacement_data[tag.decode()], 'html.parser')
         tag.replace_with(new_tag)
-
 
 def replace_placeholders(section, replacement_data):
     # Iterate over all tags in the section
@@ -122,7 +121,6 @@ def copy_directory_contents(source_directory, target_directory):
     except Exception as e:
         return f'Error copying directory contents: {str(e)}'
 
-
 def copy_repeated_file_folders(target_folder):
     try:
         source_folders = ['repeated_files']
@@ -148,7 +146,6 @@ def copy_repeated_file_folders(target_folder):
     except Exception as e:
         return f'Error copying source folders: {str(e)}'
 
-
 def create_file(content, path, file_name, file_format):
     try:
         # Combine the provided path and file name with format to create the full file path
@@ -162,12 +159,10 @@ def create_file(content, path, file_name, file_format):
     except Exception as e:
         return f'Error creating file: {str(e)}'
 
-
 def write_text_in_path(path, text):
     mainpage_tpl_path = os.path.join(path, 'mainPage.tpl')
     with open(mainpage_tpl_path, 'w') as mainPage_tpl_file:
         mainPage_tpl_file.write(text)
-
 
 def replace_attribute(section, class_name, attr, value):
     for tag in section.find_all(class_=class_name):
@@ -175,7 +170,6 @@ def replace_attribute(section, class_name, attr, value):
             tag[attr] = value
         else:
             tag.string = value
-
 
 def add_value_to_attribute(section, class_name, attr, value):
     for tag in section.find_all(class_=class_name):
@@ -212,8 +206,6 @@ def turn_to_script_links_assames(links):
         result = result + '<script src="project_files/' + item + '"></script>'
     return result
 
-
-
 def replace_attribute_by_text(section, target_text, attr, value):
     for tag in section.find_all(text=lambda text: text and target_text.strip() == text.strip()):
         parent_tag = tag.find_parent()
@@ -223,19 +215,16 @@ def replace_attribute_by_text(section, target_text, attr, value):
             else:
                 parent_tag.string = value
 
-
 def changing_numbers_to_array_elements(array, num):
     for key, val in array.items():
         array[key] = val.format(num)
     return array
-
 
 def add_before_after(section, class_name, before, after):
     complex_element = section.find(class_=class_name)
     if complex_element:
         inner_html = f'{before}\n{complex_element}\n{after}'
         complex_element.replace_with(BeautifulSoup(inner_html, 'html.parser'))
-
 
 def clean_serialize_string(string):
     string = string.replace("https://192.168.1.100/gds/view/WW12/", "")
@@ -253,3 +242,40 @@ def clean_serialize_string(string):
     string = string.replace("&gt;", ">")
     string = string.replace("&lt;", "<")
     return string
+
+
+def value_exists_in_dict_values(dictionary, value ):
+    for sub_dict in dictionary.values():
+        if value in sub_dict.values():
+            return True
+    return False
+
+def return_file_in_same_section(classes, moduls_array, index = '1'):
+    final_classes = []
+    for c in classes:
+        if value_exists_in_dict_values(moduls_array, c):
+            final_classes.append(c)
+
+    final_names = []
+    for key, val in moduls_array.items():
+        if val['class'] in final_classes:
+            final_names.append(val['file'])
+
+    file_name = ''
+    for item in final_names:
+        if item != final_names[0]:
+            file_name = file_name + '-' + item
+        else:
+            file_name =  item
+
+    return remove_repeated_words(file_name) + '-' + index
+
+def remove_repeated_words(s):
+    return "-".join(OrderedDict.fromkeys(s.split("-")))
+
+def check_if_section_built(project_path ,file_name ,section):
+    if os.path.exists(project_path + '/include_files/' + file_name + '.tpl'):
+        section = f"{read_file(project_path + '/include_files/' + file_name + '.tpl')}"
+        section = BeautifulSoup(section, 'html.parser')
+
+    return section

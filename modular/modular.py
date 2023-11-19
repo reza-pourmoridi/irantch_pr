@@ -16,6 +16,7 @@ simple_items_pattern = re.compile(r'__i_modular_nc_item_class_(\d+)')
 complex_items_class = "__i_modular_c_item_class_"
 simple_items_class = "__i_modular_nc_item_class_"
 
+
 def initiation_progress():
     if 'file' not in request.files:
         return jsonify({"message": "No file part"})
@@ -39,104 +40,104 @@ def initiation_progress():
     if not soup:
         return jsonify({"message": "testing html = " + f'{soup}'})
 
-
-
     moduls_array = {
-            'blog': {
-                'class': 'i_modular_blog',
-                'file': 'blog',
-                'name': 'وبلاگ',
-                'modular': blog_module,
-                'test_function': unit_test.unit_test_blog
-            },
-            'newsletter': {
-                'class': 'i_modular_newsletter',
-                'name': 'خبرنامه',
-                'file': 'newsletter',
-                'modular': newsletter_module,
-                'test_function': unit_test.unit_test_newsletter
-            },
-            'news': {
-                'class': 'i_modular_news',
-                'name': 'اخبار',
-                'file': 'news',
-                'modular': news_module,
-                'test_function': unit_test.unit_test_news
-            },
-            'menu': {
-                'class': 'i_modular_menu',
-                'name': 'منو',
-                'file': 'menu',
-                'modular': menu_module,
-                'test_function': unit_test.unit_test_menu
-            },
-            'footer': {
-                'class': 'i_modular_footer',
-                'name': 'فوتر',
-                'file': 'footer',
-                'modular': footer_module,
-                'test_function': unit_test.unit_test_footer
-            },
-            'banner_gallery': {
-                    'class': 'i_modular_banner_gallery',
-                'name': 'گالری بنر',
-                'file': 'search-box',
-                'modular': banner_gallery_module,
-                'test_function': unit_test.unit_test_banner_gallery
-            },
-            'header': {
-                'class': 'i_modular_header',
-                'name': 'هدر',
-                'file': 'header',
-                'modular': header_module,
-                'test_function': unit_test.test_unit_test
+        # 'blog': {
+        #     'class': 'i_modular_blog',
+        #     'file': 'blog',
+        #     'name': 'وبلاگ',
+        #     'modular': blog_module,
+        #     'test_function': unit_test.unit_test_blog
+        # },
+        # 'newsletter': {
+        #     'class': 'i_modular_newsletter',
+        #     'name': 'خبرنامه',
+        #     'file': 'newsletter',
+        #     'modular': newsletter_module,
+        #     'test_function': unit_test.unit_test_newsletter
+        # },
+        # 'news': {
+        #     'class': 'i_modular_news',
+        #     'name': 'اخبار',
+        #     'file': 'news',
+        #     'modular': news_module,
+        #     'test_function': unit_test.unit_test_news
+        # },
+        # 'menu': {
+        #     'class': 'i_modular_menu',
+        #     'name': 'منو',
+        #     'file': 'menu',
+        #     'modular': menu_module,
+        #     'test_function': unit_test.unit_test_menu
+        # },
+        # 'footer': {
+        #     'class': 'i_modular_footer',
+        #     'name': 'فوتر',
+        #     'file': 'footer',
+        #     'modular': footer_module,
+        #     'test_function': unit_test.unit_test_footer
+        # },
+        # 'banner_gallery': {
+        #         'class': 'i_modular_banner_gallery',
+        #     'name': 'گالری بنر',
+        #     'file': 'search-box',
+        #     'modular': banner_gallery_module,
+        #     'test_function': unit_test.unit_test_banner_gallery
+        # },
+        # 'header': {
+        #     'class': 'i_modular_header',
+        #     'name': 'هدر',
+        #     'file': 'header',
+        #     'modular': header_module,
+        #     'test_function': unit_test.test_unit_test
+        #
+        # },
+        # 'footer_script': {
+        #     'class': 'i_modular_script_footer',
+        #     'name': 'اسکریپت فوتر',
+        #     'file': 'footer_script',
+        #     'modular': footer_script_module,
+        #     'test_function': unit_test.test_unit_test
+        #
+        # },
+        # 'tours': {
+        #     'class': 'i_modular_tours',
+        #     'name': 'تور',
+        #     'file': 'tours',
+        #     'modular': tours_module,
+        #     'test_function': unit_test.test_unit_test
+        #
+        # },
+        'hotels_webservice': {
+            'class': 'i_modular_hotels_webservice',
+            'name': 'هتل وب سرویس',
+            'file': 'hotels-webservice',
+            'modular': hotels_webservice_module,
+            'test_function': unit_test.test_unit_test
 
-            },
-            'footer_script': {
-                'class': 'i_modular_script_footer',
-                'name': 'اسکریپت فوتر',
-                'file': 'footer_script',
-                'modular': footer_script_module,
-                'test_function': unit_test.test_unit_test
+        },
+        'hotels__external_cities': {
+            'class': 'i_modular_hotels_external_cities',
+            'name': 'هتل , شهرهای خارجی',
+            'file': 'hotels-external_cities',
+            'modular': hotels_External_cities_module,
+            'test_function': unit_test.test_unit_test
 
-            },
-            'tours': {
-                'class': 'i_modular_tours',
-                'name': 'تور',
-                'file': 'tours',
-                'modular': tours_module,
-                'test_function': unit_test.test_unit_test
-
-            },
-            'hotels_webservice': {
-                'class': 'i_modular_hotels_webservice',
-                'name': 'هتل وب سرویس',
-                'file': 'hotels-webservice',
-                'modular': hotels_webservice_module,
-                'test_function': unit_test.test_unit_test
-
-            },
-            'hotels__external_cities': {
-                'class': 'i_modular_hotels_external_cities',
-                'name': 'هتل , شهرهای خارجی',
-                'file': 'hotels-webservice',
-                'modular': hotels_External_cities_module,
-                'test_function': unit_test.test_unit_test
-
-            },
-        }
-
+        },
+    }
 
     module_messages = []
 
 
-
+    classes = []
     for module_name, module_info in moduls_array.items():
         sections = soup.find_all(class_=module_info['class'])
         index = 1
         for section in sections:
             if section:
-                module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name'] + str(index) + " = " + module_info['modular'](section, project_path , lang , str(index)))
+                first_tag = sections[0]  # Get the first tag
+                classes = first_tag.get('class')  # Get all classes of the first tag
+                file_name = helper.return_file_in_same_section(classes, moduls_array , str(index))
+                module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name'] + str(index) + " = " + module_info['modular'](section, project_path , lang , file_name))
                 index = index + 1
 
     summary_message = '\n'.join(module_messages)
@@ -146,14 +147,15 @@ def initiation_progress():
 
 
     soup = BeautifulSoup(html_content, 'html.parser')
-
+    classes = []
     for module_key, module_info in moduls_array.items():
-        class_name = module_info['class']
         sections = soup.find_all(class_=module_info['class'])
         index = 1
         for element in sections:
-            file_name = '{include file="include_files/' + module_info['file'] + '-' + str(index) + '.tpl' + '"}'
-            # Replace the old element with the 'file' string
+            first_tag = sections[0]  # Get the first tag
+            classes = first_tag.get('class')  # Get all classes of the first tag
+            file_name = helper.return_file_in_same_section(classes, moduls_array, str(index))
+            file_name = '{include file="include_files/' + file_name + '.tpl' + '"}'
             element.replace_with(file_name)
             index = index + 1
 
@@ -219,7 +221,7 @@ def initiation_modulation(class_name, module_name, modular_function, soup, soup_
 
     return f'ماژول {module_name} بازگذاری نشد'
 
-def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa', index = '1'):
+def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa',  file_name = ''):
     try:
         # create regex objects containing patterns of items classes
         complex_items_numbers = helper.item_numbers(banner_gallery_section,complex_items_pattern)
@@ -289,11 +291,11 @@ def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa', in
         banner_gallery_final_content = banner_gallery_final_content.replace("&gt;", ">")
         banner_gallery_final_content = banner_gallery_final_content.replace("&lt;", "<")
 
-        return helper.create_file(banner_gallery_final_content, include_files_directory, 'search-box'+ '-' + index, 'tpl')
+        return helper.create_file(banner_gallery_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def news_module(news_section, project_path , lang = 'fa', index = '1'):
+def news_module(news_section, project_path , lang = 'fa',  file_name = ''):
     try:
         # create regex objects containing patterns of items classes
         complex_items_numbers = helper.item_numbers(news_section,complex_items_pattern)
@@ -363,11 +365,11 @@ def news_module(news_section, project_path , lang = 'fa', index = '1'):
         news_final_content = news_final_content.replace("&gt;", ">")
         news_final_content = news_final_content.replace("&lt;", "<")
 
-        return helper.create_file(news_final_content, include_files_directory, 'news'+ '-' + index, 'tpl')
+        return helper.create_file(news_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def newsletter_module(newsletter_section, project_path , lang = 'fa', index = '1'):
+def newsletter_module(newsletter_section, project_path , lang = 'fa',  file_name = ''):
     try:
         helper.replace_attribute(newsletter_section, '__name_class__', 'name','NameSms')
         helper.replace_attribute(newsletter_section, '__email_class__', 'name','EmailSms')
@@ -390,11 +392,11 @@ def newsletter_module(newsletter_section, project_path , lang = 'fa', index = '1
         newsletter_final_content = newsletter_final_content.replace("&gt;", ">")
         newsletter_final_content = newsletter_final_content.replace("&lt;", "<")
 
-        return helper.create_file(newsletter_final_content, include_files_directory, 'newsletter'+ '-' + index, 'tpl')
+        return helper.create_file(newsletter_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def menu_module(menu_section, project_path , lang = 'fa', index = '1'):
+def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
     try:
 
 
@@ -576,11 +578,11 @@ def menu_module(menu_section, project_path , lang = 'fa', index = '1'):
         menu_final_content = menu_final_content.replace("&gt;", ">")
         menu_final_content = menu_final_content.replace("&lt;", "<")
 
-        return helper.create_file(menu_final_content, include_files_directory, 'menu'+ '-' + index, 'tpl')
+        return helper.create_file(menu_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def footer_module(footer_section, project_path, lang = 'fa', index = '1'):
+def footer_module(footer_section, project_path, lang = 'fa',  file_name = ''):
     try:
         before_html = '''{load_presentation_object filename="aboutUs" assign="objAbout"}
                             {assign var="about"  value=$objAbout->getData()}
@@ -702,11 +704,11 @@ def footer_module(footer_section, project_path, lang = 'fa', index = '1'):
         footer_final_content = footer_final_content.replace("&gt;", ">")
         footer_final_content = footer_final_content.replace("&lt;", "<")
 
-        return helper.create_file(footer_final_content, include_files_directory, 'footer'+ '-' + index, 'tpl')
+        return helper.create_file(footer_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def header_module(header_section, project_path , lang = 'fa', index = '1'):
+def header_module(header_section, project_path , lang = 'fa',  file_name = ''):
     try:
         style_links = [link.get('href') for link in header_section.find_all('link', rel='stylesheet')]
 
@@ -864,11 +866,11 @@ def header_module(header_section, project_path , lang = 'fa', index = '1'):
         header_final_content = header_final_content.replace("&amp;", "&")
 
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(header_final_content, include_files_directory, 'header'+ '-' + index, 'tpl')
+        return helper.create_file(header_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def footer_script_module(footer_script_section, project_path, lang = 'fa', index = '1'):
+def footer_script_module(footer_script_section, project_path, lang = 'fa',  file_name = ''):
     try:
         script_links = [link.get('src') for link in footer_script_section.find_all('script')]
 
@@ -943,11 +945,11 @@ def footer_script_module(footer_script_section, project_path, lang = 'fa', index
         footer_script_final_content = footer_script_final_content.replace("&lt;", "<")
         footer_script_final_content = footer_script_final_content.replace("</html>", " ")
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(footer_script_final_content, include_files_directory, 'footer_script'+ '-' + index, 'tpl')
+        return helper.create_file(footer_script_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def blog_module(blog_section, project_path , lang = 'fa', index = '1'):
+def blog_module(blog_section, project_path , lang = 'fa',  file_name = ''):
     try:
         # create regex objects containing patterns of items classes
         complex_items_numbers = helper.item_numbers(blog_section,complex_items_pattern)
@@ -1021,11 +1023,11 @@ def blog_module(blog_section, project_path , lang = 'fa', index = '1'):
         blog_final_content = blog_final_content.replace("&gt;", ">")
         blog_final_content = blog_final_content.replace("&lt;", "<")
 
-        return helper.create_file(blog_final_content, include_files_directory, 'blog'+ '-' + index, 'tpl')
+        return helper.create_file(blog_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def tours_module(tours_section, project_path, lang = 'fa', index = '1'):
+def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
     try:
         before_html = '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}'''
 
@@ -1226,15 +1228,13 @@ def tours_module(tours_section, project_path, lang = 'fa', index = '1'):
         tours_final_content = tours_final_content.replace("&gt;", ">")
         tours_final_content = tours_final_content.replace("&lt;", "<")
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(tours_final_content, include_files_directory, 'tours'+ '-' + index, 'tpl')
+        return helper.create_file(tours_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def hotels_webservice_module(hotels_section, project_path, lang = 'fa', index = '1'):
+def hotels_webservice_module(hotels_section, project_path, lang = 'fa',  file_name = ''):
     try:
-        if  os.path.exists(project_path + '/include_files/hotels.tpl'):
-            hotels_section = f"{helper.read_file(project_path + '/include_files/hotels-webservice-1.tpl')}"
-            hotels_section = BeautifulSoup(hotels_section, 'html.parser')
+        hotels_section = helper.check_if_section_built(project_path ,file_name ,hotels_section)
 
         before_html = '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}'''
 
@@ -1413,7 +1413,7 @@ def hotels_webservice_module(hotels_section, project_path, lang = 'fa', index = 
                                         if dark_star_elements:
                                             dark_star_elements.decompose()
 
-        if not os.path.exists(project_path + '/include_files/hotels.tpl'):
+        if not os.path.exists(project_path + '/include_files/' + file_name + '.tpl'):
             before_html = before_html + '\n' + '''{if $check_hotel}'''
         else:
             before_html = before_html + '\n' + '''{if 1 == 1}'''
@@ -1426,15 +1426,14 @@ def hotels_webservice_module(hotels_section, project_path, lang = 'fa', index = 
         hotels_final_content = hotels_final_content.replace("&gt;", ">")
         hotels_final_content = hotels_final_content.replace("&lt;", "<")
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(hotels_final_content, include_files_directory, 'hotels-webservice'+ '-' + index, 'tpl')
+        return helper.create_file(hotels_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def hotels_External_cities_module(hotels_section, project_path, lang = 'fa', index = '1'):
+def hotels_External_cities_module(hotels_section, project_path, lang = 'fa',  file_name = ''):
     try:
-        if  os.path.exists(project_path + '/include_files/hotels.tpl'):
-            hotels_section = f"{helper.read_file(project_path + '/include_files/hotels-webservice-1.tpl')}"
-            hotels_section = BeautifulSoup(hotels_section, 'html.parser')
+        hotels_section = helper.check_if_section_built(project_path ,file_name ,hotels_section)
+
 
         before_html = ''''''
         after_html = '''{/if}'''
@@ -1611,7 +1610,7 @@ def hotels_External_cities_module(hotels_section, project_path, lang = 'fa', ind
                                             dark_star_elements.decompose()
 
 
-        if not os.path.exists(project_path + '/include_files/hotels.tpl'):
+        if not os.path.exists(project_path + '/include_files/' + file_name + '.tpl'):
             before_html = before_html + '\n' + '''{if $check_hotel}'''
         else:
             before_html = before_html + '\n' + '''{if 1 == 1}'''
@@ -1621,11 +1620,11 @@ def hotels_External_cities_module(hotels_section, project_path, lang = 'fa', ind
         hotels_final_content = hotels_final_content.replace("&gt;", ">")
         hotels_final_content = hotels_final_content.replace("&lt;", "<")
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(hotels_final_content, include_files_directory, 'hotels-webservice'+ '-' + index, 'tpl')
+        return helper.create_file(hotels_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def fast_search_flight_module(fast_search_flight_section, project_path, lang = 'fa', index = '1'):
+def fast_search_flight_module(fast_search_flight_section, project_path, lang = 'fa',  file_name = ''):
     try:
         if  os.path.exists(project_path + '/include_files/fast-search-flight.tpl'):
             fast_search_flight_section = f"{helper.read_file(project_path + '/include_files/fast-search-flight.tpl')}"
@@ -1817,11 +1816,11 @@ def fast_search_flight_module(fast_search_flight_section, project_path, lang = '
         fast_search_flight_final_content = fast_search_flight_final_content.replace("&gt;", ">")
         fast_search_flight_final_content = fast_search_flight_final_content.replace("&lt;", "<")
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(fast_search_flight_final_content, include_files_directory, 'fast_search_flight'+ '-' + index, 'tpl')
+        return helper.create_file(fast_search_flight_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def new_module(new_section, project_path, lang = 'fa', index = '1'):
+def new_module(new_section, project_path, lang = 'fa',  file_name = ''):
     try:
 
         # type  of current functions:
@@ -1834,7 +1833,7 @@ def new_module(new_section, project_path, lang = 'fa', index = '1'):
         new_final_content = new_final_content.replace("&gt;", ">")
         new_final_content = new_final_content.replace("&lt;", "<")
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(new_final_content, include_files_directory, 'new'+ '-' + index, 'tpl')
+        return helper.create_file(new_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
 
