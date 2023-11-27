@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 
-<html dir="ltr" lang="en">
-{include file="include_files/header.tpl"}
+<html dir="rtl" lang="fa">
+{include file="include_files/header-1.tpl"}
 <body>
-{include file="include_files/menu.tpl"}
+{include file="include_files/menu-1.tpl"}
 <main>
     {if $smarty.const.GDS_SWITCH eq 'app'  || $smarty.const.GDS_SWITCH eq 'page'}
 
@@ -23,7 +23,7 @@
         </div>
     {/if}
 </main>
-{include file="include_files/footer.tpl"}
+{include file="include_files/footer-1.tpl"}
 </body>
-{include file="include_files/footer_script.tpl"}
+{include file="include_files/footer_script-1.tpl"}
 </html>

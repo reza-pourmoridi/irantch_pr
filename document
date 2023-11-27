@@ -12,15 +12,20 @@ hooks:
         __login_register_class__ : کلاس دکمه لاگین,به لینک یا دکمه داده شود
         __login_register_class__2 :کلاس دکمه لاگین دوم,به لینک یا دکمه داده شود
         __login_register_class__2 :کلاس دکمه لاگین دوم,,به لینک یا دکمه داده شود
+        __mobile_class__ : کلاس شماره موبایل فوتر
+        __phone_class__ : کلاس شماره تلفن فوتر
+        __email_class__ : کلاس ایمیل
 
 
 
     banner: i_modular_banner_gallery
+
+        __banner_tabs__ : اگر بنرش براساس تب تود این کلاس رو به سکشنی که که قراره عکسش با تبا عوض شه بدین.
+
         __link__       : لینک
         __title__      :  عنوان
         __title_class__: کلاس عنوان
         __image_class__: کلاس عکس
-        __description_class__: کلاس توضیحات
 
 
     blog: i_modular_blog
@@ -30,6 +35,15 @@ hooks:
         __title_class__     : کلاس تایتل
         __image_class__     : کلاس عکس
         __date_class__     : کلاس تاریخ
+
+
+    club weather...: i_modular_club_weather
+        __date_convertor__ : پرنت بخش تبدیل تاریخ
+        __JalaliToMiladi_button__ : دکمه تبدیل جلالی به میلادی
+        __MiladiToJalali_button__ : دکمه تبدیل میلادی به جلالی
+        __JalaliToMiladi_input__ : اینپوت تبدیل جلالی به میلادی
+        __MiladiToJalali_input__ : اینپوت تبدیل میلادی به جلالی
+
 
 
     news: i_modular_news
@@ -48,15 +62,21 @@ hooks:
     __tour__internal__special__
     __tour__external__special__
 
+    هرجایی اولین ایتم رو میزاری, برای پرنتش یکی از کلاس های بالا رو میزاری.
+    و اینکه کلاس تکراری مجازه
+
         `__link__`            : لینک
         __all_link_href__ : لینک همه تور ها
         ___price_class__   : کلاس قیمت
+        ___price_$_class__     : کلاس قیمت خارجی    ++
         __title_class__     : کلاس تایتل
+        __description_class__     : کلاس توضیحات    ++
         __city_class__     : کلاس شهر
         __image_class__     : کلاس عکس
         __date_class__     : کلاس تاریخ
         __night_class__     : کلاس شب
         __day_class__     : کلاس روز
+        __degree_class__     : کلاس درجه
 
 
     hotel webservice: i_modular_hotels_webservice
@@ -98,5 +118,9 @@ hooks:
         __instagram_class__ :   کلاس اینستاگرام
         __whatsapp_class__ :    کلاس واتساپ
         __telegram_class__ :    کلاس تلگرام
+        __linkdin_class__ :    کلاس لینک دین
+        __aparat_class__ :    کلاس آپارات
+        __youtube_class__ :    کلاس یوتیوب
+        __facebook_class__ :    کلاس فیس بوک
 
     script-footer:i_modular_script_footer

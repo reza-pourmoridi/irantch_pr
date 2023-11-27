@@ -15,6 +15,123 @@ complex_items_pattern = re.compile(r'__i_modular_c_item_class_(\d+)')
 simple_items_pattern = re.compile(r'__i_modular_nc_item_class_(\d+)')
 complex_items_class = "__i_modular_c_item_class_"
 simple_items_class = "__i_modular_nc_item_class_"
+repeatable_links = {
+    {
+        '{$smarty.const.ROOT_ADDRESS}/page/flight':
+            {
+                'پرواز', 'رحلة جوية', 'flight'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/embassies':
+            {
+                'سفارت'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/lastMinute':
+            {
+                'دقیقه 90'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/page/insurance':
+            {
+                'بیمه'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/currency':
+            {
+                'نرخ ارز'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/iranVisa':
+            {
+                'تأشيرة إيران'
+            },
+        'https://{$smarty.const.CLIENT_MAIN_DOMAIN}':
+            {
+                'خانه', 'home'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/page/tour':
+            {
+                'تور', 'شبكة', 'Iran Tour', 'tour'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/page/visa':
+            {
+                'ویزا', 'Iran visa', 'Iran visa form'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/page/hotel':
+            {
+                'الفندق', 'Iran Hotel', 'Hotel', 'هتل'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/news':
+            {
+                'اخبار سایت', 'news', 'اخبار'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/loginUser':
+            {
+                'باشگاه مسافران'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/agencyList':
+            {
+                'نمایندگی ها'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/vote':
+            {
+                'نظر سنجی'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/video':
+            {
+                'نظر سنجی'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/feedback':
+            {
+                'انتقاد و پیشنهادات'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/UserTracking':
+            {
+                'پیگیری خرید', 'ترتيب المسار', 'Track order'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/video':
+            {
+                'ویدئو ها'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/aboutIran':
+            {
+                'مقدمة عن إيران', 'Introduction to Iran', 'info of Iran', 'Introduction of Iran', 'معرفی ايران'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/rules':
+            {
+                'قوانین و مقررات', 'الأحكام والشروط', 'terms and conditions', 'rules'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/aboutUs':
+            {
+                'درباره ما', 'معلومات عنا', 'about us'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/contactUs':
+            {
+                'تماس با ما', 'اتصل بنا', 'call us', 'contacts'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/faq':
+            {
+                'پرسشهای متداول', 'Faq', 'پرسش و پاسخ'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/pay':
+            {
+                'پرداخت آنلاین'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/recommendation':
+            {
+                'recommendation', 'Travelogue', 'سفر نامه'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/orderServices':
+            {
+                'الخدمات السياحية', 'Tourism services'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/worldclock':
+            {
+                'ساعة البلدان', 'Countries clock'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/weather':
+            {
+                'علم الارصاد الجوية', 'meteorology', 'weather', 'هواشناسی'
+            }
+
+    }
+}
 
 
 def initiation_progress():
@@ -28,7 +145,7 @@ def initiation_progress():
     if file.filename == '':
         return jsonify({"message": "No selected file"})
 
-    lang = 'en'
+    lang = request.form['project_lang']
 
     project_path = helper.create_folder(request.form['project_name'])
     copy_repeated_file_folders_massage = helper.copy_repeated_file_folders(request.form['project_name'])
@@ -41,72 +158,72 @@ def initiation_progress():
         return jsonify({"message": "testing html = " + f'{soup}'})
 
     moduls_array = {
-        # 'blog': {
-        #     'class': 'i_modular_blog',
-        #     'file': 'blog',
-        #     'name': 'وبلاگ',
-        #     'modular': blog_module,
-        #     'test_function': unit_test.unit_test_blog
-        # },
-        # 'newsletter': {
-        #     'class': 'i_modular_newsletter',
-        #     'name': 'خبرنامه',
-        #     'file': 'newsletter',
-        #     'modular': newsletter_module,
-        #     'test_function': unit_test.unit_test_newsletter
-        # },
-        # 'news': {
-        #     'class': 'i_modular_news',
-        #     'name': 'اخبار',
-        #     'file': 'news',
-        #     'modular': news_module,
-        #     'test_function': unit_test.unit_test_news
-        # },
-        # 'menu': {
-        #     'class': 'i_modular_menu',
-        #     'name': 'منو',
-        #     'file': 'menu',
-        #     'modular': menu_module,
-        #     'test_function': unit_test.unit_test_menu
-        # },
-        # 'footer': {
-        #     'class': 'i_modular_footer',
-        #     'name': 'فوتر',
-        #     'file': 'footer',
-        #     'modular': footer_module,
-        #     'test_function': unit_test.unit_test_footer
-        # },
-        # 'banner_gallery': {
-        #         'class': 'i_modular_banner_gallery',
-        #     'name': 'گالری بنر',
-        #     'file': 'search-box',
-        #     'modular': banner_gallery_module,
-        #     'test_function': unit_test.unit_test_banner_gallery
-        # },
-        # 'header': {
-        #     'class': 'i_modular_header',
-        #     'name': 'هدر',
-        #     'file': 'header',
-        #     'modular': header_module,
-        #     'test_function': unit_test.test_unit_test
-        #
-        # },
-        # 'footer_script': {
-        #     'class': 'i_modular_script_footer',
-        #     'name': 'اسکریپت فوتر',
-        #     'file': 'footer_script',
-        #     'modular': footer_script_module,
-        #     'test_function': unit_test.test_unit_test
-        #
-        # },
-        # 'tours': {
-        #     'class': 'i_modular_tours',
-        #     'name': 'تور',
-        #     'file': 'tours',
-        #     'modular': tours_module,
-        #     'test_function': unit_test.test_unit_test
-        #
-        # },
+        'blog': {
+            'class': 'i_modular_blog',
+            'file': 'blog',
+            'name': 'وبلاگ',
+            'modular': blog_module,
+            'test_function': unit_test.unit_test_blog
+        },
+        'newsletter': {
+            'class': 'i_modular_newsletter',
+            'name': 'خبرنامه',
+            'file': 'newsletter',
+            'modular': newsletter_module,
+            'test_function': unit_test.unit_test_newsletter
+        },
+        'news': {
+            'class': 'i_modular_news',
+            'name': 'اخبار',
+            'file': 'news',
+            'modular': news_module,
+            'test_function': unit_test.unit_test_news
+        },
+        'menu': {
+            'class': 'i_modular_menu',
+            'name': 'منو',
+            'file': 'menu',
+            'modular': menu_module,
+            'test_function': unit_test.unit_test_menu
+        },
+        'footer': {
+            'class': 'i_modular_footer',
+            'name': 'فوتر',
+            'file': 'footer',
+            'modular': footer_module,
+            'test_function': unit_test.unit_test_footer
+        },
+        'banner_gallery': {
+                'class': 'i_modular_banner_gallery',
+            'name': 'گالری بنر',
+            'file': 'search-box',
+            'modular': banner_gallery_module,
+            'test_function': unit_test.unit_test_banner_gallery
+        },
+        'header': {
+            'class': 'i_modular_header',
+            'name': 'هدر',
+            'file': 'header',
+            'modular': header_module,
+            'test_function': unit_test.test_unit_test
+
+        },
+        'footer_script': {
+            'class': 'i_modular_script_footer',
+            'name': 'اسکریپت فوتر',
+            'file': 'footer_script',
+            'modular': footer_script_module,
+            'test_function': unit_test.test_unit_test
+
+        },
+        'tours': {
+            'class': 'i_modular_tours',
+            'name': 'تور',
+            'file': 'tours',
+            'modular': tours_module,
+            'test_function': unit_test.test_unit_test
+
+        },
         'hotels_webservice': {
             'class': 'i_modular_hotels_webservice',
             'name': 'هتل وب سرویس',
@@ -120,6 +237,22 @@ def initiation_progress():
             'name': 'هتل , شهرهای خارجی',
             'file': 'hotels-external_cities',
             'modular': hotels_External_cities_module,
+            'test_function': unit_test.test_unit_test
+
+        },
+        'club_weather_section': {
+            'class': 'i_modular_club_weather',
+            'name': 'باشگاه, نرخ ارز, تبدیل تاریخ و هواشناسی',
+            'file': 'club_weather',
+            'modular': club_weather_module,
+            'test_function': unit_test.test_unit_test
+
+        },
+        'fast_flight_search_section': {
+            'class': 'i_modular_fast_search_flight',
+            'name': 'باشگاه, نرخ ارز, تبدیل تاریخ و هواشناسی',
+            'file': 'fast_flight_search',
+            'modular': fast_flight_search_module,
             'test_function': unit_test.test_unit_test
 
         },
@@ -223,71 +356,78 @@ def initiation_modulation(class_name, module_name, modular_function, soup, soup_
 
 def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa',  file_name = ''):
     try:
-        # create regex objects containing patterns of items classes
-        complex_items_numbers = helper.item_numbers(banner_gallery_section,complex_items_pattern)
-        simple_items_numbers = helper.item_numbers(banner_gallery_section,simple_items_pattern)
-        complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
-        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
-        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
-        max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
+        banner_tab = banner_gallery_section.find(class_='__banner_tabs__')
+        if banner_tab:
+            after_html = '''{include file="include_files/banner-slider.tpl" }'''
+            banner_gallery_final_content = f'{banner_gallery_section}\n{after_html}'
 
-        before_html = '''{assign var="type_data" value=['is_active'=>1 , 'limit' =>10]}
-                        {assign var='banners' value=$obj_main_page->galleryBannerMain($type_data)}
-                        {if $page.files.main_file}
-                            {$banners = [0 => ['pic' => $page.files.main_file.src , 'title' => 'page']]}
-                        {/if}
-                        <style>
-                            .banner-slider-display {
-                                display: none !important;
-                            }
-                        </style>
-                        '''
-        after_html = ''
+        else:
+            # create regex objects containing patterns of items classes
+            complex_items_numbers = helper.item_numbers(banner_gallery_section,complex_items_pattern)
+            simple_items_numbers = helper.item_numbers(banner_gallery_section,simple_items_pattern)
+            complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
+            simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
+            simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
+            max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
 
-        before_foreach = '''
-                        {foreach $banners as $key => $banner}'''
-        after_foreach = '''{/foreach}'''
+            before_html = '''{assign var="type_data" value=['is_active'=>1 , 'limit' =>10]}
+                            {assign var='banners' value=$obj_main_page->galleryBannerMain($type_data)}
+                            {if $page.files.main_file}
+                                {$banners = [0 => ['pic' => $page.files.main_file.src , 'title' => 'page']]}
+                            {/if}
+                            <style>
+                                .banner-slider-display {
+                                    display: none !important;
+                                }
+                            </style>
+                            '''
+            after_html = ''
 
-        for num in simple_items_numbers:
-            banner_gallery_replacement_data = {
-                "__title__": '''{$banner['title']}''',
-                "__link__": '''{$banner['link']}'''
-            }
-            simple_element = banner_gallery_section.find(class_=simple_items_class + num)
-            if num == simple_items_numbers[0]:
-                helper.add_before_after(banner_gallery_section, simple_items_class + num, before_foreach,after_foreach)
+            before_foreach = '''
+                            {foreach $banners as $key => $banner}'''
+            after_foreach = '''{/foreach}'''
+
+            for num in simple_items_numbers:
+                banner_gallery_replacement_data = {
+                    "__title__": '''{$banner['title']}''',
+                    "__link__": '''{$banner['link']}'''
+                }
                 simple_element = banner_gallery_section.find(class_=simple_items_class + num)
-                simple_element = helper.replace_placeholders(simple_element, banner_gallery_replacement_data)
-                simple_element = banner_gallery_section.find(class_=simple_items_class + num)
-                helper.replace_attribute(simple_element, '__image_class__', 'src','{$banner["pic"]}')
-                helper.replace_attribute(simple_element, '__image_class__', 'alt','{$banner["title"]}')
+                if num == simple_items_numbers[0]:
+                    helper.add_before_after(banner_gallery_section, simple_items_class + num, before_foreach,after_foreach)
+                    simple_element = banner_gallery_section.find(class_=simple_items_class + num)
+                    simple_element = helper.replace_placeholders(simple_element, banner_gallery_replacement_data)
+                    simple_element = banner_gallery_section.find(class_=simple_items_class + num)
+                    helper.replace_attribute(simple_element, '__image_class__', 'src','{$banner["pic"]}')
+                    helper.replace_attribute(simple_element, '__image_class__', 'alt','{$banner["title"]}')
+                    helper.replace_attribute(simple_element, '__title_class__', 'string', '''{{$banner['title']}}'''.format(num))
 
-            else:
-                simple_element.decompose()
-        for num in complex_items_numbers:
-            before_if = '''{if banners[{0}] }'''
-            before_if = before_if.replace("{0}", num)
-            after_if = '''{/if}'''
+                else:
+                    simple_element.decompose()
+            for num in complex_items_numbers:
+                before_if = '''{if $banners[{0}] }'''
+                before_if = before_if.replace("{0}", num)
+                after_if = '''{/if}'''
 
-            banner_gallery_complex_replacement_data = {
-                "__link__": '''{{banners[{0}]['link']}}'''.format(num),
-                "__title__": '''{{banners[{0}]['title']}}'''.format(num),
-            }
-            complex_element = banner_gallery_section.find(class_=complex_items_class + num)
-            helper.add_before_after(banner_gallery_section, complex_items_class + num, before_if, after_if)
-            complex_element = banner_gallery_section.find(class_=complex_items_class + num)
-            complex_element_final = helper.replace_placeholders(complex_element, banner_gallery_complex_replacement_data)
-            complex_element = banner_gallery_section.find(class_=complex_items_class + num)
-            helper.replace_attribute(complex_element, '__image_class__', 'src', '''{{banners[{0}]['pic']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__title_class__', 'alt', '''{{banners[{0}]['title']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__description_class__', 'alt', '''{{banners[{0}]['title']}}'''.format(num))
+                banner_gallery_complex_replacement_data = {
+                    "__link__": '''{{$banners[{0}]['link']}}'''.format(num),
+                    "__title__": '''{{$banners[{0}]['title']}}'''.format(num),
+                }
+                complex_element = banner_gallery_section.find(class_=complex_items_class + num)
+                helper.add_before_after(banner_gallery_section, complex_items_class + num, before_if, after_if)
+                complex_element = banner_gallery_section.find(class_=complex_items_class + num)
+                complex_element_final = helper.replace_placeholders(complex_element, banner_gallery_complex_replacement_data)
+                complex_element = banner_gallery_section.find(class_=complex_items_class + num)
+                complex_element = banner_gallery_section.find(class_=complex_items_class + str(num))
+
+                helper.replace_attribute(complex_element, '__image_class__', 'src', '''{{$banners[{0}]['pic']}}'''.format(num))
+                helper.replace_attribute(complex_element, '__image_class__', 'alt', '''{{$banners[{0}]['title']}}'''.format(num))
+                helper.replace_attribute(complex_element, '__title_class__', 'string', '''{{$banners[{0}]['title']}}'''.format(num))
 
 
-        banner_gallery_final_content = f'{before_html}\n{banner_gallery_section}\n{after_html}'
-
+            banner_gallery_final_content = f'{before_html}\n{banner_gallery_section}\n{after_html}'
 
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        # helper.write_text_in_path(project_path, "{inclued 'include_files/banner-gallery.tpl'}")
         banner_gallery_final_content = banner_gallery_final_content.replace("&gt;", ">")
         banner_gallery_final_content = banner_gallery_final_content.replace("&lt;", "<")
 
@@ -400,66 +540,6 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
     try:
 
 
-        repeatable_links = {
-            'fa':{
-                'پرواز': '{$smarty.const.ROOT_ADDRESS}/page/flight',
-                'هتل': '{$smarty.const.ROOT_ADDRESS}/page/hotel',
-                'بیمه': '{$smarty.const.ROOT_ADDRESS}/page/insurance',
-                'انتقاد و پیشنهادات': '{$smarty.const.ROOT_ADDRESS}/feedback',
-                'نظر سنجی': '{$smarty.const.ROOT_ADDRESS}/vote',
-                'باشگاه مسافران': '{$smarty.const.ROOT_ADDRESS}/loginUser',
-                'پیگیری خرید': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
-                'وبلاگ': '{$smarty.const.ROOT_ADDRESS}/mag',
-                'ویدئو ها': '{$smarty.const.ROOT_ADDRESS}/video',
-                'نمایندگی ها': '{$smarty.const.ROOT_ADDRESS}/agencyList',
-                'همکاری با ما': '{$smarty.const.ROOT_ADDRESS}/همکاری با ما',
-                'نرخ ارز': '{$smarty.const.ROOT_ADDRESS}/currency',
-                'سفر نامه': '{$smarty.const.ROOT_ADDRESS}/recommendation',
-                'سفارت': '{$smarty.const.ROOT_ADDRESS}/embassies',
-                'پرسش و پاسخ': '{$smarty.const.ROOT_ADDRESS}/faq',
-                'پرسشهای متداول': '{$smarty.const.ROOT_ADDRESS}/faq',
-                'دقیقه 90': '{$smarty.const.ROOT_ADDRESS}/lastMinute',
-                'اخبار سایت': '{$smarty.const.ROOT_ADDRESS}/news',
-                'معرفی ايران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
-                'قوانین و مقررات': '{$smarty.const.ROOT_ADDRESS}/rules',
-                'درباره ما': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
-                'تماس با ما': '{$smarty.const.ROOT_ADDRESS}/contactUs',
-                'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
-            },
-            'ar' : {
-                'رحلة جوية': '{$smarty.const.ROOT_ADDRESS}/page/flight',
-                'ترتيب المسار': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
-                'مدونة': '{$smarty.const.ROOT_ADDRESS}/mag',
-                'الخدمات السياحية': '{$smarty.const.ROOT_ADDRESS}/orderServices',
-                'مقدمة عن إيران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
-                'الفندق إيران': '{$smarty.const.ROOT_ADDRESS}/hotel',
-                'تأشيرة إيران': '{$smarty.const.ROOT_ADDRESS}/iran-visa',
-                'شبكة': '{$smarty.const.ROOT_ADDRESS}/tour',
-                'الأحكام والشروط': '{$smarty.const.ROOT_ADDRESS}/rules',
-                'ساعة البلدان': '{$smarty.const.ROOT_ADDRESS}/worldclock',
-                'معلومات عنا': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
-                'اتصل بنا': '{$smarty.const.ROOT_ADDRESS}/contactUs',
-                'علم الارصاد الجوية': '{$smarty.const.ROOT_ADDRESS}/weather',
-            },
-            'en' : {
-                'flight': '{$smarty.const.ROOT_ADDRESS}/page/flight',
-                'Track order': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
-                'Blog': '{$smarty.const.ROOT_ADDRESS}/mag',
-                'Tourism services': '{$smarty.const.ROOT_ADDRESS}/orderServices',
-                'Introduction to Iran': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
-                'info of Iran': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
-                'Hotel': '{$smarty.const.ROOT_ADDRESS}/hotel',
-                'Iran visa': '{$smarty.const.ROOT_ADDRESS}/iran-visa',
-                'tour': '{$smarty.const.ROOT_ADDRESS}/tour',
-                'terms and conditions': '{$smarty.const.ROOT_ADDRESS}/rules',
-                'rules': '{$smarty.const.ROOT_ADDRESS}/rules',
-                'Countries clock': '{$smarty.const.ROOT_ADDRESS}/worldclock',
-                'about us': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
-                'call us': '{$smarty.const.ROOT_ADDRESS}/contactUs',
-                'contact us': '{$smarty.const.ROOT_ADDRESS}/contactUs',
-                'meteorology': '{$smarty.const.ROOT_ADDRESS}/weather',
-            }
-        }
 
         repeatable_lists = {
             'fa':{
@@ -547,8 +627,8 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
 
         helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
         helper.replace_attribute_by_text(menu_section, 'الدخول / يسجل' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
-        helper.replace_attribute(menu_section, '__login_register_class__2', 'class','__login_register_class__2 main-navigation__button2 show-box-login-js')
-        helper.replace_attribute(menu_section, '__login_register_class__', 'class','__login_register_class__ main-navigation__button2 show-box-login-js ')
+        helper.add_class_to_elements(menu_section, '__login_register_class__2',' main-navigation__button2 show-box-login-js')
+        helper.add_class_to_elements(menu_section, '__login_register_class__',' main-navigation__button2 show-box-login-js ')
 
 
         after_login = '''<div class="main-navigation__sub-menu2 arrow-up show-content-box-login-js" style="display: none">
@@ -563,12 +643,20 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
 
         # return f'{menu_section}'
 
-        for key, val in repeatable_links[lang].items():
-            helper.replace_attribute_by_text(menu_section, key, 'href', val)
+        for key, val in repeatable_links.items():
+            for item in val.items():
+                helper.replace_attribute_by_text(menu_section, item, 'href', val)
 
         for key, val in repeatable_lists[lang].items():
             helper.replace_attribute_by_text(menu_section, key, 'string', val)
 
+
+        helper.replace_attribute(footer_section, '__mobile_class__', 'string', '''{$smarty.const.CLIENT_MOBILE}''')
+        helper.replace_attribute(footer_section, '__mobile_class__', 'href', '''tel:{$smarty.const.CLIENT_MOBILE}''')
+        helper.replace_attribute(footer_section, '__phone_class__', 'string', '''{$smarty.const.CLIENT_PHONE}''')
+        helper.replace_attribute(footer_section, '__phone_class__', 'href', '''tel:{$smarty.const.CLIENT_PHONE}''')
+        helper.replace_attribute(footer_section, '__email_class__', 'string', '''{$smarty.const.CLIENT_EMAIL}''')
+        helper.replace_attribute(footer_section, '__email_class__', 'href', '''mailto:{$smarty.const.CLIENT_EMAIL}''')
 
 
         menu_final_content = f'{menu_section}'
@@ -598,7 +686,7 @@ def footer_module(footer_section, project_path, lang = 'fa',  file_name = ''):
                             {/if}'''
 
         befor_social_media = '''{assign var="socialLinks"  value=$about['social_links']|json_decode:true}
-                                {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref','linkeDin' => 'linkeDinHref']}
+                                {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref','aparat' => 'aparatHref','youtube' => 'youtubeHref','facebook' => 'facebookHref','linkeDin' => 'linkeDinHref']}
 
                                 {foreach $socialLinks as $key => $val}
                                         {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}
@@ -613,76 +701,17 @@ def footer_module(footer_section, project_path, lang = 'fa',  file_name = ''):
             '__whatsapp_class__': '{if $telegramHref}{$whatsappHref}{/if}',
             '__instagram_class__': '{if $telegramHref}{$instagramHref}{/if}',
             '__linkdin_class__': '{if $telegramHref}{$linkeDinHref}{/if}',
+            '__aparat_class__': '{if $telegramHref}{$aparatHref}{/if}',
+            '__youtube_class__': '{if $telegramHref}{$youtubeHref}{/if}',
         }
 
         for key, val in repeatable_social_links.items():
             helper.replace_attribute(social_element, key, 'href', val)
 
-        repeatable_links = {
-            'fa': {
-                'پرواز': '{$smarty.const.ROOT_ADDRESS}/page/flight',
-                'پیگیری خرید': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
-                'وبلاگ': '{$smarty.const.ROOT_ADDRESS}/mag',
-                'اخبار سایت': '{$smarty.const.ROOT_ADDRESS}/news',
-                'معرفی ايران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
-                'قوانین و مقررات': '{$smarty.const.ROOT_ADDRESS}/rules',
-                'درباره ما': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
-                'تماس با ما': '{$smarty.const.ROOT_ADDRESS}/contactUs',
-                'پرداخت آنلاین': '{$smarty.const.ROOT_ADDRESS}/pay',
-                'پرسشهای متداول': '{$smarty.const.ROOT_ADDRESS}/faq',
-            },
-            'ar': {
-                'رحلة جوية': '{$smarty.const.ROOT_ADDRESS}/page/flight',
-                'ترتيب المسار': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
-                'مدونة': '{$smarty.const.ROOT_ADDRESS}/mag',
-                'الخدمات السياحية': '{$smarty.const.ROOT_ADDRESS}/orderServices',
-                'مقدمة عن إيران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
-                'الفندق إيران': '{$smarty.const.ROOT_ADDRESS}/hotel',
-                'تأشيرة إيران': '{$smarty.const.ROOT_ADDRESS}/iran-visa',
-                'شبكة': '{$smarty.const.ROOT_ADDRESS}/tour',
-                'الأحكام والشروط': '{$smarty.const.ROOT_ADDRESS}/rules',
-                'ساعة البلدان': '{$smarty.const.ROOT_ADDRESS}/worldclock',
-                'معلومات عنا': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
-                'اتصل بنا': '{$smarty.const.ROOT_ADDRESS}/contactUs',
-                'علم الارصاد الجوية': '{$smarty.const.ROOT_ADDRESS}/weather',
-            },
-            'ar': {
-                'رحلة جوية': '{$smarty.const.ROOT_ADDRESS}/page/flight',
-                'ترتيب المسار': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
-                'مدونة': '{$smarty.const.ROOT_ADDRESS}/mag',
-                'الخدمات السياحية': '{$smarty.const.ROOT_ADDRESS}/orderServices',
-                'مقدمة عن إيران': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
-                'الفندق إيران': '{$smarty.const.ROOT_ADDRESS}/hotel',
-                'تأشيرة إيران': '{$smarty.const.ROOT_ADDRESS}/iran-visa',
-                'شبكة': '{$smarty.const.ROOT_ADDRESS}/tour',
-                'الأحكام والشروط': '{$smarty.const.ROOT_ADDRESS}/rules',
-                'ساعة البلدان': '{$smarty.const.ROOT_ADDRESS}/worldclock',
-                'معلومات عنا': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
-                'اتصل بنا': '{$smarty.const.ROOT_ADDRESS}/contactUs',
-                'علم الارصاد الجوية': '{$smarty.const.ROOT_ADDRESS}/weather',
-            },
-            'en' : {
-                'flight': '{$smarty.const.ROOT_ADDRESS}/page/flight',
-                'Track order': '{$smarty.const.ROOT_ADDRESS}/UserTracking',
-                'Blog': '{$smarty.const.ROOT_ADDRESS}/mag',
-                'Tourism services': '{$smarty.const.ROOT_ADDRESS}/orderServices',
-                'Introduction to Iran': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
-                'info of Iran': '{$smarty.const.ROOT_ADDRESS}/aboutIran',
-                'Hotel': '{$smarty.const.ROOT_ADDRESS}/hotel',
-                'Iran visa': '{$smarty.const.ROOT_ADDRESS}/iran-visa',
-                'tour': '{$smarty.const.ROOT_ADDRESS}/tour',
-                'terms and conditions': '{$smarty.const.ROOT_ADDRESS}/rules',
-                'rules': '{$smarty.const.ROOT_ADDRESS}/rules',
-                'Countries clock': '{$smarty.const.ROOT_ADDRESS}/worldclock',
-                'about us': '{$smarty.const.ROOT_ADDRESS}/aboutUs',
-                'call us': '{$smarty.const.ROOT_ADDRESS}/contactUs',
-                'contacts': '{$smarty.const.ROOT_ADDRESS}/contactUs',
-                'meteorology': '{$smarty.const.ROOT_ADDRESS}/weather',
-            }
-        }
 
-        for key, val in repeatable_links[lang].items():
-            helper.replace_attribute_by_text(footer_section, key, 'href', val)
+        for key, val in repeatable_links.items():
+            for item in val.items():
+                helper.replace_attribute_by_text(footer_section, item, 'href', val)
 
         helper.replace_attribute(footer_section, '__aboutUs_class__', 'string',
                                  '''{$htmlContent = $about['body']|strip_tags}{$htmlContent|truncate:300}''')
@@ -878,7 +907,7 @@ def footer_script_module(footer_script_section, project_path, lang = 'fa',  file
         between_mainPage_assets = []
         inside_mainPage = []
         remove_assets = ['js/jquery-3.4.1.min.js']
-        after__all = ['js/mega-menu.js', 'js/script.js']
+        after__all = ['js/header.js','js/mega-menu.js', 'js/script.js']
 
         footer_script_content = '''
                             <div class='__befor_all__'></div>
@@ -941,6 +970,7 @@ def footer_script_module(footer_script_section, project_path, lang = 'fa',  file
             element.replace_with(helper.turn_to_script_links_assames(inside_assets))
 
         footer_script_final_content = f'{footer_script_section}'
+
         footer_script_final_content = footer_script_final_content.replace("&gt;", ">")
         footer_script_final_content = footer_script_final_content.replace("&lt;", "<")
         footer_script_final_content = footer_script_final_content.replace("</html>", " ")
@@ -1062,6 +1092,7 @@ def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
                     '__night_class__': {'string': '''{$item['night']}'''},
                     '__day_class__': {'string': '''{$item['night'] + 1}'''},
                     '__city_class__': {'string': '''{$item['destination_city_name']}'''},
+                    '__degree_class__': {'string': '''{$item['StarCode']}'''},
                     '__image_class__': {
                         'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$item['tour_pic']}''',
                         'alt': '''{$item['tour_name']}'''},
@@ -1164,6 +1195,7 @@ def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
                                 '__night_class__': {'string': '''{$__tour_var__[{0}]['night']}'''},
                                 '__city_class__': {'string': '''{$__tour_var__[{0}]['destination_city_name']}'''},
                                 '__day_class__': {'string': '''{$__tour_var__[{0}]['night'] + 1}'''},
+                                '__degree_class__': {'string': '''{$__tour_var__[{0}]['StarCode']}'''},
                                 '__image_class__': {
                                     'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$__tour_var__[{0}]['tour_pic']}''',
                                     'alt': '''{$__tour_var__[{0}]['tour_name']}'''},
@@ -1837,6 +1869,135 @@ def new_module(new_section, project_path, lang = 'fa',  file_name = ''):
     except Exception as e:
         return str(e)  # Return the exception message for now
 
+def club_weather_module(club_weather_sectionproject_path, lang = 'fa',  file_name = ''):
+    try:
+        repeatable_links_club = {
+        '{$smarty.const.ROOT_ADDRESS}/loginUser':
+            {
+                'ورود'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/weather':
+            {
+                'علم الارصاد الجوية', 'meteorology', 'weather', 'هواشناسی'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/currency':
+            {
+                'نرخ ارز'
+            },
+        }
+
+        helper.replace_attribute(club_weather_section, '__JalaliToMiladi_button__', 'onclick', '''convertJalaliToMiladi()''')
+        helper.replace_attribute(club_weather_section, '__MiladiToJalali_button__', 'onclick', '''convertMiladiToJalali()''')
+
+        helper.add_class_to_elements(club_weather_section, '__JalaliToMiladi_input__','convertShamsiMiladiCalendar')
+        helper.add_class_to_elements(club_weather_section, '__MiladiToJalali_input__','convertMiladiShamsiCalendar')
+
+        helper.replace_attribute(club_weather_section, '__JalaliToMiladi_input__', 'name', '''txtShamsiCalendar''')
+        helper.replace_attribute(club_weather_section, '__JalaliToMiladi_input__', 'id', '''txtShamsiCalendar''')
+
+        helper.replace_attribute(club_weather_section, '__MiladiToJalali_input__', 'name', '''txtMiladiCalendar''')
+        helper.replace_attribute(club_weather_section, '__MiladiToJalali_input__', 'id', '''txtMiladiCalendar''')
+
+
+
+        helper.replace_attribute(club_weather_section, '__email_class__', 'string', '''{$smarty.const.CLIENT_EMAIL}''')
+        helper.replace_attribute(club_weather_section, '__email_class__', 'href', '''mailto:{$smarty.const.CLIENT_EMAIL}''')
+
+        for key, val in repeatable_links.items():
+            for item in val.items():
+                helper.replace_attribute_by_text(club_weather_section, item, 'href', val)
+        # type  of current functions:
+
+        # replace_placeholders
+        # replace_attribute and string
+        # add_before_after
+        # direct_string
+        # final_content.replace
+        club_weather_final_content = club_weather_final_content.replace("&gt;", ">")
+        club_weather_final_content = club_weather_final_content.replace("&lt;", "<")
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        return helper.create_file(club_weather_final_content, include_files_directory, file_name, 'tpl')
+    except Exception as e:
+        return str(e)  # Return the exception message for now
+
+def fast_flight_search_module(fast_flight_search_section, project_path, lang = 'fa',  file_name = ''):
+    try:
+        fast_flight_search_section = helper.check_if_section_built(project_path ,file_name ,fast_flight_search_section)
+
+        before_html = '''{assign var="params" value=['limit'=>'__local_max__','is_group'=>true]}
+                        {assign var="cities" value=$obj_main_page->dataFastSearchInternalFlight($params)}
+                        {assign var="foreign_cities" value=['IKA','DXB','LHR','CAI', 'BER' , 'BIO']}
+                        
+                        {assign var="__local_max_var__" value=__local_max__}
+                      '''
+
+
+
+        fast_flight_search_region_array = ['internal', 'external']
+        fast_flight_search_type_array = ['multi_city', 'single_city']
+
+        for region in fast_flight_search_region_array:
+            for type in fast_flight_search_type_array:
+                befor_cities_html_array = {
+                    'internal__multi_city': '''{assign var="i" value="1"}
+                                                {foreach $cities['cities_flight'] as $city}
+                                                {if $i < $__local_max_var__ }
+                                                ''',
+                    'internal__single_city': ''' ''',
+                    'external__multi_city': ''' {assign var="i" value="1"}
+                                                {foreach $foreign_cities as $city_code}
+                                                {assign var="params" value=['use_customer_db'=>true,'origin_city'=>$city_code,'destination_city'=>$foreign_cities]}
+                                                {assign var="cities" value=$obj_main_page->dataFastSearchInternationalFlight($params)}
+                                                {if $i < $__local_max_var__  and {$cities['main']['DepartureCityFa']}}
+                                                 ''',
+                    'external__single_city': ''' ''',
+                }
+                after_cities_html_array = '''
+                                         {/if}
+                                            {$i =  $i + 1}
+                                        {/foreach}
+                                         '''
+
+                befor_flights_html_array = '''
+                                                {foreach $cities['sub_cities'] as $sub_city}
+                                            '''
+                after_flights_html_array = '''
+                                            {/foreach}
+                                         '''
+
+                section_class= '__fast_flight_search__'
+                section_var= 'fast_flight_search'
+                section_params= 'fast_flight_search_params'
+                local_min_var = 'min'
+                local_max_var = 'max'
+                if region:
+                    section_class =  section_class + region + '__'
+                    section_var =  section_var + '_' + region
+                    section_params =  section_params + '_' + region
+                    local_min_var =  local_min_var + '_' + region
+                    local_max_var =  local_max_var + '_' + region
+                if type:
+                    section_class = section_class + type + '__'
+                    section_var =  section_var + '_' + type
+                    local_min_var =  local_min_var + '_' + region
+                    local_max_var =  local_max_var + '_' + region
+
+
+                # sections = fast_flight_search_section.find_all(class_=section_class)
+                # if sections:
+
+
+
+
+
+        fast_flight_search_final_content = f'{before_html}\n{fast_flight_search_section}'
+
+        fast_flight_search_final_content = fast_flight_search_final_content.replace("&gt;", ">")
+        fast_flight_search_final_content = fast_flight_search_final_content.replace("&lt;", "<")
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        return helper.create_file(fast_flight_search_final_content, include_files_directory, file_name, 'tpl')
+    except Exception as e:
+        return str(e)  # Return the exception message for now
 
 
 

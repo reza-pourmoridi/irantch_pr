@@ -171,6 +171,21 @@ def replace_attribute(section, class_name, attr, value):
         else:
             tag.string = value
 
+
+def add_class_to_elements(section, class_name, new_class):
+    for tag in section.find_all(class_=class_name):
+        # Get the current classes
+        current_classes = tag.get('class', [])
+
+        # Add the new class
+        if new_class not in current_classes:
+            current_classes.append(new_class)
+
+        # Update the class attribute
+        tag['class'] = current_classes
+
+
+
 def add_value_to_attribute(section, class_name, attr, value):
     for tag in section.find_all(class_=class_name):
         if attr != 'string':
@@ -279,3 +294,4 @@ def check_if_section_built(project_path ,file_name ,section):
         section = BeautifulSoup(section, 'html.parser')
 
     return section
+

@@ -10,7 +10,7 @@
 {/foreach}
 
 <style>
-    .search_box {
+    .__banner_tabs__ {
     {if $page.files.main_file.src && $smarty.const.GDS_SWITCH eq 'page'}
         background-image: url("{$page.files.main_file.src}");
     {else}
@@ -25,32 +25,32 @@
         {/literal}
         {if $specialFlightPic}
         {literal}
-      $('#Flight-tab').click(function () {$('.search_box').css('background-image' , 'url("{/literal}{$specialFlightPic}{literal}")')});
+      $('#Flight-tab').click(function () {$('.__banner_tabs__').css('background-image' , 'url("{/literal}{$specialFlightPic}{literal}")')});
         {/literal}
         {/if}
         {if $specialHotelPic}
         {literal}
-      $('#Hotel-tab').click(function () {$('.search_box').css('background-image' , 'url("{/literal}{$specialHotelPic}{literal}")')});
+      $('#Hotel-tab').click(function () {$('.__banner_tabs__').css('background-image' , 'url("{/literal}{$specialHotelPic}{literal}")')});
         {/literal}
         {/if}
         {if $specialTrainPic}
         {literal}
-      $('#Train-tab').click(function () {$('.search_box').css('background-image' , 'url("{/literal}{$specialTrainPic}{literal}")')});
+      $('#Train-tab').click(function () {$('.__banner_tabs__').css('background-image' , 'url("{/literal}{$specialTrainPic}{literal}")')});
         {/literal}
         {/if}
         {if $specialBusPic}
         {literal}
-      $('#Bus-tab').click(function () {$('.search_box').css('background-image' , 'url("{/literal}{$specialBusPic}{literal}")')});
+      $('#Bus-tab').click(function () {$('.__banner_tabs__').css('background-image' , 'url("{/literal}{$specialBusPic}{literal}")')});
         {/literal}
         {/if}
         {if $specialTourPic}
         {literal}
-      $('#Tour-tab').click(function () {$('.search_box').css('background-image' , 'url("{/literal}{$specialTourPic}{literal}")')});
+      $('#Tour-tab').click(function () {$('.__banner_tabs__').css('background-image' , 'url("{/literal}{$specialTourPic}{literal}")')});
         {/literal}
         {/if}
         {if $specialInsurancePic}
         {literal}
-      $('#Insurance-tab').click(function () {$('.search_box').css('background-image' , 'url("{/literal}{$specialInsurancePic}{literal}")')});
+      $('#Insurance-tab').click(function () {$('.__banner_tabs__').css('background-image' , 'url("{/literal}{$specialInsurancePic}{literal}")')});
         {/literal}
         {/if}
         {literal}

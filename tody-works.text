@@ -1,38 +1,40 @@
-modulation of darya:
-modulation of darya html.+
-checking for modules that need to be creat and separating them in two list+
-creating and checking those separate of rest of the code
-final test
+tody works:
+finding the moduls that this week needed to be modulation.
+correcting them in order of palets.
+testing all palets in hand to be down completely.
 
 
 
 
-list , those who needs to creat function for.
-menu ,++
 
-i_modular_tours,+
-i_modular_tours2,+
-i_modular_hotel_webservice,+
-i_modular_hotel_city,+
-
-i_modular_fast_search_flight,
+hotel reservation.
+fast flight search.
+contact , us.
+feedback.
+tour menu.
+flight menu.
 
 
-i_modular_other,
-i_modular_app
-i_modular_follow_us,
-i_modular_banner_tabs,
+designs:
+ava parvas
+touring.
+homan.
+hayat.
+avan.
+darya.
 
 
 
-list , those who doesn't need.
-i_modular_info,
+
+
+
+
+
+
+
 
 
 importhant: create a test for correct modulation.
-
-
-
 warning: don't forget for writing the test , check the links and images.
 warning: creating an test for scripts and links.
 warning: creating an test for images.
