@@ -698,11 +698,11 @@ def footer_module(footer_section, project_path, lang = 'fa',  file_name = ''):
         social_element = footer_section.find(class_=lambda classes: classes and '__social_class__' in classes)
         repeatable_social_links = {
             '__telegram_class__': '{if $telegramHref}{$telegramHref}{/if}',
-            '__whatsapp_class__': '{if $telegramHref}{$whatsappHref}{/if}',
-            '__instagram_class__': '{if $telegramHref}{$instagramHref}{/if}',
-            '__linkdin_class__': '{if $telegramHref}{$linkeDinHref}{/if}',
-            '__aparat_class__': '{if $telegramHref}{$aparatHref}{/if}',
-            '__youtube_class__': '{if $telegramHref}{$youtubeHref}{/if}',
+            '__whatsapp_class__': '{if $whatsappHref}{$whatsappHref}{/if}',
+            '__instagram_class__': '{if $instagramHref}{$instagramHref}{/if}',
+            '__linkdin_class__': '{if $linkeDinHref}{$linkeDinHref}{/if}',
+            '__aparat_class__': '{if $aparatHref}{$aparatHref}{/if}',
+            '__youtube_class__': '{if $youTubeHref}{$youTubeHref}{/if}',
         }
 
         for key, val in repeatable_social_links.items():
@@ -989,11 +989,19 @@ def blog_module(blog_section, project_path , lang = 'fa',  file_name = ''):
         simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
         max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
 
-        before_html = '''{assign var="data_search_blog" value=['service'=>'Public','section'=>'article', 'limit' =>1i_modular__max_limit]}
+        before_html = '''
+                        //with category
+                        {*{assign var="search_array" value=['section'=>'mag','category'=>1,'limit'=>'1i_modular__max_limit']}*}
+                        {*{assign var='articles' value=$obj_main_page->getCategoryArticles($search_array)}*}
+                        {*{assign var='counter' value=0}*}
+                        {*{assign var="article_count" value=$articles|count}*}
+        
+                        {assign var="data_search_blog" value=['service'=>'Public','section'=>'article', 'limit' =>1i_modular__max_limit]}
                         {assign var='articles' value=$obj_main_page->articlesPosition($data_search_blog)}
                         {assign var='counter' value=0}
                         {assign var="article_count" value=$articles|count}
-                        {if $articles}'''
+                        {if $articles}
+                    '''
         before_html = before_html.replace("i_modular__max_limit", max_item_number)
         after_html = '{/if}'
 
@@ -1069,7 +1077,7 @@ def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
 
         for region in tour_region_array:
             for type in tour_type_array:
-                before_html_local = '''{assign var="__params_var__" value=['type'=>'__type__','limit'=> '__local_max_limit__','dateNow' => $dateNow, 'country' =>'__country__']}
+                before_html_local = '''{assign var="__params_var__" value=['type'=>'__type__','limit'=> '__local_max_limit__','dateNow' => $dateNow, 'country' =>'__country__', 'country' =>null ,'city' => null]}
                                         {assign var='__tour_var__' value=$obj_main_page->getToursReservation($__params_var__)}
                                         {if $__tour_var__}
                                             {assign var='check_tour' value=true}
