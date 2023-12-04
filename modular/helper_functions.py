@@ -75,10 +75,12 @@ def unzip_to_folder(folder_path, zip_path):
 def is_zip(file_path):
     return zipfile.is_zipfile(file_path)
 
-def create_folder(folder_name):
+def create_folder(folder_name , path = False):
     try:
         script_directory = os.path.dirname(__file__)  # Get the directory of the script
         files_directory = os.path.join(script_directory, 'files')  # Create a 'files' subdirectory
+        if path:
+            files_directory = path  # Create a 'files' subdirectory
         folder_path = os.path.join(files_directory, folder_name)
 
         # Check if the folder already exists
@@ -218,7 +220,8 @@ def turn_to_styl_links_assames(links):
 def turn_to_script_links_assames(links):
     result = ''
     for item in links:
-        result = result + '<script src="project_files/' + item + '"></script>'
+        if item:
+            result = result + '<script src="project_files/' + item + '"></script>'
     return result
 
 def replace_attribute_by_text(section, target_text, attr, value):

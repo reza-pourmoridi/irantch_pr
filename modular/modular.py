@@ -8,6 +8,7 @@ import json
 import codecs
 from modular import helper_functions as helper
 from modular import unit_test
+from modular.searchBox import sb
 import zipfile
 
 
@@ -16,7 +17,6 @@ simple_items_pattern = re.compile(r'__i_modular_nc_item_class_(\d+)')
 complex_items_class = "__i_modular_c_item_class_"
 simple_items_class = "__i_modular_nc_item_class_"
 repeatable_links = {
-    {
         '{$smarty.const.ROOT_ADDRESS}/page/flight':
             {
                 'پرواز', 'رحلة جوية', 'flight'
@@ -103,7 +103,7 @@ repeatable_links = {
             },
         '{$smarty.const.ROOT_ADDRESS}/contactUs':
             {
-                'تماس با ما', 'اتصل بنا', 'call us', 'contacts'
+                'تماس با ما', 'اتصل بنا', 'call us', 'contacts', 'ارتباط با ما'
             },
         '{$smarty.const.ROOT_ADDRESS}/faq':
             {
@@ -131,7 +131,7 @@ repeatable_links = {
             }
 
     }
-}
+
 
 
 def initiation_progress():
@@ -144,6 +144,8 @@ def initiation_progress():
     file = request.files['file']
     if file.filename == '':
         return jsonify({"message": "No selected file"})
+
+
 
     lang = request.form['project_lang']
 
@@ -158,101 +160,109 @@ def initiation_progress():
         return jsonify({"message": "testing html = " + f'{soup}'})
 
     moduls_array = {
-        'blog': {
-            'class': 'i_modular_blog',
-            'file': 'blog',
-            'name': 'وبلاگ',
-            'modular': blog_module,
-            'test_function': unit_test.unit_test_blog
-        },
-        'newsletter': {
-            'class': 'i_modular_newsletter',
-            'name': 'خبرنامه',
-            'file': 'newsletter',
-            'modular': newsletter_module,
-            'test_function': unit_test.unit_test_newsletter
-        },
-        'news': {
-            'class': 'i_modular_news',
-            'name': 'اخبار',
-            'file': 'news',
-            'modular': news_module,
-            'test_function': unit_test.unit_test_news
-        },
-        'menu': {
-            'class': 'i_modular_menu',
-            'name': 'منو',
-            'file': 'menu',
-            'modular': menu_module,
-            'test_function': unit_test.unit_test_menu
-        },
-        'footer': {
-            'class': 'i_modular_footer',
-            'name': 'فوتر',
-            'file': 'footer',
-            'modular': footer_module,
-            'test_function': unit_test.unit_test_footer
-        },
-        'banner_gallery': {
-                'class': 'i_modular_banner_gallery',
-            'name': 'گالری بنر',
-            'file': 'search-box',
-            'modular': banner_gallery_module,
-            'test_function': unit_test.unit_test_banner_gallery
-        },
-        'header': {
-            'class': 'i_modular_header',
-            'name': 'هدر',
-            'file': 'header',
-            'modular': header_module,
-            'test_function': unit_test.test_unit_test
-
-        },
-        'footer_script': {
-            'class': 'i_modular_script_footer',
-            'name': 'اسکریپت فوتر',
-            'file': 'footer_script',
-            'modular': footer_script_module,
-            'test_function': unit_test.test_unit_test
-
-        },
-        'tours': {
-            'class': 'i_modular_tours',
-            'name': 'تور',
-            'file': 'tours',
-            'modular': tours_module,
-            'test_function': unit_test.test_unit_test
-
-        },
-        'hotels_webservice': {
-            'class': 'i_modular_hotels_webservice',
-            'name': 'هتل وب سرویس',
-            'file': 'hotels-webservice',
-            'modular': hotels_webservice_module,
-            'test_function': unit_test.test_unit_test
-
-        },
-        'hotels__external_cities': {
-            'class': 'i_modular_hotels_external_cities',
-            'name': 'هتل , شهرهای خارجی',
-            'file': 'hotels-external_cities',
-            'modular': hotels_External_cities_module,
-            'test_function': unit_test.test_unit_test
-
-        },
-        'club_weather_section': {
-            'class': 'i_modular_club_weather',
-            'name': 'باشگاه, نرخ ارز, تبدیل تاریخ و هواشناسی',
-            'file': 'club_weather',
-            'modular': club_weather_module,
-            'test_function': unit_test.test_unit_test
-
-        },
-        'fast_flight_search_section': {
-            'class': 'i_modular_fast_search_flight',
-            'name': 'باشگاه, نرخ ارز, تبدیل تاریخ و هواشناسی',
-            'file': 'fast_flight_search',
-            'modular': fast_flight_search_module,
+        # 'blog': {
+        #     'class': 'i_modular_blog',
+        #     'file': 'blog',
+        #     'name': 'وبلاگ',
+        #     'modular': blog_module,
+        #     'test_function': unit_test.unit_test_blog
+        # },
+        # 'newsletter': {
+        #     'class': 'i_modular_newsletter',
+        #     'name': 'خبرنامه',
+        #     'file': 'newsletter',
+        #     'modular': newsletter_module,
+        #     'test_function': unit_test.unit_test_newsletter
+        # },
+        # 'news': {
+        #     'class': 'i_modular_news',
+        #     'name': 'اخبار',
+        #     'file': 'news',
+        #     'modular': news_module,
+        #     'test_function': unit_test.unit_test_news
+        # },
+        # 'menu': {
+        #     'class': 'i_modular_menu',
+        #     'name': 'منو',
+        #     'file': 'menu',
+        #     'modular': menu_module,
+        #     'test_function': unit_test.unit_test_menu
+        # },
+        # 'footer': {
+        #     'class': 'i_modular_footer',
+        #     'name': 'فوتر',
+        #     'file': 'footer',
+        #     'modular': footer_module,
+        #     'test_function': unit_test.unit_test_footer
+        # },
+        # 'banner_gallery': {
+        #         'class': 'i_modular_banner_gallery',
+        #     'name': 'گالری بنر',
+        #     'file': 'search-box',
+        #     'modular': banner_gallery_module,
+        #     'test_function': unit_test.unit_test_banner_gallery
+        # },
+        # 'header': {
+        #     'class': 'i_modular_header',
+        #     'name': 'هدر',
+        #     'file': 'header',
+        #     'modular': header_module,
+        #     'test_function': unit_test.test_unit_test
+        #
+        # },
+        # 'footer_script': {
+        #     'class': 'i_modular_script_footer',
+        #     'name': 'اسکریپت فوتر',
+        #     'file': 'footer_script',
+        #     'modular': footer_script_module,
+        #     'test_function': unit_test.test_unit_test
+        #
+        # },
+        # 'tours': {
+        #     'class': 'i_modular_tours',
+        #     'name': 'تور',
+        #     'file': 'tours',
+        #     'modular': tours_module,
+        #     'test_function': unit_test.test_unit_test
+        #
+        #  },
+        # 'hotels_webservice': {
+        #     'class': 'i_modular_hotels_webservice',
+        #     'name': 'هتل وب سرویس',
+        #     'file': 'hotels-webservice',
+        #     'modular': hotels_webservice_module,
+        #     'test_function': unit_test.test_unit_test
+        #
+        # },
+        # 'hotels__external_cities': {
+        #     'class': 'i_modular_hotels_external_cities',
+        #     'name': 'هتل , شهرهای خارجی',
+        #     'file': 'hotels-external_cities',
+        #     'modular': hotels_External_cities_module,
+        #     'test_function': unit_test.test_unit_test
+        #
+        # },
+        # 'club_weather_section': {
+        #     'class': 'i_modular_club_weather',
+        #     'name': 'باشگاه, نرخ ارز, تبدیل تاریخ و هواشناسی',
+        #     'file': 'club_weather',
+        #     'modular': club_weather_module,
+        #     'test_function': unit_test.test_unit_test
+        #
+        # },
+        # 'fast_flight_search_section': {
+        #     'class': 'i_modular_fast_search_flight',
+        #     'name': 'جستجوی سریع پرواز',
+        #     'file': 'fast_flight_search',
+        #     'modular': fast_flight_search_module,
+        #     'test_function': unit_test.test_unit_test
+        #
+        # },
+        'searchBox': {
+            'class': 'i_modular_searchBox',
+            'name': 'سرچ باکس',
+            'file': 'searchBox',
+            'modular': sb.search_box,
             'test_function': unit_test.test_unit_test
 
         },
@@ -636,27 +646,28 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
                         </div>'''
 
         simple_element = menu_section.find(class_=lambda classes: classes and '__login_register_class__' in classes)
-        for tag in menu_section.find_all():
-            if tag.decode() == simple_element.decode():
-                new_tag = BeautifulSoup(f'{simple_element}\n{after_login}')
-                simple_element.replace_with(new_tag)
+        if simple_element:
+            for tag in menu_section.find_all():
+                if tag.decode() == simple_element.decode():
+                    new_tag = BeautifulSoup(f'{simple_element}\n{after_login}')
+                    simple_element.replace_with(new_tag)
 
         # return f'{menu_section}'
 
-        for key, val in repeatable_links.items():
-            for item in val.items():
-                helper.replace_attribute_by_text(menu_section, item, 'href', val)
+        for key, val_set in repeatable_links.items():
+            for text in val_set:
+                helper.replace_attribute_by_text(menu_section, text, 'href', key)
 
         for key, val in repeatable_lists[lang].items():
             helper.replace_attribute_by_text(menu_section, key, 'string', val)
 
 
-        helper.replace_attribute(footer_section, '__mobile_class__', 'string', '''{$smarty.const.CLIENT_MOBILE}''')
-        helper.replace_attribute(footer_section, '__mobile_class__', 'href', '''tel:{$smarty.const.CLIENT_MOBILE}''')
-        helper.replace_attribute(footer_section, '__phone_class__', 'string', '''{$smarty.const.CLIENT_PHONE}''')
-        helper.replace_attribute(footer_section, '__phone_class__', 'href', '''tel:{$smarty.const.CLIENT_PHONE}''')
-        helper.replace_attribute(footer_section, '__email_class__', 'string', '''{$smarty.const.CLIENT_EMAIL}''')
-        helper.replace_attribute(footer_section, '__email_class__', 'href', '''mailto:{$smarty.const.CLIENT_EMAIL}''')
+        helper.replace_attribute(menu_section, '__mobile_class__', 'string', '''{$smarty.const.CLIENT_MOBILE}''')
+        helper.replace_attribute(menu_section, '__mobile_class__', 'href', '''tel:{$smarty.const.CLIENT_MOBILE}''')
+        helper.replace_attribute(menu_section, '__phone_class__', 'string', '''{$smarty.const.CLIENT_PHONE}''')
+        helper.replace_attribute(menu_section, '__phone_class__', 'href', '''tel:{$smarty.const.CLIENT_PHONE}''')
+        helper.replace_attribute(menu_section, '__email_class__', 'string', '''{$smarty.const.CLIENT_EMAIL}''')
+        helper.replace_attribute(menu_section, '__email_class__', 'href', '''mailto:{$smarty.const.CLIENT_EMAIL}''')
 
 
         menu_final_content = f'{menu_section}'
@@ -693,25 +704,24 @@ def footer_module(footer_section, project_path, lang = 'fa',  file_name = ''):
                                 {/foreach}'''
         befor_social_media_soup = BeautifulSoup(befor_social_media, "html.parser")
         social_element = footer_section.find(class_=lambda classes: classes and '__social_class__' in classes)
-        social_element.insert_before(befor_social_media_soup)
-
-        social_element = footer_section.find(class_=lambda classes: classes and '__social_class__' in classes)
-        repeatable_social_links = {
-            '__telegram_class__': '{if $telegramHref}{$telegramHref}{/if}',
-            '__whatsapp_class__': '{if $whatsappHref}{$whatsappHref}{/if}',
-            '__instagram_class__': '{if $instagramHref}{$instagramHref}{/if}',
-            '__linkdin_class__': '{if $linkeDinHref}{$linkeDinHref}{/if}',
-            '__aparat_class__': '{if $aparatHref}{$aparatHref}{/if}',
-            '__youtube_class__': '{if $youTubeHref}{$youTubeHref}{/if}',
-        }
-
-        for key, val in repeatable_social_links.items():
-            helper.replace_attribute(social_element, key, 'href', val)
+        if social_element:
+            social_element.insert_before(befor_social_media_soup)
+            social_element = footer_section.find(class_=lambda classes: classes and '__social_class__' in classes)
+            repeatable_social_links = {
+                '__telegram_class__': '{if $telegramHref}{$telegramHref}{/if}',
+                '__whatsapp_class__': '{if $whatsappHref}{$whatsappHref}{/if}',
+                '__instagram_class__': '{if $instagramHref}{$instagramHref}{/if}',
+                '__linkdin_class__': '{if $linkeDinHref}{$linkeDinHref}{/if}',
+                '__aparat_class__': '{if $aparatHref}{$aparatHref}{/if}',
+                '__youtube_class__': '{if $youTubeHref}{$youTubeHref}{/if}',
+            }
+            for key, val in repeatable_social_links.items():
+                helper.replace_attribute(social_element, key, 'href', val)
 
 
         for key, val in repeatable_links.items():
-            for item in val.items():
-                helper.replace_attribute_by_text(footer_section, item, 'href', val)
+            for item in val:
+                helper.replace_attribute_by_text(footer_section, item, 'href', key)
 
         helper.replace_attribute(footer_section, '__aboutUs_class__', 'string',
                                  '''{$htmlContent = $about['body']|strip_tags}{$htmlContent|truncate:300}''')
@@ -950,12 +960,14 @@ def footer_script_module(footer_script_section, project_path, lang = 'fa',  file
 
         footer_script_section = BeautifulSoup(footer_script_section, "html.parser")
         elements = footer_script_section.find_all(class_='__befor_all__')
+
         for element in elements:
             element.replace_with(helper.turn_to_script_links_assames(befor_all))
 
         elements = footer_script_section.find_all(class_='__between_mainPage_assets__')
         for element in elements:
             element.replace_with(helper.turn_to_script_links_assames(between_mainPage_assets))
+
 
         elements = footer_script_section.find_all(class_='__inside_mainPage__')
         for element in elements:
@@ -965,9 +977,13 @@ def footer_script_module(footer_script_section, project_path, lang = 'fa',  file
         for element in elements:
             element.replace_with(helper.turn_to_script_links_assames(after__all))
 
+
+
         elements = footer_script_section.find_all(class_='__inside_assets__')
         for element in elements:
             element.replace_with(helper.turn_to_script_links_assames(inside_assets))
+
+
 
         footer_script_final_content = f'{footer_script_section}'
 
@@ -1664,202 +1680,6 @@ def hotels_External_cities_module(hotels_section, project_path, lang = 'fa',  fi
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def fast_search_flight_module(fast_search_flight_section, project_path, lang = 'fa',  file_name = ''):
-    try:
-        if  os.path.exists(project_path + '/include_files/fast-search-flight.tpl'):
-            fast_search_flight_section = f"{helper.read_file(project_path + '/include_files/fast-search-flight.tpl')}"
-            fast_search_flight_section = BeautifulSoup(fast_search_flight_section, 'html.parser')
-
-        before_html = '''
-
-
-                        '''
-        after_html = '''{/if}'''
-
-        fast_search_flight_region_array = ['internal','external', '']
-        fast_search_flight_type_array = ['']
-
-        for region in fast_search_flight_region_array:
-            for type in fast_search_flight_type_array:
-                before_html_local = '''                                
-                                        {assign var="__params_var__" value=['limit'=>'__local_max_limit__','is_group'=>true]}
-                                        {assign var="__fast_search_flight_var__" value=$obj_main_page->dataFastSearchInternalFlight($__params_var__)}
-                                        {assign var="__local_min_var__" value=__local_min__}
-                                        {assign var="__local_max_var__" value=__local_max__}
-                                    '''
-                before_foreach_local = '''
-                                        {foreach $__fast_search_flight_var__ as $item}
-                                            {if $__local_min_var__ <= $__local_max_var__}
-                                        '''
-                after_foreach_local = '''
-                                            {$__local_min_var__ = $__local_min_var__ + 1}
-                                            {/if}
-                                        {/foreach}
-                                        '''
-                replace_classes_local = {
-                    '__title_class__': {'string': '''{$item['DepartureCityFa']}'''},
-                    '__city_class__': {'string': '''{$item['City']}'''},
-                    '__image_class__': {
-                        'src': '''assets/images/fast_search_flight/{$item['DepartureCode']}.jpg''',
-                        'alt': '''{$item['DepartureCityFa']}'''},
-                }
-
-                section_class= '__fast_search_flight_function__'
-                section_var= 'fast_search_flight_function'
-                section_params= 'fast_search_flight_function_params'
-                local_min_var = 'min'
-                local_max_var = 'max'
-                if region:
-                    section_class =  section_class + region + '__'
-                    section_var =  section_var + '_' + region
-                    section_params =  section_params + '_' + region
-                    local_min_var =  local_min_var + '_' + region
-                    local_max_var =  local_max_var + '_' + region
-                if type:
-                    section_class = section_class + type + '__'
-                    section_var =  section_var + '_' + type
-                    local_min_var =  local_min_var + '_' + region
-                    local_max_var =  local_max_var + '_' + region
-
-
-                sections = fast_search_flight_section.find_all(class_=section_class)
-                if sections:
-                    for local_section in sections:
-                        before_html_local = before_html_local.replace("__type__", type)
-                        before_html_local = before_html_local.replace("__country__", region)
-                        before_html_local = before_html_local.replace("__fast_search_flight_var__", section_var)
-                        before_html_local = before_html_local.replace("__params_var__", section_params)
-                        before_html_local = before_html_local.replace("__local_min_var__", local_min_var)
-                        before_html_local = before_html_local.replace("__local_max_var__", local_max_var)
-                        before_foreach_local = before_foreach_local.replace("__local_min_var__", local_min_var)
-                        before_foreach_local = before_foreach_local.replace("__local_max_var__", local_max_var)
-                        before_foreach_local = before_foreach_local.replace("__fast_search_flight_var__", section_var)
-                        after_foreach_local = after_foreach_local.replace("__local_min_var__", local_min_var)
-
-                        before_html = before_html + '\n' + before_html_local
-                        complex_items_numbers = helper.item_numbers(local_section, complex_items_pattern)
-                        simple_items_numbers = helper.item_numbers(local_section, simple_items_pattern)
-                        complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
-                        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
-                        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
-                        max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
-                        before_html = before_html.replace("__local_min__", simple_items_numbers_min)
-                        before_html = before_html.replace("__local_max__", simple_items_numbers_max)
-                        before_html = before_html.replace("__local_max_limit__", max_item_number)
-                        for num in simple_items_numbers:
-                            fast_search_flight_simple_replacements = {
-                                "__link__": '''{$smarty.const.ROOT_ADDRESS}/resultExternalfast_search_flight/{$item['CountryEn']}/{$item['DepartureCityEn']}/{$objDate->daysAfterToday('7')}/{$objDate->daysAfterToday('8')}/1/R:2-0-0''',
-                            }
-                            simple_element = local_section.find(class_=simple_items_class + num)
-                            if num == simple_items_numbers[0]:
-                                simple_element = helper.replace_placeholders(simple_element, fast_search_flight_simple_replacements)
-                                simple_element = local_section.find(class_=simple_items_class + num)
-                                helper.add_before_after(local_section, simple_items_class + num, before_foreach_local, after_foreach_local)
-                                simple_element = local_section.find(class_=simple_items_class + num)
-                                for class_name, val in replace_classes_local.items():
-                                    for atr, value in val.items():
-                                        helper.replace_attribute(simple_element, class_name, atr, value)
-
-                                for i in range(1, 6):
-                                    light_star_elements = simple_element.find(class_='__star_class_light__' + str(i))
-                                    dark_star_elements = simple_element.find(class_='__star_class_dark__' + str(i))
-                                    if i == 1 and light_star_elements:
-                                        new_light_star = '''{for $i = 0; $i < count($item['StarCode']); $i++}''' + str(light_star_elements) + '''{/for}'''
-                                        new_light_star = BeautifulSoup(new_light_star, 'html.parser')
-                                        light_star_elements.replace_with(new_light_star)
-                                    else:
-                                        if light_star_elements:
-                                            light_star_elements.decompose()
-
-                                    if i == 1 and dark_star_elements:
-                                        new_dark_star = '''{for $i = count($item['StarCode']); $i < 6; $i++}''' + str(dark_star_elements) + '''{/for}'''
-                                        new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
-                                        dark_star_elements.replace_with(new_dark_star)
-                                    else:
-                                        if dark_star_elements:
-                                            dark_star_elements.decompose()
-
-
-
-
-
-
-
-                            else:
-                                simple_element.decompose()
-
-
-
-                        for num in complex_items_numbers:
-                            fast_search_flight_complex_replacements = {
-                                "__link__": '''{$smarty.const.ROOT_ADDRESS}/resultExternalfast_search_flight/{$__fast_search_flight_var__[{0}]['CountryEn']}/{$__fast_search_flight_var__[{0}]['DepartureCityEn']}/{$objDate->daysAfterToday('7')}/{$objDate->daysAfterToday('8')}/1/R:2-0-0'''  ,
-                            }
-                            replace_comlex_classes_local = {
-                                '__title_class__': {'string': '''{$__fast_search_flight_var__[{0}]['Name']}'''},
-                                '__city_class__': {'string': '''{$__fast_search_flight_var__[{0}]['City']}'''},
-                                '__image_class__': {
-                                    'src': '''assets/images/fast_search_flight/{$__fast_search_flight_var__[{0}]['DepartureCode']}.jpg''',
-                                    'alt': '''{$__fast_search_flight_var__[{0}]['DepartureCityFa']}'''},
-                            }
-                            before_c_item_local = '''{if $__fast_search_flight_var__[{0}]}'''
-                            after_c_item_local = '''{/if}'''
-
-                            before_c_item_local = before_c_item_local.replace("{0}", f'{num}')
-                            before_c_item_local = before_c_item_local.replace("__fast_search_flight_var__", section_var)
-                            fast_search_flight_complex_replacements['__link__'] = fast_search_flight_complex_replacements['__link__'].replace("{0}", f'{num}')
-                            fast_search_flight_complex_replacements['__link__'] = fast_search_flight_complex_replacements['__link__'].replace("__fast_search_flight_var__", section_var)
-
-
-                            complex_element = local_section.find(class_=complex_items_class + num)
-                            complex_element = helper.replace_placeholders(complex_element, fast_search_flight_complex_replacements)
-
-                            complex_element = local_section.find(class_=complex_items_class + num)
-                            helper.add_before_after(local_section, complex_items_class + num, before_c_item_local, after_c_item_local)
-                            complex_element = local_section.find(class_=complex_items_class + num)
-                            for class_name, val in replace_comlex_classes_local.items():
-                                for atr, value in val.items():
-                                    value = value.replace("{0}", f'{num}')
-                                    value = value.replace("__fast_search_flight_var__", section_var)
-                                    helper.replace_attribute(complex_element, class_name, atr, value)
-
-                                for i in range(1, 6):
-                                    light_star_elements = complex_element.find(class_='__star_class_light__' + str(i))
-                                    dark_star_elements = complex_element.find(class_='__star_class_dark__' + str(i))
-                                    if i == 1 and light_star_elements:
-                                        new_light_star = '''{for $i = 0; $i < count($__fast_search_flight_var__['StarCode']); $i++}''' + str(light_star_elements) + '''{/for}'''
-                                        new_light_star = new_light_star.replace("{0}", f'{num}')
-                                        new_light_star = new_light_star.replace("__fast_search_flight_var__", section_var)
-                                        new_light_star = BeautifulSoup(new_light_star, 'html.parser')
-                                        light_star_elements.replace_with(new_light_star)
-                                    else:
-                                        if light_star_elements:
-                                            light_star_elements.decompose()
-
-                                    if i == 1 and dark_star_elements:
-                                        new_dark_star = '''{for $i = count($__fast_search_flight_var__['StarCode']); $i < 6; $i++}''' + str(dark_star_elements) + '''{/for}'''
-                                        new_dark_star = new_dark_star.replace("{0}", f'{num}')
-                                        new_dark_star = new_dark_star.replace("__fast_search_flight_var__", section_var)
-                                        new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
-                                        dark_star_elements.replace_with(new_dark_star)
-                                    else:
-                                        if dark_star_elements:
-                                            dark_star_elements.decompose()
-
-
-        if not os.path.exists(project_path + '/include_files/fast_search_flight.tpl'):
-            before_html = before_html + '\n' + '''{if $check_fast_search_flight}'''
-        else:
-            before_html = before_html + '\n' + '''{if 1 == 1}'''
-
-        fast_search_flight_final_content = f'{before_html}\n{fast_search_flight_section}\n{after_html}'
-
-        fast_search_flight_final_content = fast_search_flight_final_content.replace("&gt;", ">")
-        fast_search_flight_final_content = fast_search_flight_final_content.replace("&lt;", "<")
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(fast_search_flight_final_content, include_files_directory, file_name, 'tpl')
-    except Exception as e:
-        return str(e)  # Return the exception message for now
-
 def new_module(new_section, project_path, lang = 'fa',  file_name = ''):
     try:
 
@@ -1877,7 +1697,7 @@ def new_module(new_section, project_path, lang = 'fa',  file_name = ''):
     except Exception as e:
         return str(e)  # Return the exception message for now
 
-def club_weather_module(club_weather_sectionproject_path, lang = 'fa',  file_name = ''):
+def club_weather_module(club_weather_section, project_path, lang = 'fa',  file_name = ''):
     try:
         repeatable_links_club = {
         '{$smarty.const.ROOT_ADDRESS}/loginUser':
@@ -1912,15 +1732,10 @@ def club_weather_module(club_weather_sectionproject_path, lang = 'fa',  file_nam
         helper.replace_attribute(club_weather_section, '__email_class__', 'href', '''mailto:{$smarty.const.CLIENT_EMAIL}''')
 
         for key, val in repeatable_links.items():
-            for item in val.items():
-                helper.replace_attribute_by_text(club_weather_section, item, 'href', val)
-        # type  of current functions:
+            for item in val:
+                helper.replace_attribute_by_text(club_weather_section, item, 'href', key)
 
-        # replace_placeholders
-        # replace_attribute and string
-        # add_before_after
-        # direct_string
-        # final_content.replace
+        club_weather_final_content = f'{club_weather_section}'
         club_weather_final_content = club_weather_final_content.replace("&gt;", ">")
         club_weather_final_content = club_weather_final_content.replace("&lt;", "<")
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
@@ -1932,10 +1747,10 @@ def fast_flight_search_module(fast_flight_search_section, project_path, lang = '
     try:
         fast_flight_search_section = helper.check_if_section_built(project_path ,file_name ,fast_flight_search_section)
 
-        before_html = '''{assign var="params" value=['limit'=>'__local_max__','is_group'=>true]}
+        before_html = '''
+                        {assign var="params" value=['limit'=>'__local_max__','is_group'=>true]}
                         {assign var="cities" value=$obj_main_page->dataFastSearchInternalFlight($params)}
                         {assign var="foreign_cities" value=['IKA','DXB','LHR','CAI', 'BER' , 'BIO']}
-                        
                         {assign var="__local_max_var__" value=__local_max__}
                       '''
 
@@ -1947,29 +1762,28 @@ def fast_flight_search_module(fast_flight_search_section, project_path, lang = '
         for region in fast_flight_search_region_array:
             for type in fast_flight_search_type_array:
                 befor_cities_html_array = {
-                    'internal__multi_city': '''{assign var="i" value="1"}
+                    '__fast_flight_search__internal__multi_city__': '''{assign var="i" value="1"}
                                                 {foreach $cities['cities_flight'] as $city}
                                                 {if $i < $__local_max_var__ }
                                                 ''',
-                    'internal__single_city': ''' ''',
-                    'external__multi_city': ''' {assign var="i" value="1"}
+                    '__fast_flight_search__internal__single_city': ''' ''',
+                    '__fast_flight_search__external__multi_city__': ''' {assign var="i" value="1"}
                                                 {foreach $foreign_cities as $city_code}
                                                 {assign var="params" value=['use_customer_db'=>true,'origin_city'=>$city_code,'destination_city'=>$foreign_cities]}
                                                 {assign var="cities" value=$obj_main_page->dataFastSearchInternationalFlight($params)}
                                                 {if $i < $__local_max_var__  and {$cities['main']['DepartureCityFa']}}
                                                  ''',
-                    'external__single_city': ''' ''',
+                    '__fast_flight_search__external__single_city': ''' ''',
                 }
-                after_cities_html_array = '''
+                after_cities_html = '''
                                          {/if}
                                             {$i =  $i + 1}
                                         {/foreach}
                                          '''
-
-                befor_flights_html_array = '''
+                befor_flights_html = '''
                                                 {foreach $cities['sub_cities'] as $sub_city}
                                             '''
-                after_flights_html_array = '''
+                after_flights_html = '''
                                             {/foreach}
                                          '''
 
@@ -1990,9 +1804,32 @@ def fast_flight_search_module(fast_flight_search_section, project_path, lang = '
                     local_min_var =  local_min_var + '_' + region
                     local_max_var =  local_max_var + '_' + region
 
+                sections = fast_flight_search_section.find(class_=section_class)
+                if sections:
+                    origin__cities = sections.find(class_='__origin__cities__')
+                    destination__cities = sections.find(class_='__destination__cities__')
+                    simple_items_numbers = helper.item_numbers(origin__cities, simple_items_pattern)
+                    simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
+                    simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
+                    if origin__cities:
+                        for num in simple_items_numbers:
+                            simple_element = origin__cities.find(class_=simple_items_class + num)
+                            if num == simple_items_numbers[0]:
+                                helper.replace_attribute(simple_element, '__button__', 'string','''{$city['main']['Departure_CityFa']}''')
+                                helper.replace_attribute(simple_element, '__button__', 'aria-controls','''{$city['main']['Departure_CityEn']}''')
+                                helper.replace_attribute(simple_element, '__button__', 'data-target','''#{$city['main']['Departure_CityEn']}''')
+                                helper.replace_attribute(simple_element, '__button__', 'id','''{$city['main']['Departure_CityEn']}-tab''')
+                                helper.add_before_after(origin__cities, simple_items_class + num, befor_cities_html_array[section_class], after_cities_html)
+                            else:
+                                simple_element.decompose()
+                    if destination__cities:
+                        for num in simple_items_numbers:
+                            simple_element = destination__cities.find(class_=simple_items_class + num)
+                            if num == simple_items_numbers[0]:
+                                helper.add_before_after(destination__cities, simple_items_class + num, befor_flights_html, after_flights_html)
+                            else:
+                                simple_element.decompose()
 
-                # sections = fast_flight_search_section.find_all(class_=section_class)
-                # if sections:
 
 
 

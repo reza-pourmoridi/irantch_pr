@@ -11,7 +11,6 @@ hooks:
         __main_link_href__ : لینک اصلی
         __login_register_class__ : کلاس دکمه لاگین,به لینک یا دکمه داده شود
         __login_register_class__2 :کلاس دکمه لاگین دوم,به لینک یا دکمه داده شود
-        __login_register_class__2 :کلاس دکمه لاگین دوم,,به لینک یا دکمه داده شود
         __mobile_class__ : کلاس شماره موبایل فوتر
         __phone_class__ : کلاس شماره تلفن فوتر
         __email_class__ : کلاس ایمیل
