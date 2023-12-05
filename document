@@ -123,3 +123,12 @@ hooks:
         __facebook_class__ :    کلاس فیس بوک
 
     script-footer:i_modular_script_footer
+
+
+    script-footer:i_modular_searchBox
+    i_modular_searchBox
+    __search_box_tabs__
+    __search_boxes__
+    __box__
+    _internal
+    _external
