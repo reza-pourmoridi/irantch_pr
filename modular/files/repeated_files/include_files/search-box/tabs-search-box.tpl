@@ -1,28 +1,14 @@
-<ul class="nav" id="searchBoxTabs">
-    {foreach $info_access_client_to_service as $key=>$client}
-        {if  $smarty.const.GDS_SWITCH eq 'mainPage'}
-            <li class="nav-item">
-                <a onclick="changeText(`{$obj_main_page->nameBoxSearchBox($client['MainService'])}` , 'null')" class="nav-link
-                    {if $client['MainService'] eq 'Flight' }active{/if}"
-                     id="{$client['MainService']}-tab" data-toggle="tab" href="#{$client['MainService']}">
-                                <span>
-                                    <i class="{$obj_main_page->classTabsSearchBox($client['MainService'])}"></i>
-                                    <h4>{$obj_main_page->nameTabsSearchBox($client['MainService'])}</h4>
-                                </span>
-                </a>
-            </li>
+<style> .banner-slider-display { display: none; } </style>
+{$i = 0}
+{foreach $services_array as $key=>$val}
+    {if  $smarty.const.GDS_SWITCH eq 'mainPage'}
+        {if $i eq 0}
+            {include file="./{$key}/tab.tpl" active=True}
         {else}
-            {if $active_tab eq 'internalFlight' && $client['MainService'] eq 'Flight' || $active_tab eq $client['MainService']}
-                <li class="nav-item">
-                    <a onclick="changeText(`{$obj_main_page->nameBoxSearchBox($client['MainService'])}` , 'null')" class="nav-link active"
-                       id="{$client['MainService']}-tab" data-toggle="tab" href="#{$client['MainService']}">
-                                <span>
-                                    <i class="{$obj_main_page->classTabsSearchBox($client['MainService'])}"></i>
-                                    <h4>{$obj_main_page->nameTabsSearchBox($client['MainService'])}</h4>
-                                </span>
-                    </a>
-                </li>
-            {/if}
+            {include file="./{$key}/tab.tpl" active=False}
         {/if}
-    {/foreach}
-</ul>
+        {$i = $i + 1}
+    {elseif $active_tab eq 'internalFlight' && $val eq 'Flight' || $active_tab eq $val}
+        {include file="./{$key}/tab.tpl" active=True}
+    {/if}
+{/foreach}

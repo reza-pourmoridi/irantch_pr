@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, request, send_file, jsonify
 from bs4 import BeautifulSoup
 import os
+import traceback
+import requests
 import shutil
 import re
 import requests
@@ -36,8 +38,11 @@ def get_online_html():
         else:
             return f"خطایی در گرفتن اطلاعات پیش آمده2.{response.status_code}"
 
+
     except requests.exceptions.RequestException as e:
-        return f"خطایی در گرفتن اطلاعات پیش آمده3.: {e}"
+        trace = traceback.format_exc()
+        error_message = f"خطایی در گرفتن اطلاعات پیش آمده3.: {trace}"
+        return error_message
 
 
 def unit_test_blog(blog_section, blog_section_online , lang = 'fa'):
@@ -118,8 +123,11 @@ def unit_test_blog(blog_section, blog_section_online , lang = 'fa'):
 
         return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="unit-test-section" > ' + blog_section + ' </div><div class="online section"> ' + blog_section_online +' </div></section></div>'
         return 'طرح و سکشن بلاگ ماژول گذاری شده هماهنگ نیستند.'
+
     except requests.exceptions.RequestException as e:
-        return f"خطایی در ماژول گذار پیش آمد.: {e}"
+        trace = traceback.format_exc()
+        error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
+        return error_message
 
 def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_online, lang='fa'):
     try:
@@ -141,17 +149,20 @@ def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_onli
         banner_data = json.loads(json_string)
 
         for num in simple_items_numbers:
-            banner_gallery_replacement_data = {
-                "__title__": banner_data[int(num)]['title'],
-                "__link__": banner_data[int(num)]['link']
-            }
-            simple_element = banner_gallery_section.find(class_=simple_items_class + num)
-            if num == simple_items_numbers[0]:
+            num = int(num)  # Convert 'num' to an integer
+            if 0 <= num < len(banner_data) and banner_data[num]:
+                num = str(num)
+                banner_gallery_replacement_data = {
+                    "__title__": banner_data[int(num)]['title'],
+                    "__link__": banner_data[int(num)]['link']
+                }
                 simple_element = banner_gallery_section.find(class_=simple_items_class + num)
-                simple_element = helper.replace_placeholders(simple_element, banner_gallery_replacement_data)
-                simple_element = banner_gallery_section.find(class_=simple_items_class + num)
-                helper.replace_attribute(simple_element, '__image_class__', 'src', banner_data[int(num)]['pic'])
-                helper.replace_attribute(simple_element, '__image_class__', 'alt', banner_data[int(num)]['title'])
+                if num == simple_items_numbers[0]:
+                    simple_element = banner_gallery_section.find(class_=simple_items_class + num)
+                    simple_element = helper.replace_placeholders(simple_element, banner_gallery_replacement_data)
+                    simple_element = banner_gallery_section.find(class_=simple_items_class + num)
+                    helper.replace_attribute(simple_element, '__image_class__', 'src', banner_data[int(num)]['pic'])
+                    helper.replace_attribute(simple_element, '__image_class__', 'alt', banner_data[int(num)]['title'])
 
             else:
                 simple_element.decompose()
@@ -173,6 +184,7 @@ def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_onli
             helper.replace_attribute(complex_element, '__title_class__', 'alt',
                                      banner_data[int(num)]['title'].format(num))
 
+        return 'sfjlsdfj'
         banner_gallery_section = f'{banner_gallery_section}'
         banner_gallery_section_online = f'{banner_gallery_section_online}'
 
@@ -181,7 +193,9 @@ def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_onli
 
         return '<div style="background: red;padding: 15px;">سکشن بنر خطا دارد..<section class="debug" style="display:none;"><div class="unit-test-section" >' + banner_gallery_section + '</div><div class="online section"> ' + banner_gallery_section_online + '</div></section></div>'
     except requests.exceptions.RequestException as e:
-        return f"خطایی در ماژول گذار پیش آمد.: {e}"
+        trace = traceback.format_exc()
+        error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
+        return error_message
 
 def unit_test_news(news_section, news_section_online , lang = 'fa'):
     try:
@@ -266,8 +280,12 @@ def unit_test_news(news_section, news_section_online , lang = 'fa'):
 
         return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="unit-test-section" >' + news_section + '</div><div class="online section"> ' + news_section_online +'</div></section></div>'
         return 'طرح و سکشن بلاگ ماژول گذاری شده هماهنگ نیستند.'
+
     except requests.exceptions.RequestException as e:
-        return f"خطایی در ماژول گذار پیش آمد.: {e}"
+        trace = traceback.format_exc()
+        error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
+        return error_message
+
 
 def unit_test_newsletter(newsletter_section, newsletter_section_online, lang='fa'):
     try:
@@ -301,7 +319,9 @@ def unit_test_newsletter(newsletter_section, newsletter_section_online, lang='fa
 
         return '<div style="background: red;padding: 15px;">سکشن خبرنامه خطا دارد..<section class="debug" style="display:none;"><div class="unit-test-section" >' + newsletter_section + '</div><div class="online section"> ' + newsletter_section_online + '</div></section></div>'
     except requests.exceptions.RequestException as e:
-        return f"خطایی در ماژول گذار پیش آمد.: {e}"
+        trace = traceback.format_exc()
+        error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
+        return error_message
 
 def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
     try:
@@ -374,8 +394,11 @@ def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
             return '<div style="background: green;padding: 15px;">' + "تست سکشن منوی هدر موفقیت آمیز بود." + "</div>"
 
         return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="unit-test-section" >' + menu_section + '</div><div class="online section"> ' + menu_section_online +'</div></section></div>'
+
     except requests.exceptions.RequestException as e:
-        return f"خطایی در ماژول گذار پیش آمد.: {e}"
+        trace = traceback.format_exc()
+        error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
+        return error_message
 
 def unit_test_footer(footer_section, footer_section_online , lang = 'fa'):
     try:
@@ -434,8 +457,11 @@ def unit_test_footer(footer_section, footer_section_online , lang = 'fa'):
             return '<div style="background: green;padding: 15px;">' + "تست سکشن فوتر موفقیت آمیز بود." + "</div>"
 
         return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="unit-test-section" >' + footer_section + '</div><div class="online section"> ' + footer_section_online +'</div></section></div>'
+
     except requests.exceptions.RequestException as e:
-        return f"خطایی در ماژول گذار پیش آمد.: {e}"
+        trace = traceback.format_exc()
+        error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
+        return error_message
 
 def compare_html_strings(html1, html2):
     # Parse the HTML strings

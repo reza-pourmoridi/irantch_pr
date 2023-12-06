@@ -286,7 +286,11 @@ def return_file_in_same_section(classes, moduls_array, index = '1'):
         else:
             file_name =  item
 
-    return remove_repeated_words(file_name) + '-' + index
+    if remove_repeated_words(file_name) == 'search-box':
+        return remove_repeated_words(file_name)
+    else:
+        return remove_repeated_words(file_name) + '-' + index
+
 
 def remove_repeated_words(s):
     return "-".join(OrderedDict.fromkeys(s.split("-")))

@@ -1,15 +1,24 @@
 @font-face {
-  font-family: ShabnamBold;
-  src: url("../fonts/Shabnam/Shabnam-Bold-FD.eot");
-  src: url("../fonts/Shabnam/Shabnam-Bold-FD.ttf");
-  src: url("../fonts/Shabnam/Shabnam-Bold-FD.woff");
-  src: url("../fonts/Shabnam/Shabnam-Bold-FD.woff2");
+  font-family: IRANSansWeb;
+  src: url("../fonts/IRANSansWeb/IRANSansWeb(FaNum).eot");
+  src: url("../fonts/IRANSansWeb/IRANSansWeb(FaNum).ttf");
+  src: url("../fonts/IRANSansWeb/IRANSansWeb(FaNum).woff");
+  src: url("../fonts/IRANSansWeb/IRANSansWeb(FaNum).woff2");
 }
-
 @font-face {
-  font-family: Shabnam;
-  src: url("../fonts/Shabnam/Shabnam-FD.eot");
-  src: url("../fonts/Shabnam/Shabnam-FD.ttf");
-  src: url("../fonts/Shabnam/Shabnam-FD.woff");
-  src: url("../fonts/Shabnam/Shabnam-FD.woff2");
+  font-family: IRANSansFaNum-Bold;
+  src: url("../fonts/IRANSansWeb/IRANSansFaNum-Bold.eot");
+  src: url("../fonts/IRANSansWeb/IRANSansFaNum-Bold.ttf");
+  src: url("../fonts/IRANSansWeb/IRANSansFaNum-Bold.woff");
+  src: url("../fonts/IRANSansWeb/IRANSansFaNum-Bold.woff2");
+}
+@font-face {
+  font-family: s360-icon;
+  src: url('../fonts/fontello/fontello.eot?62837394');
+  src: url('../fonts/fontello/fontello.eot?62837394#iefix') format('embedded-opentype'),
+  url('../fonts/fontello/fontello.woff?62837394') format('woff'),
+  url('../fonts/fontello/fontello.ttf?62837394') format('truetype'),
+  url('../fonts/fontello/fontello.svg?62837394#fontello') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }

@@ -160,41 +160,41 @@ def initiation_progress():
         return jsonify({"message": "testing html = " + f'{soup}'})
 
     moduls_array = {
-        'blog': {
-            'class': 'i_modular_blog',
-            'file': 'blog',
-            'name': 'وبلاگ',
-            'modular': blog_module,
-            'test_function': unit_test.unit_test_blog
-        },
-        'newsletter': {
-            'class': 'i_modular_newsletter',
-            'name': 'خبرنامه',
-            'file': 'newsletter',
-            'modular': newsletter_module,
-            'test_function': unit_test.unit_test_newsletter
-        },
-        'news': {
-            'class': 'i_modular_news',
-            'name': 'اخبار',
-            'file': 'news',
-            'modular': news_module,
-            'test_function': unit_test.unit_test_news
-        },
-        'menu': {
-            'class': 'i_modular_menu',
-            'name': 'منو',
-            'file': 'menu',
-            'modular': menu_module,
-            'test_function': unit_test.unit_test_menu
-        },
-        'footer': {
-            'class': 'i_modular_footer',
-            'name': 'فوتر',
-            'file': 'footer',
-            'modular': footer_module,
-            'test_function': unit_test.unit_test_footer
-        },
+        # 'blog': {
+        #     'class': 'i_modular_blog',
+        #     'file': 'blog',
+        #     'name': 'وبلاگ',
+        #     'modular': blog_module,
+        #     'test_function': unit_test.unit_test_blog
+        # },
+        # 'newsletter': {
+        #     'class': 'i_modular_newsletter',
+        #     'name': 'خبرنامه',
+        #     'file': 'newsletter',
+        #     'modular': newsletter_module,
+        #     'test_function': unit_test.unit_test_newsletter
+        # },
+        # 'news': {
+        #     'class': 'i_modular_news',
+        #     'name': 'اخبار',
+        #     'file': 'news',
+        #     'modular': news_module,
+        #     'test_function': unit_test.unit_test_news
+        # },
+        # 'menu': {
+        #     'class': 'i_modular_menu',
+        #     'name': 'منو',
+        #     'file': 'menu',
+        #     'modular': menu_module,
+        #     'test_function': unit_test.unit_test_menu
+        # },
+        # 'footer': {
+        #     'class': 'i_modular_footer',
+        #     'name': 'فوتر',
+        #     'file': 'footer',
+        #     'modular': footer_module,
+        #     'test_function': unit_test.unit_test_footer
+        # },
         'banner_gallery': {
                 'class': 'i_modular_banner_gallery',
             'name': 'گالری بنر',
@@ -202,62 +202,62 @@ def initiation_progress():
             'modular': banner_gallery_module,
             'test_function': unit_test.unit_test_banner_gallery
         },
-        'header': {
-            'class': 'i_modular_header',
-            'name': 'هدر',
-            'file': 'header',
-            'modular': header_module,
-            'test_function': unit_test.test_unit_test
-
-        },
-        'footer_script': {
-            'class': 'i_modular_script_footer',
-            'name': 'اسکریپت فوتر',
-            'file': 'footer_script',
-            'modular': footer_script_module,
-            'test_function': unit_test.test_unit_test
-
-        },
-        'tours': {
-            'class': 'i_modular_tours',
-            'name': 'تور',
-            'file': 'tours',
-            'modular': tours_module,
-            'test_function': unit_test.test_unit_test
-
-         },
-        'hotels_webservice': {
-            'class': 'i_modular_hotels_webservice',
-            'name': 'هتل وب سرویس',
-            'file': 'hotels-webservice',
-            'modular': hotels_webservice_module,
-            'test_function': unit_test.test_unit_test
-
-        },
-        'hotels__external_cities': {
-            'class': 'i_modular_hotels_external_cities',
-            'name': 'هتل , شهرهای خارجی',
-            'file': 'hotels-external_cities',
-            'modular': hotels_External_cities_module,
-            'test_function': unit_test.test_unit_test
-
-        },
-        'club_weather_section': {
-            'class': 'i_modular_club_weather',
-            'name': 'باشگاه, نرخ ارز, تبدیل تاریخ و هواشناسی',
-            'file': 'club_weather',
-            'modular': club_weather_module,
-            'test_function': unit_test.test_unit_test
-
-        },
-        'fast_flight_search_section': {
-            'class': 'i_modular_fast_search_flight',
-            'name': 'جستجوی سریع پرواز',
-            'file': 'fast_flight_search',
-            'modular': fast_flight_search_module,
-            'test_function': unit_test.test_unit_test
-
-        },
+        # 'header': {
+        #     'class': 'i_modular_header',
+        #     'name': 'هدر',
+        #     'file': 'header',
+        #     'modular': header_module,
+        #     'test_function': unit_test.test_unit_test
+        #
+        # },
+        # 'footer_script': {
+        #     'class': 'i_modular_script_footer',
+        #     'name': 'اسکریپت فوتر',
+        #     'file': 'footer_script',
+        #     'modular': footer_script_module,
+        #     'test_function': unit_test.test_unit_test
+        #
+        # },
+        # 'tours': {
+        #     'class': 'i_modular_tours',
+        #     'name': 'تور',
+        #     'file': 'tours',
+        #     'modular': tours_module,
+        #     'test_function': unit_test.test_unit_test
+        #
+        #  },
+        # 'hotels_webservice': {
+        #     'class': 'i_modular_hotels_webservice',
+        #     'name': 'هتل وب سرویس',
+        #     'file': 'hotels-webservice',
+        #     'modular': hotels_webservice_module,
+        #     'test_function': unit_test.test_unit_test
+        #
+        # },
+        # 'hotels__external_cities': {
+        #     'class': 'i_modular_hotels_external_cities',
+        #     'name': 'هتل , شهرهای خارجی',
+        #     'file': 'hotels-external_cities',
+        #     'modular': hotels_External_cities_module,
+        #     'test_function': unit_test.test_unit_test
+        #
+        # },
+        # 'club_weather_section': {
+        #     'class': 'i_modular_club_weather',
+        #     'name': 'باشگاه, نرخ ارز, تبدیل تاریخ و هواشناسی',
+        #     'file': 'club_weather',
+        #     'modular': club_weather_module,
+        #     'test_function': unit_test.test_unit_test
+        #
+        # },
+        # 'fast_flight_search_section': {
+        #     'class': 'i_modular_fast_search_flight',
+        #     'name': 'جستجوی سریع پرواز',
+        #     'file': 'fast_flight_search',
+        #     'modular': fast_flight_search_module,
+        #     'test_function': unit_test.test_unit_test
+        #
+        # },
         # 'searchBox': {
         #     'class': 'i_modular_searchBox',
         #     'name': 'سرچ باکس',
@@ -269,6 +269,7 @@ def initiation_progress():
     }
 
     module_messages = []
+
 
 
     classes = []
@@ -284,7 +285,6 @@ def initiation_progress():
                 index = index + 1
 
     summary_message = '\n'.join(module_messages)
-
 
     #creation of mainPage
 
@@ -326,6 +326,7 @@ def initiation_progress():
            +  '<br><br><br>' 'main_page_creation' + f'{main_page}'
            +  '<br><br><br>' + f'{summary_test_message}'})
 
+
 def upload():
     if 'file' not in request.files:
         return jsonify({"message": "No file part"})
@@ -346,6 +347,7 @@ def upload():
     helper.unzip_to_folder(files_directory, file)
     return jsonify({"message": 'استایل های پروژه بارگذاری شدند.'})
 
+
 def initiation_test(class_name, module_name, module_test_function, soup, soup_online , lang):
     section = soup.find(class_=class_name)
     section_online = soup_online.find(class_=class_name) if section else None
@@ -355,6 +357,7 @@ def initiation_test(class_name, module_name, module_test_function, soup, soup_on
 
     return f'ماژول {module_name} بازگذاری نشد'
 
+
 def initiation_modulation(class_name, module_name, modular_function, soup, soup_online):
     section = soup.find(class_=class_name)
     section_online = soup_online.find(class_=class_name) if section else None
@@ -363,6 +366,7 @@ def initiation_modulation(class_name, module_name, modular_function, soup, soup_
         return module_test_function(section, section_online)
 
     return f'ماژول {module_name} بازگذاری نشد'
+
 
 def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa',  file_name = ''):
     try:
@@ -435,15 +439,30 @@ def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa',  f
                 helper.replace_attribute(complex_element, '__title_class__', 'string', '''{{$banners[{0}]['title']}}'''.format(num))
 
 
+        search_box = banner_gallery_section.find(class_='i_modular_searchBox')
+        if search_box:
+            search_box_massage = sb.search_box(search_box, project_path)[0]
+            services_array = sb.search_box(search_box, project_path)[1]
+            services_json = json.dumps(services_array)
+            services_string = f'{services_json}'
+            before_html = before_html + '''{assign var="services_array_json" value= '__services_json_string__'}
+                                            {assign var="services_array" value=$services_array_json|json_decode}'''
+            before_html = before_html.replace("__services_json_string__", services_string)
+            search_box = banner_gallery_section.find(class_='i_modular_searchBox')
+            helper.replace_attribute(search_box, '__search_box_tabs__', 'string','''{include file="./search-box/tabs-search-box.tpl"}''')
+            helper.replace_attribute(search_box, '__search_boxes__', 'string','''{include file="./search-box/boxs-search.tpl"}''')
+
             banner_gallery_final_content = f'{before_html}\n{banner_gallery_section}\n{after_html}'
 
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         banner_gallery_final_content = banner_gallery_final_content.replace("&gt;", ">")
         banner_gallery_final_content = banner_gallery_final_content.replace("&lt;", "<")
 
-        return helper.create_file(banner_gallery_final_content, include_files_directory, file_name, 'tpl')
+        final_file_massage = helper.create_file(banner_gallery_final_content, include_files_directory, 'search-box', 'tpl')
+        return 'searh box : ' + search_box_massage + ' <br><br> banner : ' + final_file_massage
     except Exception as e:
         return str(e)  # Return the exception message for now
+
 
 def news_module(news_section, project_path , lang = 'fa',  file_name = ''):
     try:
@@ -519,6 +538,7 @@ def news_module(news_section, project_path , lang = 'fa',  file_name = ''):
     except Exception as e:
         return str(e)  # Return the exception message for now
 
+
 def newsletter_module(newsletter_section, project_path , lang = 'fa',  file_name = ''):
     try:
         helper.replace_attribute(newsletter_section, '__name_class__', 'name','NameSms')
@@ -545,6 +565,7 @@ def newsletter_module(newsletter_section, project_path , lang = 'fa',  file_name
         return helper.create_file(newsletter_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
+
 
 def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
     try:
@@ -681,6 +702,7 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
     except Exception as e:
         return str(e)  # Return the exception message for now
 
+
 def footer_module(footer_section, project_path, lang = 'fa',  file_name = ''):
     try:
         before_html = '''{load_presentation_object filename="aboutUs" assign="objAbout"}
@@ -746,6 +768,7 @@ def footer_module(footer_section, project_path, lang = 'fa',  file_name = ''):
         return helper.create_file(footer_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
+
 
 def header_module(header_section, project_path , lang = 'fa',  file_name = ''):
     try:
@@ -909,11 +932,12 @@ def header_module(header_section, project_path , lang = 'fa',  file_name = ''):
     except Exception as e:
         return str(e)  # Return the exception message for now
 
+
 def footer_script_module(footer_script_section, project_path, lang = 'fa',  file_name = ''):
     try:
         script_links = [link.get('src') for link in footer_script_section.find_all('script')]
 
-        befor_all = [ 'js/bootstrap.min.js', 'js/bootstrap.js', 'js/mega-menu.js' ]
+        befor_all = [ 'js/bootstrap.min.js','bootstrap.bundle.min.js', 'js/bootstrap.js' ]
         between_mainPage_assets = []
         inside_mainPage = []
         remove_assets = ['js/jquery-3.4.1.min.js']
@@ -994,6 +1018,7 @@ def footer_script_module(footer_script_section, project_path, lang = 'fa',  file
         return helper.create_file(footer_script_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
+
 
 def blog_module(blog_section, project_path , lang = 'fa',  file_name = ''):
     try:
@@ -1080,6 +1105,7 @@ def blog_module(blog_section, project_path , lang = 'fa',  file_name = ''):
         return helper.create_file(blog_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
+
 
 def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
     try:
@@ -1288,6 +1314,7 @@ def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
     except Exception as e:
         return str(e)  # Return the exception message for now
 
+
 def hotels_webservice_module(hotels_section, project_path, lang = 'fa',  file_name = ''):
     try:
         hotels_section = helper.check_if_section_built(project_path ,file_name ,hotels_section)
@@ -1486,6 +1513,7 @@ def hotels_webservice_module(hotels_section, project_path, lang = 'fa',  file_na
     except Exception as e:
         return str(e)  # Return the exception message for now
 
+
 def hotels_External_cities_module(hotels_section, project_path, lang = 'fa',  file_name = ''):
     try:
         hotels_section = helper.check_if_section_built(project_path ,file_name ,hotels_section)
@@ -1680,6 +1708,7 @@ def hotels_External_cities_module(hotels_section, project_path, lang = 'fa',  fi
     except Exception as e:
         return str(e)  # Return the exception message for now
 
+
 def new_module(new_section, project_path, lang = 'fa',  file_name = ''):
     try:
 
@@ -1696,6 +1725,7 @@ def new_module(new_section, project_path, lang = 'fa',  file_name = ''):
         return helper.create_file(new_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
+
 
 def club_weather_module(club_weather_section, project_path, lang = 'fa',  file_name = ''):
     try:
@@ -1742,6 +1772,7 @@ def club_weather_module(club_weather_section, project_path, lang = 'fa',  file_n
         return helper.create_file(club_weather_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         return str(e)  # Return the exception message for now
+
 
 def fast_flight_search_module(fast_flight_search_section, project_path, lang = 'fa',  file_name = ''):
     try:

@@ -15,7 +15,7 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
     try:
         tabs_section = searchBox_section.find(class_='__search_box_tabs__')
         boxes_section = searchBox_section.find(class_='__search_boxes__')
-        has_tpl_services = ['Tour','Visa','Train','Insurance','Bus','GashtTransfer','Entertainment']
+        has_tpl_services = {'Tour': Tour,'Visa': Visa,'Train': Train,'Insurance': Insurance,'Bus': Bus,'GashtTransfer': GashtTransfer,'Entertainment': Entertainment}
 
         # getting the tabs and put them in array adn tab.tpl file in searchbox directory
         hrefs_list = []
@@ -48,14 +48,50 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
         services_array = {}
         for item in id_lists:
             modified_item = item.replace('_internal', '').replace('_external', '')
-            if modified_item in services_array:
-                services_array[modified_item].append(item)
+            if item in services_array:
+                services_array[item].append(modified_item)
             else:
-                services_array[modified_item] = [item]
+                services_array[item] = modified_item
 
+        items_massages = []
+        for key, val in services_array.items():
+            if val in has_tpl_services:
+               item_massage = has_tpl_services[val](key)
+               items_massages.append(item_massage + '<br><br>')
+            else:
+                item_massage = key + ' box has been successfully modulation'
+                items_massages.append(item_massage + '<br><br>')
 
-
-
-        return f'{services_array}'
+        return [f'{items_massages}', services_array]
     except Exception as e:
         return str(e)  # Return the exception message for now
+
+
+def Tour(id = False):
+    if id:
+
+        return id
+
+def Visa(id = False):
+    if id:
+        return id
+
+def Train(id = False):
+    if id:
+        return id
+
+def Insurance(id = False):
+    if id:
+        return id
+
+def Bus(id = False):
+    if id:
+        return id
+
+def GashtTransfer(id = False):
+    if id:
+        return id
+
+def Entertainment(id = False):
+    if id:
+        return id
