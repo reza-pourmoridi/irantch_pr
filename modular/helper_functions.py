@@ -187,6 +187,18 @@ def add_class_to_elements(section, class_name, new_class):
         tag['class'] = current_classes
 
 
+def read_file(file_path, encoding='utf-8'):
+    try:
+        with open(file_path, 'r', encoding=encoding) as file:
+            content = file.read()
+            return content
+    except FileNotFoundError:
+        return "File not found"
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
+
+
+
 
 def add_value_to_attribute(section, class_name, attr, value):
     for tag in section.find_all(class_=class_name):

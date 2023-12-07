@@ -184,7 +184,6 @@ def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_onli
             helper.replace_attribute(complex_element, '__title_class__', 'alt',
                                      banner_data[int(num)]['title'].format(num))
 
-        return 'sfjlsdfj'
         banner_gallery_section = f'{banner_gallery_section}'
         banner_gallery_section_online = f'{banner_gallery_section_online}'
 

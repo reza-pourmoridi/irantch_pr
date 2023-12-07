@@ -126,9 +126,8 @@ hooks:
 
 
     script-footer:i_modular_searchBox
-    i_modular_searchBox
-    __search_box_tabs__
-    __search_boxes__
-    __box__
-    _internal
-    _external
+    __search_box_tabs__ : پرنت تب ها
+    __search_boxes__ : پرنت سرچ باکس ها
+    __box__ : پرنت هر باکس
+    _internal : استاندارد مشخص کردن تور داخلی یا پرواز داخلی
+    _external : استاندارد مشخص کردن تور خارجی یا پرواز خارجی

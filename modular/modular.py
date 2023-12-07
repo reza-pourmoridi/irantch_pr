@@ -160,112 +160,104 @@ def initiation_progress():
         return jsonify({"message": "testing html = " + f'{soup}'})
 
     moduls_array = {
-        # 'blog': {
-        #     'class': 'i_modular_blog',
-        #     'file': 'blog',
-        #     'name': 'وبلاگ',
-        #     'modular': blog_module,
-        #     'test_function': unit_test.unit_test_blog
-        # },
-        # 'newsletter': {
-        #     'class': 'i_modular_newsletter',
-        #     'name': 'خبرنامه',
-        #     'file': 'newsletter',
-        #     'modular': newsletter_module,
-        #     'test_function': unit_test.unit_test_newsletter
-        # },
-        # 'news': {
-        #     'class': 'i_modular_news',
-        #     'name': 'اخبار',
-        #     'file': 'news',
-        #     'modular': news_module,
-        #     'test_function': unit_test.unit_test_news
-        # },
-        # 'menu': {
-        #     'class': 'i_modular_menu',
-        #     'name': 'منو',
-        #     'file': 'menu',
-        #     'modular': menu_module,
-        #     'test_function': unit_test.unit_test_menu
-        # },
-        # 'footer': {
-        #     'class': 'i_modular_footer',
-        #     'name': 'فوتر',
-        #     'file': 'footer',
-        #     'modular': footer_module,
-        #     'test_function': unit_test.unit_test_footer
-        # },
+        'blog': {
+            'class': 'i_modular_blog',
+            'file': 'blog',
+            'name': 'وبلاگ',
+            'modular': blog_module,
+            'test_function': unit_test.unit_test_blog
+        },
+        'newsletter': {
+            'class': 'i_modular_newsletter',
+            'name': 'خبرنامه',
+            'file': 'newsletter',
+            'modular': newsletter_module,
+            'test_function': unit_test.unit_test_newsletter
+        },
+        'news': {
+            'class': 'i_modular_news',
+            'name': 'اخبار',
+            'file': 'news',
+            'modular': news_module,
+            'test_function': unit_test.unit_test_news
+        },
+        'menu': {
+            'class': 'i_modular_menu',
+            'name': 'منو',
+            'file': 'menu',
+            'modular': menu_module,
+            'test_function': unit_test.unit_test_menu
+        },
+        'footer': {
+            'class': 'i_modular_footer',
+            'name': 'فوتر',
+            'file': 'footer',
+            'modular': footer_module,
+            'test_function': unit_test.unit_test_footer
+        },
         'banner_gallery': {
                 'class': 'i_modular_banner_gallery',
-            'name': 'گالری بنر',
+            'name': 'گالری بنر و سرچ باکس',
             'file': 'search-box',
             'modular': banner_gallery_module,
             'test_function': unit_test.unit_test_banner_gallery
         },
-        # 'header': {
-        #     'class': 'i_modular_header',
-        #     'name': 'هدر',
-        #     'file': 'header',
-        #     'modular': header_module,
-        #     'test_function': unit_test.test_unit_test
-        #
-        # },
-        # 'footer_script': {
-        #     'class': 'i_modular_script_footer',
-        #     'name': 'اسکریپت فوتر',
-        #     'file': 'footer_script',
-        #     'modular': footer_script_module,
-        #     'test_function': unit_test.test_unit_test
-        #
-        # },
-        # 'tours': {
-        #     'class': 'i_modular_tours',
-        #     'name': 'تور',
-        #     'file': 'tours',
-        #     'modular': tours_module,
-        #     'test_function': unit_test.test_unit_test
-        #
-        #  },
-        # 'hotels_webservice': {
-        #     'class': 'i_modular_hotels_webservice',
-        #     'name': 'هتل وب سرویس',
-        #     'file': 'hotels-webservice',
-        #     'modular': hotels_webservice_module,
-        #     'test_function': unit_test.test_unit_test
-        #
-        # },
-        # 'hotels__external_cities': {
-        #     'class': 'i_modular_hotels_external_cities',
-        #     'name': 'هتل , شهرهای خارجی',
-        #     'file': 'hotels-external_cities',
-        #     'modular': hotels_External_cities_module,
-        #     'test_function': unit_test.test_unit_test
-        #
-        # },
-        # 'club_weather_section': {
-        #     'class': 'i_modular_club_weather',
-        #     'name': 'باشگاه, نرخ ارز, تبدیل تاریخ و هواشناسی',
-        #     'file': 'club_weather',
-        #     'modular': club_weather_module,
-        #     'test_function': unit_test.test_unit_test
-        #
-        # },
-        # 'fast_flight_search_section': {
-        #     'class': 'i_modular_fast_search_flight',
-        #     'name': 'جستجوی سریع پرواز',
-        #     'file': 'fast_flight_search',
-        #     'modular': fast_flight_search_module,
-        #     'test_function': unit_test.test_unit_test
-        #
-        # },
-        # 'searchBox': {
-        #     'class': 'i_modular_searchBox',
-        #     'name': 'سرچ باکس',
-        #     'file': 'searchBox',
-        #     'modular': sb.search_box,
-        #     'test_function': unit_test.test_unit_test
-        #
-        # },
+        'header': {
+            'class': 'i_modular_header',
+            'name': 'هدر',
+            'file': 'header',
+            'modular': header_module,
+            'test_function': unit_test.test_unit_test
+
+        },
+        'footer_script': {
+            'class': 'i_modular_script_footer',
+            'name': 'اسکریپت فوتر',
+            'file': 'footer_script',
+            'modular': footer_script_module,
+            'test_function': unit_test.test_unit_test
+
+        },
+        'tours': {
+            'class': 'i_modular_tours',
+            'name': 'تور',
+            'file': 'tours',
+            'modular': tours_module,
+            'test_function': unit_test.test_unit_test
+
+         },
+        'hotels_webservice': {
+            'class': 'i_modular_hotels_webservice',
+            'name': 'هتل وب سرویس',
+            'file': 'hotels-webservice',
+            'modular': hotels_webservice_module,
+            'test_function': unit_test.test_unit_test
+
+        },
+        'hotels__external_cities': {
+            'class': 'i_modular_hotels_external_cities',
+            'name': 'هتل , شهرهای خارجی',
+            'file': 'hotels-external_cities',
+            'modular': hotels_External_cities_module,
+            'test_function': unit_test.test_unit_test
+
+        },
+        'club_weather_section': {
+            'class': 'i_modular_club_weather',
+            'name': 'باشگاه, نرخ ارز, تبدیل تاریخ و هواشناسی',
+            'file': 'club_weather',
+            'modular': club_weather_module,
+            'test_function': unit_test.test_unit_test
+
+        },
+        'fast_flight_search_section': {
+            'class': 'i_modular_fast_search_flight',
+            'name': 'جستجوی سریع پرواز',
+            'file': 'fast_flight_search',
+            'modular': fast_flight_search_module,
+            'test_function': unit_test.test_unit_test
+
+        }
     }
 
     module_messages = []
@@ -439,10 +431,15 @@ def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa',  f
                 helper.replace_attribute(complex_element, '__title_class__', 'string', '''{{$banners[{0}]['title']}}'''.format(num))
 
 
+
+
         search_box = banner_gallery_section.find(class_='i_modular_searchBox')
         if search_box:
-            search_box_massage = sb.search_box(search_box, project_path)[0]
-            services_array = sb.search_box(search_box, project_path)[1]
+            search_box_modulation = sb.search_box(search_box, project_path)
+            search_box_massage = search_box_modulation[0]
+            if isinstance(search_box_modulation, str):
+                search_box_massage = search_box_modulation
+            services_array = search_box_modulation[1]
             services_json = json.dumps(services_array)
             services_string = f'{services_json}'
             before_html = before_html + '''{assign var="services_array_json" value= '__services_json_string__'}
@@ -452,8 +449,10 @@ def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa',  f
             helper.replace_attribute(search_box, '__search_box_tabs__', 'string','''{include file="./search-box/tabs-search-box.tpl"}''')
             helper.replace_attribute(search_box, '__search_boxes__', 'string','''{include file="./search-box/boxs-search.tpl"}''')
 
-            banner_gallery_final_content = f'{before_html}\n{banner_gallery_section}\n{after_html}'
 
+
+
+        banner_gallery_final_content = f'{before_html}\n{banner_gallery_section}\n{after_html}'
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         banner_gallery_final_content = banner_gallery_final_content.replace("&gt;", ">")
         banner_gallery_final_content = banner_gallery_final_content.replace("&lt;", "<")
