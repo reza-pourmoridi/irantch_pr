@@ -659,18 +659,10 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
         helper.replace_attribute_by_text(menu_section, 'الدخول / يسجل' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
         helper.add_class_to_elements(menu_section, '__login_register_class__2',' main-navigation__button2 show-box-login-js')
         helper.add_class_to_elements(menu_section, '__login_register_class__',' main-navigation__button2 show-box-login-js ')
-
-
         after_login = '''<div class="main-navigation__sub-menu2 arrow-up show-content-box-login-js" style="display: none">
                             {include file="`$smarty.const.FRONT_CURRENT_THEME`topBar.tpl"}
                         </div>'''
-
-        simple_element = menu_section.find(class_=lambda classes: classes and '__login_register_class__' in classes)
-        if simple_element:
-            for tag in menu_section.find_all():
-                if tag.decode() == simple_element.decode():
-                    new_tag = BeautifulSoup(f'{simple_element}\n{after_login}')
-                    simple_element.replace_with(new_tag)
+        helper.add_before_after(menu_section, '__login_register_class__', '', after_login)
 
         # return f'{menu_section}'
 
@@ -879,10 +871,10 @@ def header_module(header_section, project_path , lang = 'fa',  file_name = ''):
                         '''
         header_section = header_contents
 
-        befor_all = ['css/header.css', 'css/bootstrap.min.css' ]
+        befor_all = ['css/header.css', 'css/bootstrap.min.css', 'css/header.css' ]
         between_mainPage_assets = ['css/style.css']
         inside_mainPage = []
-        after__all = ['css/all.min.css', 'css/register.css']
+        after__all = ['select2.css', 'css/tabs.css', 'css/all.min.css', 'css/register.css']
 
         befor_all = helper.comapre_append_list(befor_all, style_links)
         style_links = helper.delete_assames(style_links, befor_all)
@@ -936,7 +928,7 @@ def footer_script_module(footer_script_section, project_path, lang = 'fa',  file
     try:
         script_links = [link.get('src') for link in footer_script_section.find_all('script')]
 
-        befor_all = [ 'js/bootstrap.min.js','bootstrap.bundle.min.js', 'js/bootstrap.js' ]
+        befor_all = [ 'js/bootstrap.min.js','bootstrap.bundle.min.js', 'js/bootstrap.js', 'js/select2.min.js', 'js/select2.js', 'js/header.js' ]
         between_mainPage_assets = []
         inside_mainPage = []
         remove_assets = ['js/jquery-3.4.1.min.js']
@@ -1118,7 +1110,7 @@ def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
 
         for region in tour_region_array:
             for type in tour_type_array:
-                before_html_local = '''{assign var="__params_var__" value=['type'=>'__type__','limit'=> '__local_max_limit__','dateNow' => $dateNow, 'country' =>'__country__', 'country' =>null ,'city' => null]}
+                before_html_local = '''{assign var="__params_var__" value=['type'=>'__type__','limit'=> '__local_max_limit__','dateNow' => $dateNow, 'country' =>'__country__','city' => null]}
                                         {assign var='__tour_var__' value=$obj_main_page->getToursReservation($__params_var__)}
                                         {if $__tour_var__}
                                             {assign var='check_tour' value=true}
@@ -1141,6 +1133,7 @@ def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
                     '__night_class__': {'string': '''{$item['night']}'''},
                     '__day_class__': {'string': '''{$item['night'] + 1}'''},
                     '__city_class__': {'string': '''{$item['destination_city_name']}'''},
+                    '__description_class__': {'string': '''{$item['description']}'''},
                     '__degree_class__': {'string': '''{$item['StarCode']}'''},
                     '__image_class__': {
                         'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$item['tour_pic']}''',
@@ -1243,6 +1236,7 @@ def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
                                 '__title_class__': {'string': '''{$__tour_var__[{0}]['tour_name']}'''},
                                 '__night_class__': {'string': '''{$__tour_var__[{0}]['night']}'''},
                                 '__city_class__': {'string': '''{$__tour_var__[{0}]['destination_city_name']}'''},
+                                '__description_class__': {'string': '''{$__tour_var__[{0}]['description']}'''},
                                 '__day_class__': {'string': '''{$__tour_var__[{0}]['night'] + 1}'''},
                                 '__degree_class__': {'string': '''{$__tour_var__[{0}]['StarCode']}'''},
                                 '__image_class__': {

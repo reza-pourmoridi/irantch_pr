@@ -1,25 +1,22 @@
 tody works:
-Tour
-Visa
-Train
-Insurance
-Bus
-GashtTransfer
-Entertainment
+
+    test all tree search box
+    test blog
+    test news
+
+
+
 
 
 faze one: completion
-
-    search box.
     fast flight search.
-    hotel reservation.
-
 
 
 
 
 faze two: perfection
 
+    hotel reservation.
     links work more precisely
     faq...keyhan
     feedback.
@@ -29,6 +26,7 @@ faze two: perfection
     loogbook.
 
 final faze: finalization.
+    making app user friendly.
     debuging... constantly.
 
 
