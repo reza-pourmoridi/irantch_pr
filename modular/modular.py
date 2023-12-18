@@ -16,10 +16,27 @@ complex_items_pattern = re.compile(r'__i_modular_c_item_class_(\d+)')
 simple_items_pattern = re.compile(r'__i_modular_nc_item_class_(\d+)')
 complex_items_class = "__i_modular_c_item_class_"
 simple_items_class = "__i_modular_nc_item_class_"
+
+
+
+
+
 repeatable_links = {
         '{$smarty.const.ROOT_ADDRESS}/page/flight':
             {
-                'پرواز', 'رحلة جوية', 'flight'
+                'پرواز', 'رحلة جوية', 'flight', 'بلیط هواپیما'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/page/flight-hotel':
+            {
+                'پرواز+هتل', 'flight-hotel'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/page/train':
+            {
+                'قطار', 'train', 'بلیط قطار'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/page/bus':
+            {
+                'اتوبوس', 'bus', 'بلیط اتوبوس'
             },
         '{$smarty.const.ROOT_ADDRESS}/embassies':
             {
@@ -35,7 +52,11 @@ repeatable_links = {
             },
         '{$smarty.const.ROOT_ADDRESS}/currency':
             {
-                'نرخ ارز'
+                'نرخ ارز', 'ارز'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/mag':
+            {
+                'وبلاگ'
             },
         '{$smarty.const.ROOT_ADDRESS}/iranVisa':
             {
@@ -43,7 +64,7 @@ repeatable_links = {
             },
         'https://{$smarty.const.CLIENT_MAIN_DOMAIN}':
             {
-                'خانه', 'home'
+                'خانه', 'home', 'صفحه اصلی'
             },
         '{$smarty.const.ROOT_ADDRESS}/page/tour':
             {
@@ -55,7 +76,7 @@ repeatable_links = {
             },
         '{$smarty.const.ROOT_ADDRESS}/page/hotel':
             {
-                'الفندق', 'Iran Hotel', 'Hotel', 'هتل'
+                'الفندق', 'Iran Hotel', 'Hotel', 'هتل', 'هتل ها', 'رزرو هتل '
             },
         '{$smarty.const.ROOT_ADDRESS}/news':
             {
@@ -63,7 +84,7 @@ repeatable_links = {
             },
         '{$smarty.const.ROOT_ADDRESS}/loginUser':
             {
-                'باشگاه مسافران'
+                'باشگاه مسافران', 'باشگاه مشتریان'
             },
         '{$smarty.const.ROOT_ADDRESS}/agencyList':
             {
@@ -73,9 +94,13 @@ repeatable_links = {
             {
                 'نظر سنجی'
             },
-        '{$smarty.const.ROOT_ADDRESS}/video':
+        '{$smarty.const.ROOT_ADDRESS}/employment':
             {
-                'نظر سنجی'
+                'استخدام'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/signRequest':
+            {
+                'درخواست ساین'
             },
         '{$smarty.const.ROOT_ADDRESS}/feedback':
             {
@@ -107,15 +132,19 @@ repeatable_links = {
             },
         '{$smarty.const.ROOT_ADDRESS}/faq':
             {
-                'پرسشهای متداول', 'Faq', 'پرسش و پاسخ'
+                'پرسشهای متداول', 'Faq', 'پرسش و پاسخ', 'سوالات متداول'
             },
         '{$smarty.const.ROOT_ADDRESS}/pay':
             {
-                'پرداخت آنلاین'
+                'پرداخت آنلاین', 'درگاه پرداخت'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/gallery':
+            {
+                'گالری عکس'
             },
         '{$smarty.const.ROOT_ADDRESS}/recommendation':
             {
-                'recommendation', 'Travelogue', 'سفر نامه'
+                'recommendation', 'Travelogue', 'سفر نامه', 'نظر مشتریان'
             },
         '{$smarty.const.ROOT_ADDRESS}/orderServices':
             {
@@ -123,7 +152,11 @@ repeatable_links = {
             },
         '{$smarty.const.ROOT_ADDRESS}/worldclock':
             {
-                'ساعة البلدان', 'Countries clock'
+                'ساعة البلدان', 'Countries clock', 'ساعت کشورها'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/convertDate':
+            {
+                'تبدیل تاریخ'
             },
         '{$smarty.const.ROOT_ADDRESS}/weather':
             {
@@ -299,24 +332,25 @@ def initiation_progress():
     main_page = helper.create_file(soup_str, project_path, 'mainPage', 'tpl')
 
     # UNIT TEST
-    soup = BeautifulSoup(html_content, 'html.parser')
-    if not soup:
-        return jsonify({"message": "testing html = " + f'{soup}'})
+    # soup = BeautifulSoup(html_content, 'html.parser')
+    # if not soup:
+    #     return jsonify({"message": "testing html = " + f'{soup}'})
 
-    soup_online = unit_test.get_online_html()
-    if 'خطایی' in soup_online:
-        return jsonify({"message": "testing local connection = " + f'{soup_online}'})
+    # soup_online = unit_test.get_online_html()
+    # if 'خطایی' in soup_online:
+    #     return jsonify({"message": "testing local connection = " + f'{soup_online}'})
     module_test_messages = []
 
-    for module_name, module_info in moduls_array.items():
-        section = soup.find(class_=module_info['class'])
-        if section:
-            module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online ,lang))
-    summary_test_message = '\n'.join(module_test_messages)
+    # for module_name, module_info in moduls_array.items():
+    #     section = soup.find(class_=module_info['class'])
+    #     if section:
+    #         module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online ,lang))
+    # summary_test_message = '\n'.join(module_test_messages)
 
     return jsonify({"message": f'{summary_message}'
            +  '<br><br><br>' 'main_page_creation' + f'{main_page}'
-           +  '<br><br><br>' + f'{summary_test_message}'})
+           # +  '<br><br><br>' + f'{summary_test_message}'
+                    })
 
 
 def upload():
@@ -569,32 +603,32 @@ def newsletter_module(newsletter_section, project_path , lang = 'fa',  file_name
 def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
     try:
 
-
+        before_html  = '''{load_presentation_object filename="reservationBasicInformation" assign="objResult"}'''
 
         repeatable_lists = {
             'fa':{
                 'تور داخلی' : ''' <a href="javascript:;"> تور داخلی </a>
                                     <ul class="nav-dropdown submenu-child fadeIn animated">
-                                        {foreach key=key_tour item=item_tour from=$objResult->ReservationTourCities('=1', 'return')}
-                                            <li>
-                                                <a href="{$smarty.const.ROOT_ADDRESS}/resultTourLocal/1-all/1-{$item_tour.id}/{$objDate->jdate("Y-m-d", '', '', '', 'en')}/all">
-                                                    {($smarty.const.SOFTWARE_LANG == 'fa') ? $item_tour.name : $item_tour.name_en}
-                                                </a>
-                                            </li>
-                                        {/foreach}
+                                            {foreach key=key_tour item=item_tour from=$objResult->ReservationTourCities('=1', 'return')}
+                                                <li>
+                                                    <a href="{$smarty.const.ROOT_ADDRESS}/resultTourLocal/1-all/1-{$item_tour.id}/{$objDate->jdate("Y-m-d", '', '', '', 'en')}/all">
+                                                        {($smarty.const.SOFTWARE_LANG == 'fa') ? $item_tour.name : $item_tour.name_en}
+                                                    </a>
+                                                </li>
+                                            {/foreach}
 
 
                                     </ul>
                                 ''',
                 'تور خارجی' : '''<a href="javascript:;"> تور خارجی </a>
                                     <ul class="nav-dropdown submenu-child fadeIn animated">
-                                        {foreach key=key_tour item=item_tour from=$objResult->ReservationTourCountries('yes')}
-                                            <li>
-                                                <a href="{$smarty.const.ROOT_ADDRESS}/resultTourLocal/1-all/{$item_tour.id}-all/{$objDate->jdate("Y-m-d", '', '', '', 'en')}/all">
-                                                    {($smarty.const.SOFTWARE_LANG == 'fa') ? $item_tour.name : $item_tour.name_en}
-                                                </a>
-                                            </li>
-                                        {/foreach}
+                                            {foreach key=key_tour item=item_tour from=$objResult->ReservationTourCountries('yes')}
+                                                <li>
+                                                    <a href="{$smarty.const.ROOT_ADDRESS}/resultTourLocal/1-all/{$item_tour.id}-all/{$objDate->jdate("Y-m-d", '', '', '', 'en')}/all">
+                                                        {($smarty.const.SOFTWARE_LANG == 'fa') ? $item_tour.name : $item_tour.name_en}
+                                                    </a>
+                                                </li>
+                                            {/foreach}  
                                     </ul>
                                 ''',
 
@@ -670,8 +704,8 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
             for text in val_set:
                 helper.replace_attribute_by_text(menu_section, text, 'href', key)
 
-        for key, val in repeatable_lists[lang].items():
-            helper.replace_attribute_by_text(menu_section, key, 'string', val)
+        # for key, val in repeatable_lists[lang].items():
+        #     helper.replace_attribute_by_text(menu_section, key, 'string', val)
 
 
         helper.replace_attribute(menu_section, '__mobile_class__', 'string', '''{$smarty.const.CLIENT_MOBILE}''')
@@ -683,6 +717,8 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
 
 
         menu_final_content = f'{menu_section}'
+        menu_final_content = f'{before_html}\n{menu_section}'
+
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         # helper.write_text_in_path(project_path, "{inclued 'include_files/menu.tpl'}")
         menu_final_content = menu_final_content.replace("__main_link_href__", "https://{$smarty.const.CLIENT_MAIN_DOMAIN}")
@@ -1022,7 +1058,7 @@ def blog_module(blog_section, project_path , lang = 'fa',  file_name = ''):
         max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
 
         before_html = '''
-                        //with category
+                        {*with category*}
                         {*{assign var="search_array" value=['section'=>'mag','category'=>1,'limit'=>'1i_modular__max_limit']}*}
                         {*{assign var='articles' value=$obj_main_page->getCategoryArticles($search_array)}*}
                         {*{assign var='counter' value=0}*}
@@ -1055,10 +1091,31 @@ def blog_module(blog_section, project_path , lang = 'fa',  file_name = ''):
                 simple_element = helper.replace_placeholders(simple_element, blog_replacement_data)
                 simple_element = blog_section.find(class_=simple_items_class + num)
                 helper.replace_attribute(simple_element, '__image_class__', 'src','{$article["image"]}')
-                helper.replace_attribute(simple_element, '__image_class__', 'src','{$article["image"]}')
+                helper.replace_attribute(simple_element, '__image_class__', 'alt','{$article["alt"]}')
                 helper.replace_attribute(simple_element, '__title_class__', 'string','{$article["title"]}')
                 helper.replace_attribute(simple_element, '__heading_class__', 'string','{$article["heading"]}')
                 helper.replace_attribute(simple_element, '__date_class__', 'string','{$article["created_at"]}')
+                for i in range(1, 6):
+                    light_star_elements = simple_element.find(
+                        class_='__star_class_light__' + str(i))
+                    dark_star_elements = simple_element.find(class_='__star_class_dark__' + str(i))
+                    if i == 1 and light_star_elements:
+                        new_light_star = '''{for $i = 0; $i < count($item['rates']); $i++}''' + str(
+                            light_star_elements) + '''{/for}'''
+                        new_light_star = BeautifulSoup(new_light_star, 'html.parser')
+                        light_star_elements.replace_with(new_light_star)
+                    else:
+                        if light_star_elements:
+                            light_star_elements.decompose()
+
+                    if i == 1 and dark_star_elements:
+                        new_dark_star = '''{for $i = count($item['rates']); $i < 6; $i++}''' + str(
+                            dark_star_elements) + '''{/for}'''
+                        new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
+                        dark_star_elements.replace_with(new_dark_star)
+                    else:
+                        if dark_star_elements:
+                            dark_star_elements.decompose()
 
             else:
                 simple_element.decompose()
@@ -1085,6 +1142,31 @@ def blog_module(blog_section, project_path , lang = 'fa',  file_name = ''):
             helper.replace_attribute(complex_element, '__heading_class__', 'string', '''{{$articles[{0}]['heading']}}'''.format(num))
             helper.replace_attribute(complex_element, '__date_class__', 'string', '''{{$articles[{0}]['created_at']}}'''.format(num))
 
+            for i in range(1, 6):
+                light_star_elements = complex_element.find(class_='__star_class_light__' + str(i))
+                dark_star_elements = complex_element.find(class_='__star_class_dark__' + str(i))
+                if i == 1 and light_star_elements:
+                    new_light_star = '''{for $i = 0; $i < count($articles[{0}]['rates']); $i++}'''.format(num) + str(
+                        light_star_elements) + '''{/for}'''
+                    new_light_star = new_light_star.replace("{0}", f'{num}')
+                    # new_light_star = new_light_star.replace("__hotel_var__", section_var)
+                    new_light_star = BeautifulSoup(new_light_star, 'html.parser')
+                    light_star_elements.replace_with(new_light_star)
+                else:
+                    if light_star_elements:
+                        light_star_elements.decompose()
+
+                if i == 1 and dark_star_elements:
+                    new_dark_star = '''{for $i = count($articles[{0}]['rates']); $i < 6; $i++}'''.format(num) + str(
+                        dark_star_elements) + '''{/for}'''
+                    new_dark_star = new_dark_star.replace("{0}", f'{num}')
+                    new_dark_star = new_dark_star.replace("__hotel_var__", section_var)
+                    new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
+                    dark_star_elements.replace_with(new_dark_star)
+                else:
+                    if dark_star_elements:
+                        dark_star_elements.decompose()
+
 
         blog_final_content = f'{before_html}\n{blog_section}\n{after_html}'
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
@@ -1100,6 +1182,8 @@ def blog_module(blog_section, project_path , lang = 'fa',  file_name = ''):
 
 def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
     try:
+        tours_section = helper.check_if_section_built(project_path ,file_name ,tours_section)
+
         before_html = '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}'''
 
 

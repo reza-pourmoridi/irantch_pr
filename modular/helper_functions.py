@@ -236,14 +236,19 @@ def turn_to_script_links_assames(links):
             result = result + '<script src="project_files/' + item + '"></script>'
     return result
 
+
 def replace_attribute_by_text(section, target_text, attr, value):
     for tag in section.find_all(text=lambda text: text and target_text.strip() == text.strip()):
         parent_tag = tag.find_parent()
         if parent_tag:
-            if attr != 'string':
+            if attr == 'href':
+                if parent_tag.name == 'a':
+                    parent_tag[attr] = value
+            elif attr != 'string':
                 parent_tag[attr] = value
             else:
                 parent_tag.string = value
+
 
 def changing_numbers_to_array_elements(array, num):
     for key, val in array.items():

@@ -1,0 +1,139 @@
+@import "components/fonts";
+@import "components/variables";
+@import "components/mixin";
+body, html {
+  font-family: $fontFamily, serif !important;
+  direction: rtl;
+  min-height: 100vh;
+  background: #f8f9fb;
+  overflow-x: hidden;
+}
+
+main, .content_tech {
+  min-height: 100vh;
+}
+a, a:hover {
+  text-decoration: none
+}
+button{
+  outline: none;
+  &:focus{
+    outline: none;
+  }
+}
+.banner{
+  height: 500px;
+}
+
+.bast_main{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  >div{
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    border-radius: $rounded;
+    background: #fff;
+    i{
+      background-color: #f0f6fc;
+      padding: .5rem;
+      border-radius: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-left: 1rem;
+      svg{
+        width: 25px;
+        height: 25px;
+        fill: $mainColor;
+      }
+    }
+    >div{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-start;
+      h2{
+        font-size: 1rem;
+        margin-bottom: 0;
+        color: $mainColor;
+        text-align: right;
+        font-family: $fontFamilyBold;
+      }
+      h3{
+        font-size: .875rem;
+        margin-bottom: 0;
+        color: $mainColor;
+        text-align: right;
+      }
+    }
+  }
+}
+@media(max-width : 992px){
+  .bast_main{
+    grid-template-columns: repeat(1, 1fr) !important;
+  }
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 10px
+}
+
+.title div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px
+}
+
+.title div h2 {
+  font-family: IRANSansFaNum-Bold;
+  font-size: 25px;
+  margin-bottom: 0;
+  color: #000
+}
+
+.title div h3 {
+  font-family: IRANSansFaNum-Bold;
+  font-size: 20px;
+  margin-bottom: 0;
+  color: #697488
+}
+
+.title a {
+  padding: 10px 30px;
+  color: #1e4f81;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 15px;
+  border-radius: 8px;
+  border: 1px solid #1e4f81;
+  transition: all .3s cubic-bezier(0.165, 0.84, 0.44, 1)
+}
+
+.title a:hover {
+  border-color: #1e4f81;
+  background-color: #1e4f81 !important;
+  color: #fff !important
+}
+
+
+@import "components/select2";
+@import "section/header";
+@import "section/tab";
+@import "section/advertising";
+@import "section/tour";
+@import "section/box";
+@import "section/blog";
+@import "section/news-letters";
+@import "section/footer";

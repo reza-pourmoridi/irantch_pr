@@ -1,0 +1,5 @@
+how to shorten the time of adding new section for modulation?
+
+1-do not using replace_placeholders() function and instade ,using replace()
+2-creatin an deafult function for every type of section and just change some.
+3-

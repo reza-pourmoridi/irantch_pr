@@ -1,23 +1,14 @@
 $(document).ready(function () {
-    $('input:radio[name="btn_switch_tour"]').change(
-        function(){
-            if (this.checked && this.value == '1') {
-
-
-                $('#international_tour').css('display','flex');
-                $('#internal_tour').hide();
-
-
-            }
-            else {
-                $('#international_tour').hide();
-                $('#internal_tour').css('display','flex');
-            }
-        });
-
-
-
     $(".select2 , .select-route-bus-js , .default-select2 , .gasht-type-js , .select2_in").select2();
+    $(".switch-input-tour-js").on("change", function () {
+        if (this.checked && this.value === "1") {
+            $(".international-tour-js").css("display", "flex")
+            $(".internal-tour-js").hide()
+        } else {
+            $(".international-tour-js").hide()
+            $(".internal-tour-js").css("display", "flex")
+        }
+    })
     $('.switch-input-js').on('change', function() {
         if (this.checked && this.value === '1') {
             $('.international-flight-js').css('display', 'flex')

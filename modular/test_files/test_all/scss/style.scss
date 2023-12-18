@@ -1,0 +1,23 @@
+@import "components/variables";
+@import "components/fonts";
+@import "components/mixin";
+
+body {
+  font-family: $fontFamily, serif !important;
+  overflow-x: hidden;
+  direction: rtl;
+  min-height: 100vh;
+  background: #fff;
+}
+main, .content_tech {
+  min-height: 100vh;
+}
+a, a:hover {
+  text-decoration: none
+}
+button{
+  outline: none;
+  &:focus{
+    outline: none;
+  }
+}
