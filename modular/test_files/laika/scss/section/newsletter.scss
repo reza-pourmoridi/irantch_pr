@@ -1,0 +1,94 @@
+@import "../components/variables";
+@import "../components/mixin";
+.bg_main {
+  background: $mainColor;
+}
+.form_newsletter > label {
+  position: relative;
+}
+
+.form_newsletter > label > i {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  font-size: 20px;
+  transform: translateY(-50%);
+  color: $mainColor;
+}
+
+.form_newsletter > label > input {
+  padding-left: 3rem;
+  border-radius: $rounded;
+  border: none;
+  font-size: 17px;
+  height: 50px
+}
+
+.form_newsletter > label > input:focus {
+  box-shadow: none
+}
+
+.form_newsletter > label > input::placeholder {
+  color: $mainColor;
+}
+
+.form_newsletter > label > a {
+  background: #325af8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  font-size: 20px;
+  color: #fff;
+  border-radius: $rounded;
+  transition: all .3s;
+  svg{
+    width: 25px;
+    height: 25px;
+    fill: #fff;
+  }
+}
+
+.form_newsletter > label > a:hover {
+  background: #fff;
+  color: $mainColor;
+  svg{
+    width: 25px;
+    height: 25px;
+    fill: $mainColor;
+  }
+}
+
+.text_newsletter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.text_newsletter > i {
+  font-size: 100px;
+  color: #fff;
+  padding-left: 30px;
+  @include flex-center-all();
+  svg{
+    width: 90px;
+    height: 90px;
+    fill: #fff;
+  }
+}
+
+.text_newsletter > div {
+  color: #fff;
+  text-align: right;
+}
+
+.text_newsletter > div > h2 {
+  font-family: $fontFamilyBold;
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+
+.text_newsletter > div > p {
+  font-size: 16px;
+  margin: 0;
+}

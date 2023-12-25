@@ -1,0 +1,1797 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+@font-face {
+    font-family: iransans;
+    src: url(../fonts/FontsFree-Net-ir_sans.ttf);
+}
+
+body {
+    font-family: iransans;
+}
+
+/******************header***************/
+.header1 {
+    width: 100%;
+    height: 50px;
+}
+
+.nimpheader1 {
+    font-size: 18px;
+    margin-top: 12px;
+    color: #1D285A;
+}
+
+.nimpheader1 .svg-inline--fa {
+    width: 23px;
+    height: 23px;
+    margin-top: -5px;
+    margin-right: 20px;
+    color: #1D285A;
+}
+
+.niminput1 {
+    background: white;
+    color: #6c757d;
+    font-size: 12px;
+    margin-right: 2px;
+    width: 100px;
+    padding: 5px;
+    border: none;
+}
+
+.niminput1::placeholder {
+    background: white;
+    color: #1D285A;
+    font-size: 12px;
+    border: none;
+}
+
+.niminput1:focus {
+    outline: none;
+}
+
+.nimkhatc {
+    padding: 0 !important;
+}
+
+.nimkhat {
+    background: #C5C5C5;
+    width: 100%;
+    height: 2px;
+}
+
+/***********************menu**********************/
+.langar {
+    color: black;
+!important;
+    text-decoration: none;
+}
+
+.langar:hover {
+    text-decoration: none;
+    color: #1D285A
+}
+
+@media screen and (max-width: 880px) {
+    .langar {
+        color: white;
+    !important;
+    }
+
+    .langar:hover {
+        text-decoration: none;
+        color: white;
+    }
+}
+
+.nimmenu {
+    width: 100%;
+    height: 70px;
+    background: white;
+}
+
+.nimlogo {
+    width: 120px;
+    height: 50px;
+}
+
+.nimlogo > img {
+    margin-top: 5px;
+    max-width: 100%;
+    object-fit: cover;
+}
+
+.nimitem {
+    height: 60px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    list-style: none;
+}
+
+.nimitem > li {
+    margin-top: 15px;
+    margin-right: 50px;
+    color: black;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.nimdrop > li {
+    margin-top: 15px;
+    margin-right: 50px !important;
+    color: black !important;
+    font-size: 15px !important;
+    font-weight: bold !important;
+}
+
+.nimdrop > li:hover {
+    color: #1D285A !important;
+}
+
+.nimitem > li:hover {
+    cursor: pointer;
+    color: #1D285A;
+}
+
+.nimdrop li {
+    margin-right: 20px;
+    color: #343434;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.nimdrop li:hover {
+    cursor: pointer;
+    color: #1D285A;
+}
+
+.nimdrop {
+    height: 100%;
+    position: relative;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nimdropc {
+    display: none;
+    background: white;
+    list-style: none;
+    color: #343434;
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    -webkit-transition: all 0.5s linear;
+    -moz-transition: all 0.5s linear;
+    transition: all 0.5s linear;
+    border-radius: 10px;
+    top: 50px;
+    right: -40px;
+
+}
+
+@media screen and (max-width: 980px) {
+    .nimdropc {
+        position: static;
+        border-radius: 0;
+        top: 0 !important;
+        right: 0 !important;
+
+    }
+
+    .nimdrop {
+        height: auto;
+        display: block;
+    }
+}
+
+.nimdrop:hover .nimdropc {
+    display: block;
+}
+
+.nimdropc li {
+    color: black;
+    width: 100%;
+    height: 40px;
+    margin: 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nimdropc li:hover {
+    background: #1D285A;
+    color: white;
+    border-radius: 10px;
+}
+
+/********************menu hamberger****************/
+.nimbar1, .nimbar2, .nimbar3 {
+    width: 35px;
+    height: 5px;
+    background-color: #1D285A;
+    margin: 6px 0;
+    transition: 0.4s;
+}
+
+.change .nimbar1 {
+    -webkit-transform: rotate(-45deg) translate(-8px, 6px);
+    transform: rotate(-45deg) translate(-8px, 6px);
+}
+
+.change .nimbar2 {
+    opacity: 0;
+}
+
+.change .nimbar3 {
+    -webkit-transform: rotate(45deg) translate(-8px, -8px);
+    transform: rotate(45deg) translate(-8px, -8px);
+}
+
+.nimitemhamb {
+    background: #1D285A !important;
+    color: white;
+    display: none;
+
+}
+
+.nimitemhamb li {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    color: white;
+    border-bottom: 1px solid white;
+    padding: 10px;
+}
+
+.nimdrop .itemdrop {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: start !important;
+    align-items: center !important;
+    color: white !important;
+    margin-right: 0 !important;
+    padding: 10px;
+}
+
+.nimdrop > .itemdrop:hover {
+    color: white !important;
+}
+
+.nimdropc > li {
+    color: #1D285A !important;
+    border-radius: 0 !important;
+}
+
+.nimdropc > li:hover {
+    color: white !important;
+}
+
+/*****************slider1*************************/
+#a, #b, #c, #d, #e {
+    color: white;
+    text-align: center;
+    font-size: 12px;
+}
+
+.nimslider1 {
+    width: 100%;
+    height: auto;
+    background: url("../images/6 (1).jpg") no-repeat center;
+    background-size: cover;
+}
+
+@media screen and (max-width: 980px) {
+    .nimslider1 {
+        height: auto;
+        padding-bottom: 20px;
+        background: url("../images/blog4.jpg") no-repeat center fixed;
+        background-size: cover;
+    }
+}
+
+.nimorib {
+    width: 950px;
+    height: auto;
+    background: rgba(238, 25, 143, 0.5);
+    z-index: 10;
+    clip-path: polygon(
+            calc(100% - 600px) 0,
+            100% 0,
+            100% 100%,
+            0 100%
+    );
+}
+
+@media screen and (max-width: 920px) {
+    .nimorib {
+        clip-path: none;
+        width: 100%;
+        background: transparent;
+    }
+}
+
+@media screen and (min-width: 1400px) and (max-width: 1500px) {
+    .nimorib {
+        width: 1020px;
+        height: auto;
+        background: rgba(238, 25, 143, 0.5);
+        z-index: 10;
+        clip-path: polygon(
+                calc(100% - 680px) 0,
+                100% 0,
+                100% 100%,
+                0 100%
+        );
+    }
+
+    .nimsearchitem {
+        width: 165px;
+    }
+}
+
+@media screen and (min-width: 1500px) and (max-width: 1600px) {
+    .nimorib {
+        width: 1050px;
+        height: auto;
+        background: rgba(238, 25, 143, 0.5);
+        z-index: 10;
+        clip-path: polygon(
+                calc(100% - 740px) 0,
+                100% 0,
+                100% 100%,
+                0 100%
+        );
+    }
+
+    .nimsearchitem {
+        width: 180px;
+    }
+}
+
+@media screen and (min-width: 1600px) and (max-width: 1700px) {
+    .nimorib {
+        width: 1080px;
+        height: auto;
+        background: rgba(238, 25, 143, 0.5);
+        z-index: 10;
+        clip-path: polygon(
+                calc(100% - 750px) 0,
+                100% 0,
+                100% 100%,
+                0 100%
+        );
+    }
+
+    .nimsearchitem {
+        width: 195px;
+    }
+}
+
+@media screen and (min-width: 1700px) and (max-width: 1800px) {
+    .nimorib {
+        width: 1110px;
+        height: auto;
+        background: rgba(238, 25, 143, 0.5);
+        z-index: 10;
+        clip-path: polygon(
+                calc(100% - 800px) 0,
+                100% 0,
+                100% 100%,
+                0 100%
+        );
+    }
+
+    .nimsearchitem {
+        width: 210px;
+    }
+}
+
+@media screen and (min-width: 1800px) and (max-width: 1900px) {
+    .nimorib {
+        width: 1140px;
+        height: auto;
+        background: rgba(238, 25, 143, 0.5);
+        z-index: 10;
+        clip-path: polygon(
+                calc(100% - 830px) 0,
+                100% 0,
+                100% 100%,
+                0 100%
+        );
+    }
+
+    .nimsearchitem {
+        width: 225px;
+    }
+}
+
+@media screen and (min-width: 1900px) and (max-width: 2000px) {
+    .nimorib {
+        width: 1170px;
+        height: auto;
+        background: rgba(238, 25, 143, 0.5);
+        z-index: 10;
+        clip-path: polygon(
+                calc(100% - 860px) 0,
+                100% 0,
+                100% 100%,
+                0 100%
+        );
+    }
+
+    .nimsearchitem {
+        width: 240px;
+    }
+}
+
+@media screen and (min-width: 2000px) and (max-width: 2100px) {
+    .nimorib {
+        width: 1200px;
+        height: auto;
+        background: rgba(238, 25, 143, 0.5);
+        z-index: 10;
+        clip-path: polygon(
+                calc(100% - 890px) 0,
+                100% 0,
+                100% 100%,
+                0 100%
+        );
+    }
+
+    .nimsearchitem {
+        width: 255px;
+    }
+}
+
+@media screen and (min-width: 2100px) and (max-width: 2200px) {
+    .nimorib {
+        width: 1230px;
+        height: auto;
+        background: rgba(238, 25, 143, 0.5);
+        z-index: 10;
+        clip-path: polygon(
+                calc(100% - 920px) 0,
+                100% 0,
+                100% 100%,
+                0 100%
+        );
+    }
+
+    .nimsearchitem {
+        width: 270px;
+    }
+}
+
+@media screen and (min-width: 2200px) and (max-width: 2300px) {
+    .nimorib {
+        width: 1260px;
+        height: auto;
+        background: rgba(238, 25, 143, 0.5);
+        z-index: 10;
+        clip-path: polygon(
+                calc(100% - 950px) 0,
+                100% 0,
+                100% 100%,
+                0 100%
+        );
+    }
+
+    .nimsearchitem {
+        width: 285px;
+    }
+}
+
+@media screen and (min-width: 2300px) and (max-width: 2400px) {
+    .nimorib {
+        width: 1290px;
+        height: auto;
+        background: rgba(238, 25, 143, 0.5);
+        z-index: 10;
+        clip-path: polygon(
+                calc(100% - 980px) 0,
+                100% 0,
+                100% 100%,
+                0 100%
+        );
+    }
+
+    .nimsearchitem {
+        width: 315px;
+    }
+}
+
+@media screen and (min-width: 2401px) {
+    .nimorib {
+        width: 70%;
+        height: auto;
+        background: rgba(238, 25, 143, 0.5);
+        z-index: 10;
+        clip-path: polygon(
+                calc(100% - 65%) 0,
+                100% 0,
+                100% 100%,
+                0 100%
+        );
+    }
+}
+
+.nimsearchitems {
+    width: 565px;
+    padding: 40px 20px;
+}
+@media screen and (max-width: 990px) {
+    .nimsearchitems {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+}
+
+.nimsearchitem {
+    background: #0022625c;
+    opacity: 1;
+    width: 90px !important;
+    height: 75px;
+    padding-bottom: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s linear;
+    -webkit-transition: 0.5s linear;
+    -moz-transition: 0.5s linear;
+    text-align: center;
+    font-size: 15px;
+    color: white;
+}
+
+.imghotel {
+    width: 100%;
+}
+
+.imghotel > img {
+    width: 65px;
+    object-fit: fill;
+    height: 45px;
+}
+.fa-plane {
+    font-size: 50px !important;
+}
+
+@media screen and (max-width: 980px) {
+    .nimsearchitem {
+        width: 100% !important;
+        border-top: 1px solid white;
+        border-radius: 0;
+    }
+}
+
+.nimsearchitem > p {
+    font-size: 12px;
+}
+
+.nimsearchitem > div {
+    width: 100%;
+    height: auto;
+    padding: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.nimsearchitem > div .svg-inline--fa {
+    color: white;
+    font-size: 5px;
+    cursor: pointer;
+}
+
+.nimsearchitem > p {
+    text-align: center;
+    color: white;
+    cursor: pointer;
+}
+
+.nimsearchitemclick {
+    background:  #1d285a;
+}
+
+.nimsearchitem:hover {
+    opacity: 0.7;
+}
+
+.pavazkhareji {
+    display: none;
+}
+
+.hotel {
+    display: none;
+}
+
+.toordakheli {
+    display: none;
+}
+
+.toorkhareji {
+    display: none;
+}
+
+.btntoor {
+    display: none;
+}
+
+.nimcontselect1 {
+    margin-top: 10px;
+}
+
+.bargasht2 {
+    display: none;
+}
+
+.bargasht::placeholder {
+    color: #c6c8ca;
+}
+
+.bime {
+    display: none;
+}
+
+.nafaratbime {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+@media screen and (max-width: 980px) {
+    .nafaratbime {
+        flex-wrap: wrap;
+    }
+}
+
+.pacc {
+    width: 100%;
+    display: none;
+    padding: 0 5px;
+}
+
+@media screen and (max-width: 980px) {
+    .pacc {
+        display: block;
+    }
+
+    .paghcc {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 980px) {
+    .pavazdakheli {
+        display: none;
+    }
+
+    .radio {
+        display: none;
+    }
+
+    .nimbtn3, .nimbtn, .niminput2 {
+        margin-bottom: 5px;
+    }
+}
+.select2.select2-container.select2-container--default.select2-container{
+    width: 550px !important;
+    height: 45px !important;
+}
+.select2-container--default .select2-selection--single{
+    height: 45px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+/*********************radio buttom******************/
+.radio{
+    justify-content: center;
+    align-items: center;
+}
+.radioc {
+    width: 550px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.radios .TripTypeRadio {
+    display: flex;
+    margin-top: 30px;
+    padding-left: 20px;
+}
+
+@media screen and (max-width: 780px) {
+    .radios .TripTypeRadio {
+        display: flex;
+    }
+
+}
+
+.radios .TripTypeRadio label {
+    cursor: pointer;
+    color: white;
+
+}
+
+.TripTypeRadio .form-group {
+    position: relative;
+    cursor: pointer;
+    font-size: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.form-control-rd {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+
+}
+
+.form-control-rd-lbl span {
+    background-color: #fff;
+    -webkit-box-shadow: 0 0 0 1px #ccc inset;
+    -moz-box-shadow: 0 0 0 1px #ccc inset;
+    box-shadow: 0 0 0 1px #ccc inset;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
+    display: inline-block;
+    line-height: 0;
+    float: right;
+    position: relative;
+    -webkit-transition: .15s all;
+    -moz-transition: .15s all;
+    -o-transition: .15s all;
+    transition: .15s all;
+    height: 18px;
+    width: 18px;
+    top: 6px;
+    margin-left: 5px;
+
+}
+
+.form-control-rd:checked + .form-control-rd-lbl span::before {
+    right: 5px;
+    top: 5px;
+    opacity: 1;
+    height: 8px;
+    width: 8px;
+    background-color: #FE28FE;
+    border-radius: 50%;
+    -webkit-transition: .15s all;
+    -moz-transition: .15s all;
+    -o-transition: .15s all;
+    transition: .15s all;
+}
+
+.form-control-rd-lbl span::before {
+    background-color: #ABA0A0;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
+    content: '';
+    position: absolute;
+    right: 50%;
+    top: 60%;
+    opacity: 0;
+    height: 0;
+    width: 0;
+    -webkit-transition: .3s all;
+    -moz-transition: .3s all;
+    -o-transition: .3s all;
+    transition: .3s all;
+}
+
+.form-control-rd-lbl {
+    margin: 0;
+}
+
+label.pointer {
+    font-size: 13px !important;
+}
+
+@media screen and (max-width: 1125px) {
+    label.pointer {
+        font-size: 10px !important;
+    }
+}
+
+#do {
+
+}
+
+.niminputj {
+    width: 100%;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+}
+.niminputj1{
+    width: 145px;
+    padding: 19px 0;
+    display: flex;
+    justify-content: center;
+}
+.nimdkh {
+    display: flex;
+    width: 550px;
+    height: 45px;
+    background: #9069A0;
+    opacity: 0.7;
+    border-radius: 10px;
+}
+
+.nimdakhel, .nimkharej, .nimdakhel2, .nimkharej2, .nimdakhel3, .nimkharej3 {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    color: #fdfdfe;
+    padding: 2px;
+}
+
+.btngasht {
+    display: none;
+}
+
+.gasht {
+    display: none;
+}
+
+.trans {
+    display: none;
+}
+
+.nimdakhel > div, .nimkharej > div {
+    cursor: pointer;
+}
+
+.abi {
+    width: 100%;
+    border-radius: 10px;
+    height: 100%;
+    background: #002260;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 345px) {
+    .radios .TripTypeRadio label {
+        font-size: 10px;
+        padding-right: 20px;
+        margin-top: 10px;
+    }
+
+    .form-control-rd-lbl span {
+        position: absolute;
+        margin-left: 60px;
+    }
+}
+
+/***************/
+.nimlabel {
+    margin-bottom: 0 !important;
+    color: white;
+    margin-left: 10px;
+}
+
+.nimcontselect {
+    width: 550px;
+    margin-bottom: 10px;
+}
+
+.select2-container--default .select2-selection--single {
+    border-radius: 10px !important;
+    outline: none;
+    background-color: #fff;
+    border: 1px solid #d1d1d1;
+    height: 45px !important;
+    display: flex;
+    align-items: center;
+}
+
+.niminput2 {
+    border-radius: 10px !important;
+    outline: none;
+    background-color: #fff;
+    border: 1px solid #d1d1d1;
+    height: 45px !important;
+    padding: 10px;
+    color: #737373;
+    width: 275px;
+    font-size: 12px;
+    margin-left: 2px;
+}
+
+@media screen and (max-width: 980px) {
+    .niminput2 {
+        width: 50%;
+    }
+}
+
+.niminput3 {
+    width: 550px;
+    font-size: 15px;
+}
+
+.select2-container {
+    margin-left: 2px;
+    height: 50px !important;
+}
+
+.nimbtnnafarat {
+    border-radius: 10px !important;
+    width: 100% !important;
+}
+
+.nimbtnnafarat::placeholder {
+    font-size: 10px !important;
+    font-weight: bold;
+}
+
+.nimbtn {
+    background: #002260;
+    color: white;
+    border: none;
+    -webkit-transition: all 0.5s linear;
+    -moz-transition: all 0.5s linear;
+    transition: all 0.5s linear;
+}
+
+.nimbtn:hover {
+    background: #EE198F;
+    color: white;
+    border: none;
+}
+
+.nimbtn:focus {
+    outline: none;
+}
+
+.nimbtn3 {
+    width: 275px;
+}
+.nimbtn3c{
+    width: 550px;
+    display: flex;
+    justify-content: flex-end;
+}
+.nimbtn6 {
+    margin-top: 10px;
+}
+
+@media screen and (max-width: 980px) {
+    .nimbtn3 {
+        width: 100%;
+    }
+}
+.nimcal{
+    width: 275px !important;
+}
+
+/******************slider2**************************/
+.nimslider2 {
+    padding: 20px 0;
+    background: rgba(238, 238, 238, 0.5);
+}
+
+.nimptour {
+    color: #EE198F;
+    font-weight: bolder;
+    text-align: center;
+}
+
+.nimptour1 {
+    color: #b3b3b3;
+}
+
+.sliderp2 {
+    text-align: center;
+    margin: 20px 0 !important;
+    color: #002260;
+    font-weight: bolder;
+}
+
+.sliderp22 {
+    cursor: pointer;
+    color: #002260;
+    padding: 20px;
+}
+
+.nimtourfilter {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+}
+
+.itemfix {
+    width: 100%;
+    border: 1.5px solid #002260;
+    padding-bottom: 10px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.itemfix div img {
+    overflow: hidden;
+}
+
+.itemfix img {
+    width: 280px;
+    height: 200px;
+    object-fit: cover;
+    filter: blur(1px);
+    -webkit-transition: 0.3s linear;
+    -moz-transition: 0.3s linear;
+    transition: 0.3s linear;
+    cursor: pointer;
+}
+
+.itemfix img:hover {
+    filter: blur(0);
+}
+
+.itemfix p {
+    text-align: center;
+}
+
+.nimbtn2c {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.nimbtn2 {
+    width: 60%;
+    height: auto;
+    padding-top: 0 !important;
+    padding-bottom: 5px;
+    font-size: 12px;
+    border-radius: 20px !important;
+    cursor: pointer;
+    border: none;
+    margin: 0 !important;
+}
+
+@media screen and (max-width: 980px) {
+    .nimbtn2 {
+        width: 90%;
+    }
+}
+
+.nimspstylebanafsh {
+    background: #002260;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 20px;
+}
+
+#owl2 {
+    display: none;
+}
+
+.nimpkish {
+    color: #EE198F;
+}
+
+/***************slider3*******************/
+.hotelp {
+    color: #b3b3b3 !important;
+}
+
+.nimslider3 {
+    width: 100%;
+    padding: 10px 0;
+    background: rgba(238, 238, 238, 0.5);
+
+}
+
+.nimimghotel {
+    height: 200px;
+    width: 100%;
+}
+.itemhk{
+    -webkit-box-shadow: rgba(0,0,0,0.1) 0 0 10px !important;
+    -moz-box-shadow: rgba(0,0,0,0.1) 0 0 10px !important;
+    box-shadow: rgba(0,0,0,0.1) 0 0 10px !important;
+}
+.nimimghotel img {
+    height: 200px;
+    width: 100%;
+    opacity: 1;
+    transition: all 0.3s linear;
+    cursor: pointer;
+}
+
+.nimimghotel img:hover {
+    opacity: 0.7;
+}
+
+.itemh {
+    width: 100%;
+    height: auto;
+    background: #fff;
+    -webkit-box-shadow: rgba(0,0,0,0.1) 10px 0 10px;
+    -moz-box-shadow: rgba(0,0,0,0.1) 10px 0 10px;
+    box-shadow: rgba(0,0,0,0.1) 10px 0 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+}
+
+.sliderp6 {
+    color: #EE198F;
+}
+
+.nameofh {
+    background: #eeeeee;
+    margin: 20px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(100% - 20px);
+    transition: all 0.3s linear;
+    color: black;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.nameofh:hover {
+    background: #002260;
+    color: white;
+}
+.nameofhc{
+    width: 100%;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+.itemh p {
+    color: #EE198F;
+    text-align: center;
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+.nimstarc {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nimstar {
+    color: gold;
+}
+.owl-carousel .owl-item img{
+    border-radius: 10px 10px 0 0;
+}
+/***************slider4*******************/
+.nimslider4 {
+    width: 100%;
+    padding: 10px 0;
+    background: #eee;
+}
+
+.sliderp4 {
+    color: #b3b3b3;
+}
+
+.itemfix2 {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.itemfix2 > div {
+    width: 90%;
+    height: 300px;
+
+}
+
+.itemfix2 > div > img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    transition: all 0.5s linear;
+}
+
+.itemfix2 > div > img:hover {
+    filter: hue-rotate(90deg);
+}
+
+.owl-theme .owl-dots .owl-dot.active span, .owl-theme .owl-dots .owl-dot:hover span {
+    background: #EE198F;
+}
+
+button.owl-dot {
+    outline: none;
+}
+
+/**************************khadamate gardesh***************************/
+.sliderpkh {
+    color: #EE198F;
+}
+
+.nimkhadamat {
+    width: 100%;
+    padding: 20px 0;
+}
+
+.nimkhedmat {
+    width: 100%;
+    padding: 5px;
+    border: 1.5px solid #002260;
+    border-radius: 10px;
+}
+
+.nimkhedmatc {
+    padding: 5px 10px;
+}
+
+.nimimgc {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.nimimgc img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+@media screen and (max-width: 980px) {
+    .nimimgc img {
+        margin-top: 20px;
+    }
+}
+
+.nimkhedmat p {
+    color: #b3b3b3;
+    padding: 10px;
+    text-align: right;
+    font-size: 12px;
+    margin-bottom: 2rem;
+}
+
+.nimkhedmat p:first-of-type {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+}
+
+.nimbtn5 {
+    background-color: #002260 ;
+    padding: 15px !important;
+    margin: 20px !important;
+    margin-bottom: 10px;
+}
+
+.nimpadding {
+    padding: 0;
+}
+
+@media screen and (max-width: 990px) {
+    .nimpadding {
+        padding-left: 15px;
+    }
+}
+
+.nimbtn5:hover {
+    background-color: #EE198F;
+}
+
+/******************************palarex********************************/
+.paralex {
+    width: 100%;
+    height: 250px;
+    padding: 20px;
+    background: white;
+}
+
+.paralexp {
+    color: #EE198F;
+    margin-top: 0 !important;
+}
+
+@media screen and (max-width: 980px) {
+    .paralex {
+        height: auto;
+        background: #eee;
+        padding-top: 20px;
+        padding-bottom: 50px;
+    }
+}
+
+.nimimgparalex {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nimimgparalex > img {
+    width: 100px;
+    height: 90px;
+    cursor: pointer;
+    transition: all 0.5s linear;
+}
+
+.nimpparalex > p {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #5D5D5D;
+    transition: all 0.5s linear;
+}
+
+.nimpparalexc {
+    cursor: pointer;
+}
+
+.nimpparalexc:hover .nimpparalex > p {
+    color: black;
+}
+
+@media screen and (max-width: 980px) {
+    .nimimgparalex > img {
+        cursor: pointer;
+        margin-top: 30px;
+    }
+}
+
+/******************************aplication*****************************/
+.nimapp {
+    width: 100%;
+    padding: 20px;
+}
+
+.nimpapp {
+    color: #002260;
+    font-weight: bolder;
+    font-size: 30px;
+    text-align: center;
+}
+
+.imgapp, .imgapplication {
+    width: 100%;
+    height: 100%;
+}
+
+@media screen and (max-width: 985px) {
+    .imgapp {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.imgapp > img {
+    width: 160px;
+    height: 50px;
+    margin-top: 5px;
+    margin-left: 50px;
+    cursor: pointer;
+}
+
+.nimbtndl {
+    width: 160px;
+    height: 50px;
+    margin-top: 5px;
+    background: #EE198F;
+    padding: 10px;
+    color: #eeeeee;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    margin-left: 50px;
+}
+
+.nimandp {
+    font-size: 25px;
+    font-weight: bolder;
+    color: #002260;
+    margin-left: 240px;
+}
+
+@media screen and (max-width: 980px) {
+    .nimandp {
+        margin-left: 0;
+    }
+}
+
+@media screen and (min-width: 980px) and (max-width: 1320px) {
+    .nimandp {
+        font-size: 20px;
+    }
+}
+
+.imgapplication {
+    width: 300px;
+    cursor: pointer;
+}
+
+.imgapplication > img {
+    width: 300px;
+    height: 150px;
+}
+
+@media screen and (max-width: 980px) {
+    .imgapp > img {
+        width: 200px;
+        height: 80px;
+        cursor: pointer;
+        margin: 5px;
+    }
+
+    .imgapplication > img {
+        width: 200px;
+        height: 80px;
+        cursor: pointer;
+        margin: 5px;
+    }
+}
+
+@media screen and (max-width: 985px) {
+    .nimimgapp {
+        width: 200px;
+    }
+
+}
+
+/*************************slider5*************************************/
+.nimslider5 {
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    background: rgba(238, 238, 238, 0.5);
+}
+
+.nimfilter {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+}
+
+.nimfilter > li {
+    padding: 20px;
+    cursor: pointer;
+    color: black;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+@media screen and (max-width: 780px) {
+    .nimfilter > li {
+        font-size: 8px;
+        padding: 10px;
+    }
+
+}
+
+.nimfilter > li:hover {
+    color: black;
+}
+
+.nimimgs5 {
+    padding: 2px;
+}
+
+.nimimgiran {
+    width: 100%;
+    background: url("../images/5.jpg") no-repeat center;
+    background-size: 100% 400px;
+    height: 300px;
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+
+}
+
+.hover {
+    color: white;
+    position: absolute;
+    top: 0;
+    display: flex;
+    justify-content: right;
+    opacity: 0.7;
+    padding: 20px;
+    width: 100%;
+    background: #ee198f5c;
+    transition: all .2s linear;
+}
+
+
+
+.nimimgdobai {
+    width: 100%;
+    background: url("../images/dubai1.jfif") no-repeat center;
+    background-size: cover;
+    height: 300px;
+    border-radius: 10px;
+}
+
+.nimimgantalia {
+    width: 100%;
+    background: url("../images/antalia.jfif") no-repeat center;
+    background-size: 100% 400px;
+    height: 300px;
+    border-radius: 10px;
+
+}
+
+.nimimgoropa {
+    width: 100%;
+    background: url("../images/2.jpg") no-repeat center;
+    background-size: cover;
+    height: 300px;
+    border-radius: 10px;
+}
+
+.nimcont5 {
+    width: 90%;
+}
+
+.nimcont6 {
+    width: 95%;
+}
+
+.activfilter {
+    color: #EE198F !important;
+}
+
+.moarefi, .etelaat, .akhbar, .sayer {
+    display: none;
+}
+.iran{
+    display: flex;
+}
+
+/***************************khabarnameh*****************************/
+.nimkhabarname {
+    width: 100%;
+    height: 211px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.sliderp3 {
+    text-align: right;
+    font-size: 20px;
+    color: #EE198F;
+    margin: 30px 0 !important;
+}
+
+.sliderp5 {
+    font-size: 15px;
+    color: black;
+    text-align: right;
+
+}
+
+.niminputkhc {
+    width: 100%;
+    display: flex;
+    justify-content: right;
+}
+
+.niminputkh {
+    padding: 10px;
+    border-radius: 10px;
+    background: #002260;
+    color: white;
+    transition: all 0.5s linear;
+    border: none;
+    font-size: 12px;
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media screen and (max-width: 780px) {
+    .niminputkh {
+        width: 100%;
+        display: block;
+    }
+}
+
+.niminputkh:hover {
+    background: #EE198F
+}
+
+.niminputkh:focus {
+    outline: none;
+}
+
+.niminputkhc input {
+    padding: 5px;
+    margin-left: 10px;
+    font-size: 12px;
+    width: 30%;
+}
+
+@media screen and (max-width: 880px) {
+    .niminputkhc input {
+        width: 100%;
+        display: block;
+    }
+}
+
+.niminputkhc input::placeholder {
+    font-size: 12px;
+}
+
+@media screen and (max-width: 880px) {
+    .niminputkhc input::placeholder {
+        font-size: 6px;
+    }
+}
+
+.nimimgkhabar {
+    position: absolute;
+    left: 0;
+}
+
+@media screen and (max-width: 880px) {
+    .nimimgkhabar {
+        display: none;
+    }
+}
+
+/**************************slider6***********************************/
+.nimslider6 {
+    padding-top: 30px;
+    padding-bottom: 20px;
+    background: rgba(238, 238, 238, 0.5);
+}
+
+.bimimgs6 {
+    display: flex;
+    justify-content: center;
+}
+
+.bimimgs6 img {
+    max-width: 100px;
+}
+
+/*********footer*****************************************************/
+.nimfooter {
+    width: 100%;
+    padding: 20px;
+    background: url("../images/ross-parmly-rf6ywHVkrlY-unsplash.jpg") center no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    position: relative;
+}
+
+.nimfooter:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: rgba(0, 34, 96, 0.8);
+}
+
+.nimfooter p {
+    color: white;
+    text-align: right;
+    z-index: 1000;
+}
+
+@media screen and (max-width: 980px) {
+    .nimfooter p {
+        text-align: center;
+    }
+}
+
+.nimpadres {
+    margin-top: 30px !important;
+}
+
+.nimpdastresi {
+    margin-top: 20px;
+    font-size: 20px;
+    text-align: center !important;
+    font-weight: bold !important;
+}
+
+.nimpdastresi2 {
+    text-align: right !important;
+}
+
+.nimpfooter2 p {
+    text-align: center !important;
+}
+
+.nimpfooter2 p:hover {
+    color: rgba(238, 238, 238, 0.5);
+    cursor: pointer;
+}
+
+@media screen and (max-width: 980px) {
+    .nimpdastresi {
+        text-align: center !important;
+    }
+
+    .nimpfooter2 p {
+        text-align: center !important;
+    }
+}
+
+.nimiconfooter {
+    color: white;
+    font-size: 40px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+.nimiconfooterc {
+    text-align: center !important;
+}
+
+.nimimgfooterc {
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nimimgfooter {
+    width: 110px;
+    height: 90px;
+    margin: 1px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nimimgfooter img {
+    width: 110px;
+    height: 90px;
+}
+
+

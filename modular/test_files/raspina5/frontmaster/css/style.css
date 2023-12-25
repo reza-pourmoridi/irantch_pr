@@ -1,0 +1,387 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+@font-face {
+    font-family: iransans;
+    src: url(../fonts/FontsFree-Net-ir_sans.ttf);
+}
+
+body {
+    font-family: iransans;
+}
+
+/******************header***************/
+.header1{
+    width: 100%;
+    height: 50px;
+}
+.nimpheader1 {
+    font-size: 18px;
+    margin-top: 12px;
+    color: #1D285A;
+}
+
+.nimpheader1 .svg-inline--fa {
+    width: 23px;
+    height: 23px;
+    margin-top: -5px;
+    margin-right: 20px;
+    color: #1D285A;
+}
+
+.niminput1 {
+    background: white;
+    color: #6c757d;
+    font-size: 12px;
+    margin-right: 2px;
+    width: 100px;
+    padding: 5px;
+    border: none;
+}
+
+.niminput1::placeholder {
+    background: white;
+    color: #1D285A;
+    font-size: 12px;
+    border: none;
+}
+
+.niminput1:focus {
+    outline: none;
+}
+
+.nimkhatc {
+    padding: 0 !important;
+}
+
+.nimkhat {
+    background: #C5C5C5;
+    width: 100%;
+    height: 2px;
+}
+
+/***********************menu**********************/
+.langar{
+    color: black;!important;
+    text-decoration: none;
+}
+.langar:hover{
+    text-decoration: none;
+    color: #1D285A
+}
+@media screen and (max-width: 880px){
+    .langar{
+        color: white;!important;
+    }
+    .langar:hover{
+        text-decoration: none;
+        color: white;
+    }
+}
+.nimmenu {
+    width: 100%;
+    height: 70px;
+    background: white;
+}
+
+.nimlogo {
+    width: 120px;
+    height: 50px;
+}
+
+.nimlogo > img {
+    margin-top: 5px;
+    max-width: 100%;
+    object-fit: cover;
+}
+
+.nimitem {
+    height: 60px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    list-style: none;
+}
+
+.nimitem > li {
+    margin-top: 15px;
+    margin-right: 50px;
+    color: black;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.nimdrop > li {
+    margin-top: 15px;
+    margin-right: 50px !important;
+    color: black !important;
+    font-size: 15px !important;
+    font-weight: bold !important;
+}
+
+.nimdrop > li:hover {
+    color: #1D285A !important;
+}
+
+.nimitem > li:hover {
+    cursor: pointer;
+    color: #1D285A;
+}
+
+.nimdrop li {
+    margin-right: 20px;
+    color: #343434;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.nimdrop li:hover {
+    cursor: pointer;
+    color: #1D285A;
+}
+
+.nimdrop {
+    height: 100%;
+    position: relative;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nimdropc {
+    display: none;
+    background: white;
+    list-style: none;
+    color: #343434;
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    -webkit-transition: all 0.5s linear;
+    -moz-transition: all 0.5s linear;
+    transition: all 0.5s linear;
+    border-radius: 10px;
+    top: 50px;
+    right: -40px;
+
+}
+
+@media screen and (max-width: 980px) {
+    .nimdropc {
+        position: static;
+        border-radius: 0;
+        top: 0 !important;
+        right: 0 !important;
+
+    }
+
+    .nimdrop {
+        height: auto;
+        display: block;
+    }
+}
+
+.nimdrop:hover .nimdropc {
+    display: block;
+}
+
+.nimdropc li {
+    color: black;
+    width: 100%;
+    height: 40px;
+    margin: 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nimdropc li:hover {
+    background: #1D285A;
+    color: white;
+    border-radius: 10px;
+}
+
+/********************menu hamberger****************/
+.nimbar1, .nimbar2, .nimbar3 {
+    width: 35px;
+    height: 5px;
+    background-color: #1D285A;
+    margin: 6px 0;
+    transition: 0.4s;
+}
+
+.change .nimbar1 {
+    -webkit-transform: rotate(-45deg) translate(-8px, 6px);
+    transform: rotate(-45deg) translate(-8px, 6px);
+}
+
+.change .nimbar2 {
+    opacity: 0;
+}
+
+.change .nimbar3 {
+    -webkit-transform: rotate(45deg) translate(-8px, -8px);
+    transform: rotate(45deg) translate(-8px, -8px);
+}
+
+.nimitemhamb {
+    background: #1D285A !important;
+    color: white;
+    display: none;
+
+}
+
+.nimitemhamb li {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    color: white;
+    border-bottom: 1px solid white;
+    padding: 10px;
+}
+
+.nimdrop .itemdrop {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: start !important;
+    align-items: center !important;
+    color: white !important;
+    margin-right: 0 !important;
+    padding: 10px;
+}
+
+.nimdrop > .itemdrop:hover {
+    color: white !important;
+}
+
+.nimdropc > li {
+    color: #1D285A !important;
+    border-radius: 0 !important;
+}
+
+.nimdropc > li:hover {
+    color: white !important;
+}
+
+/************container***********/
+.nimcont{
+    width: 100%;
+    height: 100%;
+}
+/*********footer*****************************************************/
+.nimfooter {
+    width: 100%;
+    padding: 20px;
+    background: url("../images/ross-parmly-rf6ywHVkrlY-unsplash.jpg") center no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    position: relative;
+}
+
+.nimfooter:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: rgba(0, 34, 96, 0.8);
+}
+
+.nimfooter p {
+    color: white;
+    text-align: right;
+    z-index: 1000;
+}
+
+@media screen and (max-width: 980px) {
+    .nimfooter p {
+        text-align: center;
+    }
+}
+
+.nimpadres {
+    margin-top: 30px !important;
+}
+
+.nimpdastresi {
+    margin-top: 20px;
+    font-size: 20px;
+    text-align: center !important;
+    font-weight: bold !important;
+}
+
+.nimpdastresi2 {
+    text-align: right !important;
+}
+
+.nimpfooter2 p {
+    text-align: center !important;
+}
+
+.nimpfooter2 p:hover {
+    color: rgba(238, 238, 238, 0.5);
+    cursor: pointer;
+}
+
+@media screen and (max-width: 980px) {
+    .nimpdastresi {
+        text-align: center !important;
+    }
+
+    .nimpfooter2 p {
+        text-align: center !important;
+    }
+}
+
+.nimiconfooter {
+    color: white;
+    font-size: 40px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+.nimiconfooterc {
+    text-align: center !important;
+}
+
+.nimimgfooterc {
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nimimgfooter {
+    width: 110px;
+    height: 90px;
+    margin: 1px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nimimgfooter img {
+    width: 110px;
+    height: 90px;
+}

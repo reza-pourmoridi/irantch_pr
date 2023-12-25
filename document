@@ -4,9 +4,6 @@ hooks:
         __i_modular_c_item_class_0 : آیتم های پیچیده
         i_modular_modulation : باید در یک تگ متا در هدر نوشته شود
 
-
-    head:i_modular_header
-
     menu : i_modular_menu
         __main_link_href__ : لینک اصلی
         __login_register_class__ : کلاس دکمه لاگین,به لینک یا دکمه داده شود
@@ -47,6 +44,7 @@ hooks:
 
     news: i_modular_news
         __link__            : لینک
+        __all_link_href__ : لینک همه اخبار ها ها
         __heading_class__   : کلاس توضیحات مختصر اخبار
         __title_class__     : کلاس تایتل
         __image_class__     : کلاس عکس
@@ -96,6 +94,7 @@ hooks:
         __city_class__     : کلاس شهر
         __image_class__     : کلاس عکس
         __date_class__     : کلاس توضیحات
+        __star_class_light__1     : کلاس ستاره ها(توضیح خواسته شود)
 
 
     newsletter: i_modular_newsletter
@@ -122,7 +121,25 @@ hooks:
         __youtube_class__ :    کلاس یوتیوب
         __facebook_class__ :    کلاس فیس بوک
 
-    script-footer:i_modular_script_footer
+
+    about_us: i_modular_about_us
+        __address_class__ : کلاس آدرس در فوتر
+        __aboutUs_class__ : کلاس درباره ما
+        __aboutUs_class_href__ : کلاس لینک درباره ما
+        __mobile_class__ : کلاس شماره موبایل فوتر
+        __phone_class__ : کلاس شماره تلفن فوتر
+        __email_class__ : کلاس ایمیل
+        __social_class__ : کلاس پرنت شبکه های اجتماعی
+        __aboutUsLink__ :   لینک درباره ما
+        __instagram_class__ :   کلاس اینستاگرام
+        __whatsapp_class__ :    کلاس واتساپ
+        __telegram_class__ :    کلاس تلگرام
+        __linkdin_class__ :    کلاس لینک دین
+        __aparat_class__ :    کلاس آپارات
+        __youtube_class__ :    کلاس یوتیوب
+        __facebook_class__ :    کلاس فیس بوک
+
+
 
 
     script-footer:i_modular_searchBox

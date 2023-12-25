@@ -171,7 +171,7 @@ def initiation_progress():
     if 'file' not in request.files:
         return jsonify({"message": "No file part"})
 
-    if 'project_name' not in request.form:
+    if 'project_name' not in request.form or not request.form['project_name']:
         return jsonify({"message": "No project name"})
 
     file = request.files['file']
@@ -228,6 +228,13 @@ def initiation_progress():
             'modular': footer_module,
             'test_function': unit_test.unit_test_footer
         },
+        'about_us': {
+            'class': 'i_modular_about_us',
+            'name': 'درباره ما',
+            'file': 'about-us',
+            'modular': about_us,
+            'test_function': unit_test.unit_test_footer
+        },
         'banner_gallery': {
                 'class': 'i_modular_banner_gallery',
             'name': 'گالری بنر و سرچ باکس',
@@ -236,19 +243,21 @@ def initiation_progress():
             'test_function': unit_test.unit_test_banner_gallery
         },
         'header': {
-            'class': 'i_modular_header',
+            'class': False,
             'name': 'هدر',
             'file': 'header',
             'modular': header_module,
-            'test_function': unit_test.test_unit_test
+            'test_function': unit_test.test_unit_test,
+            'tag': 'head'
 
         },
         'footer_script': {
-            'class': 'i_modular_script_footer',
+            'class': False,
             'name': 'اسکریپت فوتر',
             'file': 'footer_script',
             'modular': footer_script_module,
-            'test_function': unit_test.test_unit_test
+            'test_function': unit_test.test_unit_test,
+            'tag': 'script'
 
         },
         'tours': {
@@ -299,14 +308,25 @@ def initiation_progress():
 
     classes = []
     for module_name, module_info in moduls_array.items():
-        sections = soup.find_all(class_=module_info['class'])
+        if module_info['class']:
+            sections = soup.find_all(class_=module_info['class'])
+        elif module_info['tag']:
+            sections = soup.find_all(module_info['tag'])
+            tags_length = len(sections)
+
         index = 1
         for section in sections:
             if section:
                 first_tag = sections[0]  # Get the first tag
                 classes = first_tag.get('class')  # Get all classes of the first tag
-                file_name = helper.return_file_in_same_section(classes, moduls_array , str(index))
-                module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name'] + str(index) + " = " + module_info['modular'](section, project_path , lang , file_name))
+                if module_info['class']:
+                    file_name = helper.return_file_in_same_section(classes, moduls_array , str(index))
+                    module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name'] + str(index) + " = " + module_info['modular'](section, project_path, lang, file_name))
+                elif module_info['tag']:
+                    if index == tags_length:
+                        file_name = module_info['file']
+                        section = soup
+                        module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name']  + " = " + module_info['modular'](section, project_path , lang , file_name))
                 index = index + 1
 
     summary_message = '\n'.join(module_messages)
@@ -317,14 +337,28 @@ def initiation_progress():
     soup = BeautifulSoup(html_content, 'html.parser')
     classes = []
     for module_key, module_info in moduls_array.items():
-        sections = soup.find_all(class_=module_info['class'])
+        if module_info['class']:
+            sections = soup.find_all(class_=module_info['class'])
+        elif module_info['tag']:
+            sections = soup.find_all(module_info['tag'])
+            tags_length = len(sections)
+
         index = 1
         for element in sections:
             first_tag = sections[0]  # Get the first tag
             classes = first_tag.get('class')  # Get all classes of the first tag
-            file_name = helper.return_file_in_same_section(classes, moduls_array, str(index))
-            file_name = '{include file="include_files/' + file_name + '.tpl' + '"}'
-            element.replace_with(file_name)
+            if module_info['class']:
+                file_name = helper.return_file_in_same_section(classes, moduls_array, str(index))
+                file_name = '{include file="include_files/' + file_name + '.tpl' + '"}'
+                element.replace_with(file_name)
+            elif module_info['tag']:
+                if index == tags_length:
+                    file_name = module_info['file']
+                    file_name = '{include file="include_files/' + file_name + '.tpl' + '"}'
+                    element.replace_with(file_name)
+                else:
+                    element.replace_with('')
+
             index = index + 1
 
     modified_html_content = str(soup)
@@ -797,6 +831,55 @@ def footer_module(footer_section, project_path, lang = 'fa',  file_name = ''):
         return str(e)  # Return the exception message for now
 
 
+def about_us(about_us_section, project_path, lang = 'fa',  file_name = ''):
+    try:
+        befor_social_media = '''{assign var="socialLinks"  value=$about['social_links']|json_decode:true}
+                                {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref','aparat' => 'aparatHref','youtube' => 'youtubeHref','facebook' => 'facebookHref','linkeDin' => 'linkeDinHref']}
+
+                                {foreach $socialLinks as $key => $val}
+                                        {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}
+                                {/foreach}'''
+        befor_social_media_soup = BeautifulSoup(befor_social_media, "html.parser")
+        social_element = about_us_section.find(class_=lambda classes: classes and '__social_class__' in classes)
+        if social_element:
+            social_element.insert_before(befor_social_media_soup)
+            social_element = about_us_section.find(class_=lambda classes: classes and '__social_class__' in classes)
+            repeatable_social_links = {
+                '__telegram_class__': '{if $telegramHref}{$telegramHref}{/if}',
+                '__whatsapp_class__': '{if $whatsappHref}{$whatsappHref}{/if}',
+                '__instagram_class__': '{if $instagramHref}{$instagramHref}{/if}',
+                '__linkdin_class__': '{if $linkeDinHref}{$linkeDinHref}{/if}',
+                '__aparat_class__': '{if $aparatHref}{$aparatHref}{/if}',
+                '__youtube_class__': '{if $youTubeHref}{$youTubeHref}{/if}',
+            }
+            for key, val in repeatable_social_links.items():
+                helper.replace_attribute(social_element, key, 'href', val)
+
+        helper.replace_attribute(about_us_section, '__aboutUs_class__', 'string',
+                                 '''{$htmlContent = $about['body']|strip_tags}{$htmlContent|truncate:300}''')
+        helper.replace_attribute(about_us_section, '__aboutUs_class_href__', 'href',
+                                 '''{$smarty.const.ROOT_ADDRESS}/mag''')
+        helper.replace_attribute(about_us_section, '__address_class__', 'string',
+                                 ''' آدرس :  {$smarty.const.CLIENT_ADDRESS} ''')
+        helper.replace_attribute(about_us_section, '__mobile_class__', 'string', '''{$smarty.const.CLIENT_MOBILE}''')
+        helper.replace_attribute(about_us_section, '__mobile_class__', 'href', '''tel:{$smarty.const.CLIENT_MOBILE}''')
+        helper.replace_attribute(about_us_section, '__phone_class__', 'string', '''{$smarty.const.CLIENT_PHONE}''')
+        helper.replace_attribute(about_us_section, '__phone_class__', 'href', '''tel:{$smarty.const.CLIENT_PHONE}''')
+        helper.replace_attribute(about_us_section, '__email_class__', 'string', '''{$smarty.const.CLIENT_EMAIL}''')
+        helper.replace_attribute(about_us_section, '__email_class__', 'href', '''mailto:{$smarty.const.CLIENT_EMAIL}''')
+        about_us_section = helper.replace_placeholders(about_us_section,
+                                                     {'__aboutUsLink__': '{$smarty.const.ROOT_ADDRESS}/aboutUs'})
+        about_us_final_content = f'{about_us_section}'
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        # helper.write_text_in_path(project_path, "{inclued 'include_files/about_us.tpl'}")
+        about_us_final_content = about_us_final_content.replace("&gt;", ">")
+        about_us_final_content = about_us_final_content.replace("&lt;", "<")
+
+        return helper.create_file(about_us_final_content, include_files_directory, file_name, 'tpl')
+    except Exception as e:
+        return str(e)  # Return the exception message for now
+
+
 def header_module(header_section, project_path , lang = 'fa',  file_name = ''):
     try:
         style_links = [link.get('href') for link in header_section.find_all('link', rel='stylesheet')]
@@ -986,6 +1069,7 @@ def footer_script_module(footer_script_section, project_path, lang = 'fa',  file
                             <script type="text/javascript" src="project_files/js/script.js"></script>
                             
                             <script type="text/javascript" src="assets/main-asset/js/public-main.js"></script>
+                            </html>
                         '''
         footer_script_section = footer_script_content
 
@@ -1917,24 +2001,52 @@ def fast_flight_search_module(fast_flight_search_section, project_path, lang = '
                     origin__cities = sections.find(class_='__origin__cities__')
                     destination__cities = sections.find(class_='__destination__cities__')
                     simple_items_numbers = helper.item_numbers(origin__cities, simple_items_pattern)
-                    simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
-                    simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
                     if origin__cities:
                         for num in simple_items_numbers:
                             simple_element = origin__cities.find(class_=simple_items_class + num)
                             if num == simple_items_numbers[0]:
                                 helper.replace_attribute(simple_element, '__button__', 'string','''{$city['main']['Departure_CityFa']}''')
-                                helper.replace_attribute(simple_element, '__button__', 'aria-controls','''{$city['main']['Departure_CityEn']}''')
-                                helper.replace_attribute(simple_element, '__button__', 'data-target','''#{$city['main']['Departure_CityEn']}''')
-                                helper.replace_attribute(simple_element, '__button__', 'id','''{$city['main']['Departure_CityEn']}-tab''')
+                                helper.replace_attribute(simple_element, '__button__', 'aria-controls','''{$city['main']['Departure_CityEn']}55''')
+                                helper.replace_attribute(simple_element, '__button__', 'data-target','''#{$city['main']['Departure_CityEn']}55''')
+                                helper.replace_attribute(simple_element, '__button__', 'id','''{$city['main']['Departure_CityEn']}55-tab''')
+                                helper.add_class_to_elements(simple_element, '__button__',' {if $i==1} active {/if} ')
+
                                 helper.add_before_after(origin__cities, simple_items_class + num, befor_cities_html_array[section_class], after_cities_html)
                             else:
                                 simple_element.decompose()
+
+                    simple_items_numbers = helper.item_numbers(destination__cities, simple_items_pattern)
                     if destination__cities:
                         for num in simple_items_numbers:
                             simple_element = destination__cities.find(class_=simple_items_class + num)
                             if num == simple_items_numbers[0]:
-                                helper.add_before_after(destination__cities, simple_items_class + num, befor_flights_html, after_flights_html)
+                                helper.replace_attribute(simple_element, simple_items_class + num, 'aria-labelledby','''{$city['main']['Departure_CityEn']}55-tab''')
+                                helper.replace_attribute(simple_element, simple_items_class + num, 'id','''{$city['main']['Departure_CityEn']}55''')
+                                helper.replace_attribute(simple_element, simple_items_class + num, 'role','''tabpanel''')
+                                helper.add_class_to_elements(simple_element, simple_items_class + num,' {if $i==1} active {/if} ')
+
+
+                                helper.add_before_after(destination__cities, simple_items_class + num, befor_cities_html_array[section_class], after_cities_html)
+                                final_items_pattern = re.compile(r'__final_destination_(\d+)')
+                                final_items_numbers = helper.item_numbers(destination__cities, final_items_pattern)
+                                if final_items_pattern:
+                                    for num in final_items_numbers:
+                                        final_simple_element = destination__cities.find(class_='__final_destination_' + num)
+                                        if num == final_items_numbers[0]:
+
+                                            helper.replace_attribute(final_simple_element, '__final_destination_' + num, 'data-target','''#calenderBox''')
+                                            helper.replace_attribute(final_simple_element, '__final_destination_' + num, 'data-toggle','''modal''')
+                                            helper.replace_attribute(final_simple_element, '__final_destination_' + num, 'onclick','''calenderFlightSearch('{$city['main']['Departure_Code']}','{$sub_city['Departure_Code']}')''')
+
+                                            helper.replace_attribute(final_simple_element, '__origin__', 'string','''{$city['main']['Departure_CityFa']}''')
+                                            helper.replace_attribute(final_simple_element, '__destination__', 'string','''{$sub_city['Departure_CityFa']}''')
+
+                                            helper.add_class_to_elements(final_simple_element, '__final_destination_' + num,' flightSearchBox ')
+
+                                            helper.add_before_after(destination__cities, '__final_destination_' + num,befor_flights_html,after_flights_html)
+                                        else:
+                                            final_simple_element.decompose()
+
                             else:
                                 simple_element.decompose()
 
