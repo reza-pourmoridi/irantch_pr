@@ -1,3 +1,5 @@
+{load_presentation_object filename="specialPages" assign="objSpecialPages"}
+
 {assign var="searchServices" value=['flight'=>'specialFlightPic','hotel'=> 'specialHotelPic','train' => 'specialTrainPic',
 'bus' =>'specialBusPic', 'tour' =>'specialTourPic', 'insurance' =>'specialInsurancePic', 'visa' =>'specialVisaPic', 'gasht' =>'specialGashtPic',
 'mainPage' =>'MainPagePic']}

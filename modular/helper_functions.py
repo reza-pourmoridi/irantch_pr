@@ -186,6 +186,18 @@ def add_class_to_elements(section, class_name, new_class):
         # Update the class attribute
         tag['class'] = current_classes
 
+def remove_class_from_elements(section, class_name, class_to_remove):
+    for tag in section.find_all(class_=class_name):
+        # Get the current classes
+        current_classes = tag.get('class', [])
+
+        # Remove the class if it exists
+        if class_to_remove in current_classes:
+            current_classes.remove(class_to_remove)
+
+        # Update the class attribute
+        tag['class'] = current_classes
+
 
 def read_file(file_path, encoding='utf-8'):
     try:

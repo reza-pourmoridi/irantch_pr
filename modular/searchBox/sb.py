@@ -26,7 +26,11 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
             for a in all_a_tags:
                 if a.get('href'):
                     item = a.get('href').lstrip('#')
+
                     parent_li = a.find_parent('li')
+                    parent_li = f'{parent_li}'
+                    parent_li = parent_li.replace("nav-link", 'nav-link {if $active} active {/if}')
+
                     item_path = helper.create_folder(item, project_path + '/include_files/search-box')
                     if parent_li:
                         tab_page = helper.create_file(f'{parent_li}', item_path, 'tab', 'tpl')

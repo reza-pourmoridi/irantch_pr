@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/jahangardan.iml" filepath="$PROJECT_DIR$/.idea/jahangardan.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../roxan gasht/site/roxan1/.idea/roxan1.iml" filepath="$PROJECT_DIR$/../../../roxan gasht/site/roxan1/.idea/roxan1.iml" />
+      <module fileurl="file://Z:/jahangardan-kohan/fa/user/.idea/user.iml" filepath="Z:/jahangardan-kohan/fa/user/.idea/user.iml" />
+    </modules>
+  </component>
+</project>

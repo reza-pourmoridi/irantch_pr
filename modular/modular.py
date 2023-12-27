@@ -42,6 +42,10 @@ repeatable_links = {
             {
                 'سفارت'
             },
+        '{$smarty.const.ROOT_ADDRESS}/page/entertainment':
+            {
+                'تفریحات'
+            },
         '{$smarty.const.ROOT_ADDRESS}/lastMinute':
             {
                 'دقیقه 90'
@@ -68,7 +72,7 @@ repeatable_links = {
             },
         '{$smarty.const.ROOT_ADDRESS}/page/tour':
             {
-                'تور', 'شبكة', 'Iran Tour', 'tour'
+                'تور', 'شبكة', 'Iran Tour', 'tour', 'تور لحظه آخری'
             },
         '{$smarty.const.ROOT_ADDRESS}/page/visa':
             {
@@ -92,11 +96,11 @@ repeatable_links = {
             },
         '{$smarty.const.ROOT_ADDRESS}/vote':
             {
-                'نظر سنجی'
+                'نظر سنجی', 'نظرسنجی'
             },
         '{$smarty.const.ROOT_ADDRESS}/employment':
             {
-                'استخدام'
+                'استخدام', 'فرم استخدام',
             },
         '{$smarty.const.ROOT_ADDRESS}/signRequest':
             {
@@ -114,9 +118,17 @@ repeatable_links = {
             {
                 'ویدئو ها'
             },
+        '{$smarty.const.ROOT_ADDRESS}/page/visa':
+            {
+                'اطلاعات ویزا', 'ویزا'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/aboutCountry':
+            {
+                'معرفی کشورها'
+            },
         '{$smarty.const.ROOT_ADDRESS}/aboutIran':
             {
-                'مقدمة عن إيران', 'Introduction to Iran', 'info of Iran', 'Introduction of Iran', 'معرفی ايران'
+                'مقدمة عن إيران', 'Introduction to Iran', 'info of Iran', 'Introduction of Iran', 'معرفی ايران', 'معرفی ایران'
             },
         '{$smarty.const.ROOT_ADDRESS}/rules':
             {
@@ -432,9 +444,9 @@ def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa',  f
     try:
         banner_tab = banner_gallery_section.find(class_='__banner_tabs__')
         if banner_tab:
+            before_html = ''''''
             after_html = '''{include file="include_files/banner-slider.tpl" }'''
             banner_gallery_final_content = f'{banner_gallery_section}\n{after_html}'
-
         else:
             # create regex objects containing patterns of items classes
             complex_items_numbers = helper.item_numbers(banner_gallery_section,complex_items_pattern)
@@ -567,6 +579,7 @@ def news_module(news_section, project_path , lang = 'fa',  file_name = ''):
                 helper.replace_attribute(simple_element, '__image_class__', 'alt','{$item["alt"]}')
                 helper.replace_attribute(simple_element, '__title_class__', 'string','{$item["title"]}')
                 helper.replace_attribute(simple_element, '__heading_class__', 'string','{$item["heading"]}')
+                helper.replace_attribute(simple_element, '__date_class__', 'string','{$item["created_at"]}')
                 helper.replace_attribute(simple_element, '__description_class__', 'string','{$item["description"]}')
 
             else:
@@ -591,11 +604,14 @@ def news_module(news_section, project_path , lang = 'fa',  file_name = ''):
             helper.replace_attribute(complex_element, '__image_class__', 'src', '''{{$othe_itmes[{0}]['image']}}'''.format(num))
             helper.replace_attribute(complex_element, '__image_class__', 'alt', '''{{$othe_itmes[{0}]['alt']}}'''.format(num))
             helper.replace_attribute(complex_element, '__title_class__', 'string', '''{{$othe_itmes[{0}]['title']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__date_class__', 'string', '''{{$othe_itmes[{0}]['created_at']}}'''.format(num))
             helper.replace_attribute(complex_element, '__heading_class__', 'string', '''{{$othe_itmes[{0}]['heading']}}'''.format(num))
             helper.replace_attribute(complex_element, '__description_class__', 'string', '''{{$othe_itmes[{0}]['description']}}'''.format(num))
 
 
+
         news_final_content = f'{before_html}\n{news_section}\n{after_html}'
+        news_final_content = news_final_content.replace("__all_link_href__", "{$smarty.const.ROOT_ADDRESS}/news")
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         # helper.write_text_in_path(project_path, "{inclued 'include_files/news.tpl'}")
         news_final_content = news_final_content.replace("&gt;", ">")
@@ -724,9 +740,14 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
         }
 
         helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
+        helper.replace_attribute_by_text(menu_section, 'ورود / ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
         helper.replace_attribute_by_text(menu_section, 'الدخول / يسجل' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
-        helper.add_class_to_elements(menu_section, '__login_register_class__2',' main-navigation__button2 show-box-login-js')
-        helper.add_class_to_elements(menu_section, '__login_register_class__',' main-navigation__button2 show-box-login-js ')
+
+        helper.replace_attribute(menu_section, '__login_register_class__2', 'href', '''{if $obj_main_page->isLogin()}javascript:{else}{$smarty.const.ROOT_ADDRESS}/authenticate{/if}''')
+        helper.replace_attribute(menu_section, '__login_register_class__', 'href', '''{if $obj_main_page->isLogin()}javascript:{else}{$smarty.const.ROOT_ADDRESS}/authenticate{/if}''')
+
+        helper.add_class_to_elements(menu_section, '__login_register_class__2',' {if $obj_main_page->isLogin()}show-box-login-js main-navigation__button2{else}main-navigation__button1{/if} ')
+        helper.add_class_to_elements(menu_section, '__login_register_class__',' {if $obj_main_page->isLogin()}show-box-login-js main-navigation__button2{else}main-navigation__button1{/if} ')
         after_login = '''<div class="main-navigation__sub-menu2 arrow-up show-content-box-login-js" style="display: none">
                             {include file="`$smarty.const.FRONT_CURRENT_THEME`topBar.tpl"}
                         </div>'''
@@ -908,7 +929,7 @@ def header_module(header_section, project_path , lang = 'fa',  file_name = ''):
 
 
 
-<head class="i_modular_header">
+<head >
     <meta charset="UTF-8">
     <meta test="i_modular_modulation">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -1009,8 +1030,7 @@ def header_module(header_section, project_path , lang = 'fa',  file_name = ''):
 
         inside_assets = style_links
 
-        after__all = helper.comapre_append_list(after__all, style_links)
-        style_links = helper.delete_assames(style_links, after__all)
+
         header_section = BeautifulSoup(header_section, "html.parser")
         elements = header_section.find_all(class_='__befor_all__')
         for element in elements:
@@ -1047,7 +1067,7 @@ def footer_script_module(footer_script_section, project_path, lang = 'fa',  file
     try:
         script_links = [link.get('src') for link in footer_script_section.find_all('script')]
 
-        befor_all = [ 'js/bootstrap.min.js','bootstrap.bundle.min.js', 'js/bootstrap.js', 'js/select2.min.js', 'js/select2.js', 'js/header.js' ]
+        befor_all = [ 'js/bootstrap.min.js','bootstrap.bundle.min.js', 'js/bootstrap.js', 'bootstrap.bundle.min.js', 'js/select2.min.js', 'js/select2.js', 'js/header.js' ]
         between_mainPage_assets = []
         inside_mainPage = []
         remove_assets = ['js/jquery-3.4.1.min.js']
@@ -1177,6 +1197,8 @@ def blog_module(blog_section, project_path , lang = 'fa',  file_name = ''):
                 helper.replace_attribute(simple_element, '__image_class__', 'src','{$article["image"]}')
                 helper.replace_attribute(simple_element, '__image_class__', 'alt','{$article["alt"]}')
                 helper.replace_attribute(simple_element, '__title_class__', 'string','{$article["title"]}')
+                helper.replace_attribute(simple_element, '__degree_class__', 'string','{$article["rates"]["average"]}')
+                helper.replace_attribute(simple_element, '__category_class__', 'string','''{$article['categories_array'][0]['title']}''')
                 helper.replace_attribute(simple_element, '__heading_class__', 'string','{$article["heading"]}')
                 helper.replace_attribute(simple_element, '__date_class__', 'string','{$article["created_at"]}')
                 for i in range(1, 6):
@@ -1223,6 +1245,8 @@ def blog_module(blog_section, project_path , lang = 'fa',  file_name = ''):
             complex_element = blog_section.find(class_=complex_items_class + num)
             helper.replace_attribute(complex_element, '__image_class__', 'src', '''{{$articles[{0}]['image']}}'''.format(num))
             helper.replace_attribute(complex_element, '__title_class__', 'string', '''{{$articles[{0}]['title']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__degree_class__', 'string', '''{{$articles[{0}]["rates"]["average"]}}'''.format(num))
+            helper.replace_attribute(complex_element, '__category_class__', 'string', '''{{$articles[{0}]["categories_array"][0]['title']}}'''.format(num))
             helper.replace_attribute(complex_element, '__heading_class__', 'string', '''{{$articles[{0}]['heading']}}'''.format(num))
             helper.replace_attribute(complex_element, '__date_class__', 'string', '''{{$articles[{0}]['created_at']}}'''.format(num))
 
@@ -1298,6 +1322,7 @@ def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
                 replace_classes_local = {
                     '___price_class__': {'string': '''{$item['min_price']['discountedMinPriceR']|number_format}'''},
                     '__title_class__': {'string': '''{$item['tour_name']}'''},
+                    '__airline_class__': {'string': '''{$item['airline_name']}'''},
                     '__night_class__': {'string': '''{$item['night']}'''},
                     '__day_class__': {'string': '''{$item['night'] + 1}'''},
                     '__city_class__': {'string': '''{$item['destination_city_name']}'''},
@@ -1402,6 +1427,7 @@ def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
                             replace_comlex_classes_local = {
                                 '___price_class__': {'string': '''{$__tour_var__[{0}]['min_price']['discountedMinPriceR']|number_format}'''},
                                 '__title_class__': {'string': '''{$__tour_var__[{0}]['tour_name']}'''},
+                                '__airline_class__': {'string': '''{$__tour_var__[{0}]['airline_name']}'''},
                                 '__night_class__': {'string': '''{$__tour_var__[{0}]['night']}'''},
                                 '__city_class__': {'string': '''{$__tour_var__[{0}]['destination_city_name']}'''},
                                 '__description_class__': {'string': '''{$__tour_var__[{0}]['description']}'''},
@@ -1861,6 +1887,7 @@ def hotels_External_cities_module(hotels_section, project_path, lang = 'fa',  fi
             before_html = before_html + '\n' + '''{if 1 == 1}'''
 
         hotels_final_content = f'{before_html}\n{hotels_section}\n{after_html}'
+        hotels_final_content = hotels_final_content.replace("__all_link_href__", "{$smarty.const.ROOT_ADDRESS}/page/hotel")
 
         hotels_final_content = hotels_final_content.replace("&gt;", ">")
         hotels_final_content = hotels_final_content.replace("&lt;", "<")
@@ -1939,12 +1966,6 @@ def fast_flight_search_module(fast_flight_search_section, project_path, lang = '
     try:
         fast_flight_search_section = helper.check_if_section_built(project_path ,file_name ,fast_flight_search_section)
 
-        before_html = '''
-                        {assign var="params" value=['limit'=>'__local_max__','is_group'=>true]}
-                        {assign var="cities" value=$obj_main_page->dataFastSearchInternalFlight($params)}
-                        {assign var="foreign_cities" value=['IKA','DXB','LHR','CAI', 'BER' , 'BIO']}
-                        {assign var="__local_max_var__" value=__local_max__}
-                      '''
 
 
 
@@ -1953,28 +1974,37 @@ def fast_flight_search_module(fast_flight_search_section, project_path, lang = '
 
         for region in fast_flight_search_region_array:
             for type in fast_flight_search_type_array:
-                befor_cities_html_array = {
-                    '__fast_flight_search__internal__multi_city__': '''{assign var="i" value="1"}
+                befor_cities_html_array_multy = {
+                    'internal': '''{assign var="i" value="1"}
                                                 {foreach $cities['cities_flight'] as $city}
                                                 {if $i < $__local_max_var__ }
                                                 ''',
-                    '__fast_flight_search__internal__single_city': ''' ''',
-                    '__fast_flight_search__external__multi_city__': ''' {assign var="i" value="1"}
+                    'external': ''' {assign var="i" value="1"}
                                                 {foreach $foreign_cities as $city_code}
                                                 {assign var="params" value=['use_customer_db'=>true,'origin_city'=>$city_code,'destination_city'=>$foreign_cities]}
                                                 {assign var="cities" value=$obj_main_page->dataFastSearchInternationalFlight($params)}
                                                 {if $i < $__local_max_var__  and {$cities['main']['DepartureCityFa']}}
                                                  ''',
-                    '__fast_flight_search__external__single_city': ''' ''',
+                }
+                befor_cities_html_array_single = {
+                    'internal': '''{foreach $cities['cities_flight'] as $city} ''',
+                    'external': ''' {foreach $cities['sub_cities'] as $sub_city}''',
                 }
                 after_cities_html = '''
                                          {/if}
                                             {$i =  $i + 1}
                                         {/foreach}
                                          '''
-                befor_flights_html = '''
+                after_cities_html_single = '''
+                                        {/foreach}
+                                         '''
+                befor_flights_html = {   'internal':   '''
+                                                {foreach $city['sub_cities'] as $sub_city}
+                                            ''' ,
+                                         'external':   '''
                                                 {foreach $cities['sub_cities'] as $sub_city}
-                                            '''
+                                            ''' ,
+                                         }
                 after_flights_html = '''
                                             {/foreach}
                                          '''
@@ -1997,58 +2027,139 @@ def fast_flight_search_module(fast_flight_search_section, project_path, lang = '
                     local_max_var =  local_max_var + '_' + region
 
                 sections = fast_flight_search_section.find(class_=section_class)
+                before_html = '''
+                                {assign var="params" value=['limit'=>'7','is_group'=>true]}
+                                {assign var="cities" value=$obj_main_page->dataFastSearchInternalFlight($params)}
+                                {assign var="foreign_cities" value=['IKA','DXBALL','ISTALL','KUL', 'MOWALL' , 'NJF' , 'TBS']}
+                                {assign var="__local_max_var__" value=__local_max__}
+                              '''
                 if sections:
-                    origin__cities = sections.find(class_='__origin__cities__')
-                    destination__cities = sections.find(class_='__destination__cities__')
-                    simple_items_numbers = helper.item_numbers(origin__cities, simple_items_pattern)
-                    if origin__cities:
-                        for num in simple_items_numbers:
-                            simple_element = origin__cities.find(class_=simple_items_class + num)
-                            if num == simple_items_numbers[0]:
-                                helper.replace_attribute(simple_element, '__button__', 'string','''{$city['main']['Departure_CityFa']}''')
-                                helper.replace_attribute(simple_element, '__button__', 'aria-controls','''{$city['main']['Departure_CityEn']}55''')
-                                helper.replace_attribute(simple_element, '__button__', 'data-target','''#{$city['main']['Departure_CityEn']}55''')
-                                helper.replace_attribute(simple_element, '__button__', 'id','''{$city['main']['Departure_CityEn']}55-tab''')
-                                helper.add_class_to_elements(simple_element, '__button__',' {if $i==1} active {/if} ')
+                    if type == 'multi_city':
+                        origin__cities = sections.find(class_='__origin__cities__')
+                        destination__cities = sections.find(class_='__destination__cities__')
+                        simple_items_numbers = helper.item_numbers(origin__cities, simple_items_pattern)
+                        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
+                        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
+                        simple_items_numbers_max = int(simple_items_numbers_max)
+                        simple_items_numbers_max = simple_items_numbers_max + 2
+                        simple_items_numbers_max = f'{simple_items_numbers_max}'
+                        before_html = before_html.replace("__local_max__", simple_items_numbers_max)
 
-                                helper.add_before_after(origin__cities, simple_items_class + num, befor_cities_html_array[section_class], after_cities_html)
+                        if origin__cities:
+                            for num in simple_items_numbers:
+                                simple_element = origin__cities.find(class_=simple_items_class + num)
+                                if num == simple_items_numbers[0]:
+                                    if region == 'internal':
+                                        helper.replace_attribute(simple_element, '__button__', 'string','''{$city['main']['Departure_CityFa']}''')
+                                        helper.replace_attribute(simple_element, '__button__', 'aria-controls','''{$city['main']['Departure_CityEn']}''')
+                                        helper.replace_attribute(simple_element, '__button__', 'data-target','''#{$city['main']['Departure_CityEn']}''')
+                                        helper.replace_attribute(simple_element, '__button__', 'id','''{$city['main']['Departure_CityEn']}-tab''')
+                                    else:
+                                        helper.replace_attribute(simple_element, '__button__', 'string','''{$cities['main']['DepartureCityFa']}''')
+                                        helper.replace_attribute(simple_element, '__button__', 'aria-controls','''{$cities['main']['DepartureCityEn']}''')
+                                        helper.replace_attribute(simple_element, '__button__', 'data-target','''#{$cities['main']['DepartureCityEn']}''')
+                                        helper.replace_attribute(simple_element, '__button__', 'id','''{$cities['main']['DepartureCityEn']}-tab''')
+
+                                    helper.remove_class_from_elements(simple_element, '__button__','show')
+                                    helper.remove_class_from_elements(simple_element, '__button__','active')
+                                    helper.add_class_to_elements(simple_element, '__button__',' {if $i==1} show active {/if} ')
+
+                                    helper.add_before_after(origin__cities, simple_items_class + num, befor_cities_html_array_multy[region], after_cities_html)
+                                else:
+                                    simple_element.decompose()
+
+                        simple_items_numbers = helper.item_numbers(destination__cities, simple_items_pattern)
+                        if destination__cities:
+                            for num in simple_items_numbers:
+                                simple_element = destination__cities.find(class_=simple_items_class + num)
+                                if num == simple_items_numbers[0]:
+                                    if region == 'internal':
+                                        helper.replace_attribute(destination__cities, simple_items_class + num, 'aria-labelledby','''{$city['main']['Departure_CityEn']}-tab''')
+                                        helper.replace_attribute(destination__cities, simple_items_class + num, 'id','''{$city['main']['Departure_CityEn']}''')
+                                    else:
+                                        helper.replace_attribute(destination__cities, simple_items_class + num, 'aria-labelledby','''{$cities['main']['DepartureCityEn']}-tab''')
+                                        helper.replace_attribute(destination__cities, simple_items_class + num, 'id','''{$cities['main']['DepartureCityEn']}''')
+
+                                    helper.replace_attribute(destination__cities, simple_items_class + num, 'role','''tabpanel''')
+                                    helper.remove_class_from_elements(destination__cities, simple_items_class + num,'show')
+                                    helper.remove_class_from_elements(destination__cities, simple_items_class + num,'active')
+                                    helper.add_class_to_elements(destination__cities, simple_items_class + num,' {if $i==1} show active {/if} ')
+
+
+                                    helper.add_before_after(destination__cities, simple_items_class + num, befor_cities_html_array_multy[region], after_cities_html)
+                                    final_items_pattern = re.compile(r'__final_destination_(\d+)')
+                                    final_items_numbers = helper.item_numbers(destination__cities, final_items_pattern)
+                                    if final_items_pattern:
+                                        for num in final_items_numbers:
+                                            final_simple_element = destination__cities.find(class_='__final_destination_' + num)
+                                            if num == final_items_numbers[0]:
+
+                                                helper.replace_attribute(destination__cities, '__final_destination_' + num, 'data-target','''#calenderBox''')
+                                                helper.replace_attribute(destination__cities, '__final_destination_' + num, 'data-toggle','''modal''')
+                                                if region == 'internal':
+                                                    helper.replace_attribute(destination__cities, '__final_destination_' + num, 'onclick','''calenderFlightSearch('{$city['main']['Departure_Code']}','{$sub_city['Departure_Code']}')''')
+                                                    helper.replace_attribute(destination__cities, '__origin__', 'string','''{$city['main']['Departure_CityFa']}''')
+                                                    helper.replace_attribute(destination__cities, '__destination__', 'string','''{$sub_city['Departure_CityFa']}''')
+                                                else:
+                                                    helper.replace_attribute(destination__cities, '__final_destination_' + num, 'onclick','''calenderFlightSearch('{$cities['main']['DepartureCode']}','{$sub_city['DepartureCode']}')''')
+                                                    helper.replace_attribute(destination__cities, '__origin__', 'string','''{$cities['main']['DepartureCityFa']}''')
+                                                    helper.replace_attribute(destination__cities, '__destination__', 'string','''{$sub_city['DepartureCityFa']}''')
+
+                                                helper.add_class_to_elements(destination__cities, '__final_destination_' + num,' flightSearchBox ')
+                                                helper.add_before_after(destination__cities, '__final_destination_' + num,befor_flights_html[region],after_flights_html)
+                                            else:
+                                                final_simple_element.decompose()
+
+                                else:
+                                    simple_element.decompose()
+
+                    elif type == 'single_city':
+                        if region == 'internal':
+                            before_html = '''
+                                                {assign var="params" value=['limit'=>'7','is_group'=>true]}
+                                                {assign var="cities" value=$obj_main_page->dataFastSearchInternalFlight($params)}
+                                              '''
+                        elif region == 'external':
+                            before_html = '''
+                                                {assign var="params" value=['use_customer_db'=>true,'origin_city'=>'IKA','destination_city'=>['IKA','DXB','IST','CDG','YYZ','NJF','MHD']]}
+                                                {assign var="cities" value=$obj_main_page->dataFastSearchInternationalFlight($params)}
+                                              '''
+
+                        simple_items_numbers = helper.item_numbers(sections, simple_items_pattern)
+                        for num in simple_items_numbers:
+                            simple_element = sections.find(class_=simple_items_class + num)
+                            if num == simple_items_numbers[0]:
+                                if region == 'internal':
+                                    helper.replace_attribute(sections, '__origin__', 'aria-labelledby','''{$city['main']['Departure_CityEn']}-tab''')
+                                    helper.add_before_after(sections, simple_items_class + num,befor_cities_html_array_single[region], after_cities_html_single)
                             else:
                                 simple_element.decompose()
 
-                    simple_items_numbers = helper.item_numbers(destination__cities, simple_items_pattern)
-                    if destination__cities:
-                        for num in simple_items_numbers:
-                            simple_element = destination__cities.find(class_=simple_items_class + num)
-                            if num == simple_items_numbers[0]:
-                                helper.replace_attribute(simple_element, simple_items_class + num, 'aria-labelledby','''{$city['main']['Departure_CityEn']}55-tab''')
-                                helper.replace_attribute(simple_element, simple_items_class + num, 'id','''{$city['main']['Departure_CityEn']}55''')
-                                helper.replace_attribute(simple_element, simple_items_class + num, 'role','''tabpanel''')
-                                helper.add_class_to_elements(simple_element, simple_items_class + num,' {if $i==1} active {/if} ')
+                        # final_items_pattern = re.compile(r'__final_destination_(\d+)')
+                        # final_items_numbers = helper.item_numbers(sections, final_items_pattern)
+                        # if final_items_pattern:
+                        #     for num in final_items_numbers:
+                        #         final_simple_element = destination__cities.find(class_='__final_destination_' + num)
+                        #         if num == final_items_numbers[0]:
+                        #
+                        #             helper.replace_attribute(destination__cities, '__button__','data-target', '''#calenderBox''')
+                        #             helper.replace_attribute(destination__cities, '__button__','data-toggle', '''modal''')
+                        #             if region == 'internal':
+                        #                 helper.replace_attribute(destination__cities, '__button__','onclick','''calenderFlightSearch('{$city['main']['Departure_Code']}','{$sub_city['Departure_Code']}')''')
+                        #                 helper.replace_attribute(destination__cities, '__origin__', 'string','''{$city['main']['Departure_CityFa']}''')
+                        #                 helper.replace_attribute(destination__cities, '__destination__', 'string','''{$sub_city['Departure_CityFa']}''')
+                        #             else:
+                        #                 helper.replace_attribute(destination__cities, '__button__','onclick','''calenderFlightSearch('{$cities['main']['DepartureCode']}','{$sub_city['DepartureCode']}')''')
+                        #                 helper.replace_attribute(destination__cities, '__origin__', 'string','''{$cities['main']['DepartureCityFa']}''')
+                        #                 helper.replace_attribute(destination__cities, '__destination__', 'string','''{$sub_city['DepartureCityFa']}''')
+                        #
+                        #             helper.add_class_to_elements(destination__cities, '__button__',' flightSearchBox ')
+                        #             helper.add_before_after(destination__cities, '__final_destination_' + num,befor_flights_html[region], after_flights_html)
+                        #         else:
+                        #             final_simple_element.decompose()
 
 
-                                helper.add_before_after(destination__cities, simple_items_class + num, befor_cities_html_array[section_class], after_cities_html)
-                                final_items_pattern = re.compile(r'__final_destination_(\d+)')
-                                final_items_numbers = helper.item_numbers(destination__cities, final_items_pattern)
-                                if final_items_pattern:
-                                    for num in final_items_numbers:
-                                        final_simple_element = destination__cities.find(class_='__final_destination_' + num)
-                                        if num == final_items_numbers[0]:
 
-                                            helper.replace_attribute(final_simple_element, '__final_destination_' + num, 'data-target','''#calenderBox''')
-                                            helper.replace_attribute(final_simple_element, '__final_destination_' + num, 'data-toggle','''modal''')
-                                            helper.replace_attribute(final_simple_element, '__final_destination_' + num, 'onclick','''calenderFlightSearch('{$city['main']['Departure_Code']}','{$sub_city['Departure_Code']}')''')
-
-                                            helper.replace_attribute(final_simple_element, '__origin__', 'string','''{$city['main']['Departure_CityFa']}''')
-                                            helper.replace_attribute(final_simple_element, '__destination__', 'string','''{$sub_city['Departure_CityFa']}''')
-
-                                            helper.add_class_to_elements(final_simple_element, '__final_destination_' + num,' flightSearchBox ')
-
-                                            helper.add_before_after(destination__cities, '__final_destination_' + num,befor_flights_html,after_flights_html)
-                                        else:
-                                            final_simple_element.decompose()
-
-                            else:
-                                simple_element.decompose()
 
 
 

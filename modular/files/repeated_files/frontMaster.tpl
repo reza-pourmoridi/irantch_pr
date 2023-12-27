@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <html dir="rtl" lang="fa">
-{include file="include_files/header-1.tpl"}
+{include file="include_files/header.tpl"}
 <body>
 {include file="include_files/menu-1.tpl"}
 <main>
@@ -25,5 +25,5 @@
 </main>
 {include file="include_files/footer-1.tpl"}
 </body>
-{include file="include_files/footer_script-1.tpl"}
+{include file="include_files/footer_script.tpl"}
 </html>

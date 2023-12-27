@@ -11,6 +11,15 @@ hooks:
         __mobile_class__ : کلاس شماره موبایل فوتر
         __phone_class__ : کلاس شماره تلفن فوتر
         __email_class__ : کلاس ایمیل
+        __social_class__ : کلاس پرنت شبکه های اجتماعی
+        __aboutUsLink__ :   لینک درباره ما
+        __instagram_class__ :   کلاس اینستاگرام
+        __whatsapp_class__ :    کلاس واتساپ
+        __telegram_class__ :    کلاس تلگرام
+        __linkdin_class__ :    کلاس لینک دین
+        __aparat_class__ :    کلاس آپارات
+        __youtube_class__ :    کلاس یوتیوب
+        __facebook_class__ :    کلاس فیس بوک
 
 
 
@@ -31,6 +40,8 @@ hooks:
         __title_class__     : کلاس تایتل
         __image_class__     : کلاس عکس
         __date_class__     : کلاس تاریخ
+        __degree_class__     : کلاس درجه
+        __category_class__     : کلاس دسته بندی
 
 
     club weather...: i_modular_club_weather
@@ -49,6 +60,7 @@ hooks:
         __title_class__     : کلاس تایتل
         __image_class__     : کلاس عکس
         __description_class__     : کلاس توضیحات
+        __date_class__     : کلاس تاریخ
 
 
     tour: i_modular_tours
@@ -67,6 +79,7 @@ hooks:
         ___price_class__   : کلاس قیمت
         ___price_$_class__     : کلاس قیمت خارجی    ++
         __title_class__     : کلاس تایتل
+        __airline_class__     : کلاس ایرلاین
         __description_class__     : کلاس توضیحات    ++
         __city_class__     : کلاس شهر
         __image_class__     : کلاس عکس
@@ -74,7 +87,7 @@ hooks:
         __night_class__     : کلاس شب
         __day_class__     : کلاس روز
         __degree_class__     : کلاس درجه
-
+        __star_class_light__1
 
     hotel webservice: i_modular_hotels_webservice
     __hotel__internal__
@@ -148,3 +161,16 @@ hooks:
     __box__ : پرنت هر باکس
     _internal : استاندارد مشخص کردن تور داخلی یا پرواز داخلی
     _external : استاندارد مشخص کردن تور خارجی یا پرواز خارجی
+
+    fast_search_flight: i_modular_fast_search_flight
+        __fast_flight_search__internal__multi_city__:  پرنت جستجوی سریع تب دار داخلی
+        __fast_flight_search__external__multi_city__: پرنت جستجوی سریع تب دار خارجی
+        __fast_flight_search__internal__single_city__: پرنت جستجوی سریع تب دار داخلی
+        __fast_flight_search__external__single_city__: پرنت جستجوی سریع تب دار خارجی
+
+        __button__
+        __origin__cities__
+        __destination__cities__
+        __origin__
+        __destination__
+        __final_destination_0

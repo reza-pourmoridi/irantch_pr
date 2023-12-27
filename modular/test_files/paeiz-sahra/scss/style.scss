@@ -1,0 +1,570 @@
+@import "components/variables";
+@import "components/mixin";
+@import "components/fonts";
+
+@media (min-width: 1200px){
+  .container {
+    max-width: 1300px;
+  }
+}
+
+body{
+  overflow-x: hidden;
+  direction: rtl;
+  padding: 0;
+  background: #fff !important;
+  line-height: 24px;
+  text-align: right;
+  color: #4b5259 !important;
+  font-family: $fontFamily;
+}
+
+//banne
+.banner-paeiz{
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  min-height: 600px;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  margin-bottom: 30px;
+
+  .owl-banner-paeiz{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+
+    img{
+      width: 100%;
+      height: 100%;
+      filter: brightness(60%);
+    }
+
+    .owl-stage-outer{
+      width: 100%;
+      height: 100%;
+    }
+    .owl-stage-outer .owl-stage{
+      width: 100%;
+      height: 100%;
+    }
+    .owl-item{
+      width: 100%;
+      height: 100%;
+    }
+    .item{
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .parent-text-search-paeiz{
+    position: relative;
+    z-index: 2;
+    @include flex-direction-colum();
+    gap: 40px;
+
+    .text-banner-paeiz{
+      width: 100%;
+      @include flex-direction-colum();
+      gap: 15px;
+
+      h2{
+        color: #fff;
+        margin-bottom: 0;
+        font-size: 40px;
+        font-family: $fontFamilyBold;
+      }
+      p{
+        font-size: 20px;
+        color: #fff;
+        font-family: $fontFamilyBold;
+      }
+    }
+  }
+}
+
+//title
+.title-paeize{
+  @include flex-between();
+  align-items: end;
+  margin-bottom: 30px;
+  border-bottom: 1px dashed $secondColor;
+  padding-bottom: 10px;
+  position: relative;
+  z-index: 2;
+
+  .text-title-paeize{
+    @include flex-direction-colum();
+    gap: 10px;
+
+    h2{
+      font-family: $fontFamilyBold;
+      color: #333;
+      margin-bottom: 0;
+      font-size: 30px;
+    }
+    p{
+      color: rgba(74, 74, 74, 0.58);
+      font-size: 18px;
+      margin-bottom: 0;
+      font-family: $fontFamily;
+    }
+  }
+  .more-title-paeize {
+    font-size: 18px;
+    color: #fff;
+    width: auto;
+    line-height: 37px;
+    transition: $transition;
+    font-family: $fontFamily;
+    @include flex-center-all();
+    gap: 9px;
+    background: $mainColor;
+    border-radius: 50px;
+    padding: 7px 30px;
+
+    svg{
+      width: 12px;
+      fill: #fff;
+      transition: $transition;
+    }
+
+    &:hover{
+      color: #fff;
+      text-decoration: none;
+      background: $secondColor;
+      transform: translateY(7px);
+    }
+    &:hover svg{
+      fill: #fff;
+    }
+  }
+}
+
+.tour-paeiz-last{
+  padding: 30px 0 80px;
+  position: relative;
+
+  .tour-bg1{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    opacity: .4;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .item-last-tour{
+    @include flex-direction-colum();
+    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 10px 32px -4px rgba(23.999999999999996, 39.000000000000036, 75, 0.1);
+    transition: $transition;
+    border-radius: $rounded;
+    background: #fff;
+    border: 1px solid #ccc;
+
+    &:hover{
+      text-decoration: none;
+    }
+
+    .parent-img{
+      width: 100%;
+      height: 300px;
+
+      img{
+        width: 100%;
+        height: 100%;
+        filter: brightness(80%);
+        transition: $transition;
+
+        &:hover{
+          transform: scale(0.9);
+        }
+      }
+    }
+
+    .parent-text{
+      @include flex-direction-colum();
+      gap: 12px;
+      padding: 20px;
+
+      h2{
+        color: #000;
+        font-size: 22px;
+        margin-bottom: 0;
+        font-family: $fontFamilyBold;
+      }
+      h4{
+        color: #555;
+        font-size: 18px;
+        margin-bottom: 0;
+      }
+      button{
+        @include flex-align-items-center();
+        width: 100%;
+        justify-content: left;
+        transition: $transition;
+        color: $mainColor;
+        font-size: 16px;
+        background: transparent;
+        border: none;
+        outline: none;
+        gap: 7px;
+
+        &:hover{
+          transform: translateY(7px);
+          color: $secondColor;
+        }
+      }
+    }
+  }
+}
+
+//owl-dots
+.owl-theme .owl-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+.owl-theme .owl-dots .owl-dot span {
+  width: 9px;
+  height: 9px;
+  margin: 5px 7px;
+  background: #bebfbf;
+  display: block;
+  -webkit-backface-visibility: visible;
+  transition: opacity .2s ease;
+  border-radius: 30px;
+}
+.owl-theme .owl-dots .owl-dot.active span, .owl-theme .owl-dots .owl-dot:hover span {
+  background: $mainColor;
+}
+
+//special-tours-paeiz
+.special-tours-paeiz{
+  padding: 40px 0 80px;
+  background: #f1f2f2;
+
+  .parent-special-tours-paeiz{
+    @include grid-style(3,30px,30px);
+
+    .items-special-tours-paeiz{
+      position: relative;
+      display: flex;
+      align-items: end;
+      justify-content: right;
+      padding: 20px;
+      border-radius: $rounded;
+      overflow: hidden;
+      transition: $transition;
+      height: 500px;
+
+      &:hover{
+        text-decoration: none;
+      }
+      &:hover img{
+        transform: scale(1.1);
+      }
+
+      &::after{
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(100%, transparent), to(rgba(15, 15, 15, 0.75)));
+        background: -webkit-linear-gradient(top, transparent 50%, rgba(15, 15, 15, 0.99) 100%);
+        background: -o-linear-gradient(top, transparent 50%, rgba(15, 15, 15, 0.75) 100%);
+        background: linear-gradient(top bottom, transparent 50%, rgba(15, 15, 15, 0.75) 100%);
+        position: absolute;
+        height: 150%;
+        width: 100%;
+        z-index: 1;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        opacity: 1;
+        content: "";
+        transition: all ease .5s;
+      }
+      img{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        transition: $transition;
+      }
+      .parent-text{
+        @include flex-direction-colum();
+        gap: 12px;
+        position: relative;
+        z-index: 2;
+
+        h2{
+          color: #fff;
+          font-size: 22px;
+          margin-bottom: 0;
+          font-family: $fontFamilyBold;
+        }
+        h4{
+          color: #fff;
+          font-size: 18px;
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .parent-special-tours2{
+    @include grid-style(1,30px,30px);
+
+    .items-special-tours2{
+      position: relative;
+      display: flex;
+      align-items: end;
+      justify-content: right;
+      padding: 20px;
+      border-radius: $rounded;
+      overflow: hidden;
+      transition: $transition;
+
+      &:hover{
+        text-decoration: none;
+      }
+
+      &:hover img{
+        transform: scale(1.1);
+      }
+
+      &::after{
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(100%, transparent), to(rgba(15, 15, 15, 0.75)));
+        background: -webkit-linear-gradient(top, transparent 50%, rgba(15, 15, 15, 0.99) 100%);
+        background: -o-linear-gradient(top, transparent 50%, rgba(15, 15, 15, 0.75) 100%);
+        background: linear-gradient(top bottom, transparent 50%, rgba(15, 15, 15, 0.75) 100%);
+        position: absolute;
+        height: 150%;
+        width: 100%;
+        z-index: 1;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        opacity: 1;
+        content: "";
+        transition: all ease .5s;
+      }
+
+      img{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        transition: $transition;
+      }
+      .parent-text{
+        @include flex-direction-colum();
+        gap: 12px;
+        position: relative;
+        z-index: 2;
+
+        h2{
+          color: #fff;
+          font-size: 22px;
+          margin-bottom: 0;
+          font-family: $fontFamilyBold;
+        }
+        h4{
+          color: #fff;
+          font-size: 18px;
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+
+//hotel-paeize
+.hotel-paeize{
+  padding: 40px 0 80px;
+
+  .item-hotel-paeiz{
+    @include flex-direction-colum();
+    overflow: hidden;
+    transition: $transition;
+
+    &:hover{
+      text-decoration: none;
+    }
+
+    &:hover .parent-text{
+      background: #eff0f0;
+    }
+
+    &:hover img{
+      transform: scale(1.05) rotate(2deg);
+    }
+    .parent-img{
+      width: 100%;
+      height: 300px;
+      border-radius: $rounded $rounded 0 0;
+      overflow: hidden;
+
+      img{
+        width: 100%;
+        height: 100%;
+        -ms-filter: brightness(80%);
+        filter: brightness(80%);
+        transition: $transition;
+      }
+    }
+
+    .parent-text{
+      @include flex-direction-colum();
+      gap: 5px;
+      padding: 20px;
+      background: #f8f8f8;
+      border-radius: 0 0 $rounded $rounded;
+      transition: $transition;
+
+      button{
+        @include flex-align-items-center();
+        width: 100%;
+        justify-content: left;
+        transition: $transition;
+        color: $mainColor;
+        font-size: 16px;
+        background: transparent;
+        border: none;
+        outline: none;
+        gap: 7px;
+
+        span{
+          color: $mainColor;
+          margin-bottom: 0;
+          transition: $transition;
+        }
+
+        &:hover{
+          transform: translateY(7px);
+          color: $secondColor;
+        }
+        &:hover span{
+          color: $secondColor;
+        }
+      }
+      .star-hotel{
+        @include flex-align-items-center() ;
+        justify-content: right;
+        gap: 3px;
+        margin-bottom: 8px;
+
+        i{
+          font-size: 14px;
+          color: #f7af1c;
+        }
+      }
+      h2{
+        font-size: 24px;
+        color: #000;
+        font-family: $fontFamilyBold;
+        margin-bottom: 0;
+      }
+      span{
+        font-size: 16px;
+        color: #777;
+        margin-bottom: 7px;
+      }
+      p{
+        font-size: 16px;
+        margin-bottom: 14px;
+        color: #444;
+        @include text-limit(2);
+      }
+    }
+  }
+}
+
+
+@media (max-width: 991px) {
+  .banner-paeiz{
+    height: 50vh;
+  }
+  .more-title-paeize{
+    padding: 7px 20px;
+    font-size: 16px !important;
+  }
+  .parent-special-tours-paeiz{
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .items-special-tours-paeiz2{
+    display: none !important;
+  }
+}
+
+@media (max-width: 769px) {
+  .parent-text-search-paeiz{
+    gap: 20px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .banner-paeiz {
+    height: unset;
+    min-height: unset;
+    padding-top: 10rem;
+  }
+  .banner-paeiz .parent-text-search-paeiz .text-banner-paeiz h2{
+    font-size: 30px;
+  }
+  .banner-paeiz .parent-text-search-paeiz .text-banner-paeiz p{
+    font-size: 14px;
+  }
+  .title-paeize .text-title-paeize h2{
+    font-size: 20px;
+  }
+  .title-paeize .text-title-paeize p{
+    display: none;
+  }
+  .title-paeize .more-title-paeize{
+    font-size: 14px !important;
+    line-height: unset !important;
+  }
+  .title-paeize .more-title-paeize svg{
+    width: 10px;
+  }
+  .title-paeize{
+    align-items: center !important;
+  }
+  .more-title-paeize{
+    padding: 7px 20px !important;
+  }
+  .tour-paeiz-last{
+    padding: 30px 0 60px !important;
+  }
+  .special-tours-paeiz{
+    padding: 40px 0 60px !important;
+  }
+  .special-tours-paeiz .parent-special-tours-paeiz .items-special-tours-paeiz{
+    height: 300px !important;
+  }
+  .parent-special-tours-paeiz {
+    grid-template-columns: repeat(1, 1fr) !important;
+  }
+  .special-tours-paeiz .parent-special-tours2 .items-special-tours2{
+    height: 300px;
+  }
+  .items-special-tours-paeiz2{
+    display: flex !important;
+  }
+  .hotel-paeize{
+    padding: 40px 0 60px !important;
+  }
+  .hotel-paeize .item-hotel-paeiz .parent-text .star-hotel{
+    margin-bottom: 10px !important;
+  }
+  .hotel-paeize .item-hotel-paeiz .parent-text h2{
+    font-size: 22px !important;
+  }
+}
