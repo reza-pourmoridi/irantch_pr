@@ -362,6 +362,8 @@ def initiation_progress():
             if module_info['class']:
                 file_name = helper.return_file_in_same_section(classes, moduls_array, str(index))
                 file_name = '{include file="include_files/' + file_name + '.tpl' + '"}'
+                if 'menu' in file_name:
+                    file_name = '''{if $smarty.session.layout neq 'pwa' }''' + file_name + '''{/if}'''
                 element.replace_with(file_name)
             elif module_info['tag']:
                 if index == tags_length:
@@ -739,6 +741,7 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
             }
         }
 
+        helper.replace_attribute_by_text(menu_section, 'ورود  |  ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
         helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
         helper.replace_attribute_by_text(menu_section, 'ورود / ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
         helper.replace_attribute_by_text(menu_section, 'الدخول / يسجل' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
@@ -769,6 +772,7 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
         helper.replace_attribute(menu_section, '__phone_class__', 'href', '''tel:{$smarty.const.CLIENT_PHONE}''')
         helper.replace_attribute(menu_section, '__email_class__', 'string', '''{$smarty.const.CLIENT_EMAIL}''')
         helper.replace_attribute(menu_section, '__email_class__', 'href', '''mailto:{$smarty.const.CLIENT_EMAIL}''')
+        helper.replace_attribute(menu_section, '__logo_class__', 'alt', '''{$obj->Title_head()}''')
 
 
         menu_final_content = f'{menu_section}'
@@ -807,21 +811,20 @@ def footer_module(footer_section, project_path, lang = 'fa',  file_name = ''):
                                         {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}
                                 {/foreach}'''
         befor_social_media_soup = BeautifulSoup(befor_social_media, "html.parser")
-        social_element = footer_section.find(class_=lambda classes: classes and '__social_class__' in classes)
-        if social_element:
-            social_element.insert_before(befor_social_media_soup)
-            social_element = footer_section.find(class_=lambda classes: classes and '__social_class__' in classes)
-            repeatable_social_links = {
-                '__telegram_class__': '{if $telegramHref}{$telegramHref}{/if}',
-                '__whatsapp_class__': '{if $whatsappHref}{$whatsappHref}{/if}',
-                '__instagram_class__': '{if $instagramHref}{$instagramHref}{/if}',
-                '__linkdin_class__': '{if $linkeDinHref}{$linkeDinHref}{/if}',
-                '__aparat_class__': '{if $aparatHref}{$aparatHref}{/if}',
-                '__youtube_class__': '{if $youTubeHref}{$youTubeHref}{/if}',
-            }
-            for key, val in repeatable_social_links.items():
-                helper.replace_attribute(social_element, key, 'href', val)
-
+        social_elements = footer_section.find_all(class_=lambda classes: classes and '__social_class__' in classes)
+        for social_element in social_elements:
+            if social_element:
+                social_element.insert_before(befor_social_media_soup)
+                repeatable_social_links = {
+                    '__telegram_class__': '{if $telegramHref}{$telegramHref}{/if}',
+                    '__whatsapp_class__': '{if $whatsappHref}{$whatsappHref}{/if}',
+                    '__instagram_class__': '{if $instagramHref}{$instagramHref}{/if}',
+                    '__linkdin_class__': '{if $linkeDinHref}{$linkeDinHref}{/if}',
+                    '__aparat_class__': '{if $aparatHref}{$aparatHref}{/if}',
+                    '__youtube_class__': '{if $youTubeHref}{$youTubeHref}{/if}',
+                }
+                for key, val in repeatable_social_links.items():
+                    helper.replace_attribute(social_element, key, 'href', val)
 
         for key, val in repeatable_links.items():
             for item in val:
@@ -832,7 +835,7 @@ def footer_module(footer_section, project_path, lang = 'fa',  file_name = ''):
         helper.replace_attribute(footer_section, '__aboutUs_class_href__', 'href',
                                  '''{$smarty.const.ROOT_ADDRESS}/mag''')
         helper.replace_attribute(footer_section, '__address_class__', 'string',
-                                 ''' آدرس :  {$smarty.const.CLIENT_ADDRESS} ''')
+                                 '''  {$smarty.const.CLIENT_ADDRESS} ''')
         helper.replace_attribute(footer_section, '__mobile_class__', 'string', '''{$smarty.const.CLIENT_MOBILE}''')
         helper.replace_attribute(footer_section, '__mobile_class__', 'href', '''tel:{$smarty.const.CLIENT_MOBILE}''')
         helper.replace_attribute(footer_section, '__phone_class__', 'string', '''{$smarty.const.CLIENT_PHONE}''')
@@ -1012,9 +1015,9 @@ def header_module(header_section, project_path , lang = 'fa',  file_name = ''):
         header_section = header_contents
 
         befor_all = ['css/header.css', 'css/bootstrap.min.css', 'css/header.css' ]
-        between_mainPage_assets = ['css/style.css']
+        between_mainPage_assets = ['select2.css', 'css/style.css']
         inside_mainPage = []
-        after__all = ['select2.css', 'css/tabs.css', 'css/all.min.css', 'css/register.css']
+        after__all = ['css/tabs.css', 'css/all.min.css', 'css/register.css']
 
         befor_all = helper.comapre_append_list(befor_all, style_links)
         style_links = helper.delete_assames(style_links, befor_all)

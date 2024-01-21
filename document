@@ -2,10 +2,10 @@ hooks:
     global:
         __i_modular_nc_item_class_0 : آیتم های ساده
         __i_modular_c_item_class_0 : آیتم های پیچیده
-        i_modular_modulation : باید در یک تگ متا در هدر نوشته شود
 
     menu : i_modular_menu
         __main_link_href__ : لینک اصلی
+        __logo_class__ : کلاس لوگو
         __login_register_class__ : کلاس دکمه لاگین,به لینک یا دکمه داده شود
         __login_register_class__2 :کلاس دکمه لاگین دوم,به لینک یا دکمه داده شود
         __mobile_class__ : کلاس شماره موبایل فوتر
