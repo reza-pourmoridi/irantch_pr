@@ -155,7 +155,7 @@ hooks:
 
 
 
-    script-footer:i_modular_searchBox
+    script-searchbox:i_modular_searchBox
     __search_box_tabs__ : پرنت تب ها
     __search_boxes__ : پرنت سرچ باکس ها
     __box__ : پرنت هر باکس

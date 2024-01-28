@@ -69,9 +69,7 @@
 .owl-carousel .owl-nav button.owl-next,
 .owl-carousel .owl-nav button.owl-prev,
 .owl-carousel button.owl-dot {
- background:0 0;
  color:inherit;
- border:none;
  padding:0;
  font:inherit
 }
@@ -100,22 +98,14 @@
 .owl-carousel.owl-rtl {
  direction:rtl
 }
-.owl_hotel .owl-item {
-    float:right;
-    padding: 15px !important;
-   }
 .owl-carousel.owl-rtl .owl-item {
  float:right;
- padding: 0px ;
+ padding: 10px;
 }
-
-
-@media (max-width: 990px) {
-    .owl-carousel.owl-rtl .owl-item {
-        padding: 0px !important;
-       }
+.owl-carousel .animated {
+ animation-duration:1s;
+ animation-fill-mode:both
 }
-
 .owl-carousel .owl-animated-in {
  z-index:0
 }
@@ -192,8 +182,8 @@
 
 
 .owl-dots .owl-dot span {
- width: 13px;
- height: 13px;
+ width: 10px;
+ height: 10px;
  margin: 5px 7px;
  background: #D6D6D6;
  display: block;
@@ -203,7 +193,7 @@
 }
 
 .owl-dots .owl-dot.active span, .owl-dots .owl-dot:hover span {
- background: #D9B6D6;
+ background: var(--primary);
 }
 
 .owl-dots{ text-align: center; padding: 10px 0;}

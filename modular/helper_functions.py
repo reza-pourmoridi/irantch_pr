@@ -173,6 +173,13 @@ def replace_attribute(section, class_name, attr, value):
         else:
             tag.string = value
 
+def replace_attribute_by_tag(section, tag_name, attr, value):
+    for tag in section.find_all(tag_name):
+        if attr != 'string':
+            tag[attr] = value
+        else:
+            tag.string = value
+
 
 def add_class_to_elements(section, class_name, new_class):
     for tag in section.find_all(class_=class_name):
@@ -197,6 +204,13 @@ def remove_class_from_elements(section, class_name, class_to_remove):
 
         # Update the class attribute
         tag['class'] = current_classes
+
+
+def remove_tag_from_soup_object(content, tag_name):
+    tag = content.find(tag_name)
+    tag_content = tag.decode_contents() if tag else None
+    soup = BeautifulSoup(f'{tag_content}', 'html.parser')
+    return soup
 
 
 def read_file(file_path, encoding='utf-8'):
@@ -330,4 +344,12 @@ def check_if_section_built(project_path ,file_name ,section):
         section = BeautifulSoup(section, 'html.parser')
 
     return section
+
+def if_dosnt_exist_create_else_add(file_path, file_name ,string):
+    if os.path.exists(file_path + '/' + file_name + '.tpl'):
+        section = f"{read_file(file_path + '/' + file_name + '.tpl')}"
+        section = BeautifulSoup(section, 'html.parser')
+        return create_file(f'{section}' + string, file_path, file_name, 'tpl')
+
+    return create_file(string, file_path, file_name, 'tpl')
 

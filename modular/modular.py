@@ -559,7 +559,7 @@ def news_module(news_section, project_path , lang = 'fa',  file_name = ''):
                             {assign var="othe_itmes" value=$main_articles['data']}
                             {assign var="i" value="2"}
                             {assign var='counter' value=0}
-                            {if $main_articles['count'] > 0 }'''
+                            {if $othe_itmes > 0 }'''
         after_html = '{/if}'
 
         before_foreach = '''{foreach $othe_itmes as $item} {if $counter >= i_modular__min_for_limit and $counter <= i_modular__max_for_limit}'''
@@ -1605,7 +1605,7 @@ def hotels_webservice_module(hotels_section, project_path, lang = 'fa',  file_na
                                     light_star_elements = simple_element.find(class_='__star_class_light__' + str(i))
                                     dark_star_elements = simple_element.find(class_='__star_class_dark__' + str(i))
                                     if i == 1 and light_star_elements:
-                                        new_light_star = '''{for $i = 0; $i < count($item['StarCode']); $i++}''' + str(light_star_elements) + '''{/for}'''
+                                        new_light_star = '''{for $i = 0; $i < ($item['StarCode']); $i++}''' + str(light_star_elements) + '''{/for}'''
                                         new_light_star = BeautifulSoup(new_light_star, 'html.parser')
                                         light_star_elements.replace_with(new_light_star)
                                     else:
@@ -1613,7 +1613,7 @@ def hotels_webservice_module(hotels_section, project_path, lang = 'fa',  file_na
                                             light_star_elements.decompose()
 
                                     if i == 1 and dark_star_elements:
-                                        new_dark_star = '''{for $i = count($item['StarCode']); $i < 6; $i++}''' + str(dark_star_elements) + '''{/for}'''
+                                        new_dark_star = '''{for $i = ($item['StarCode']); $i < 6; $i++}''' + str(dark_star_elements) + '''{/for}'''
                                         new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
                                         dark_star_elements.replace_with(new_dark_star)
                                     else:
@@ -1667,7 +1667,7 @@ def hotels_webservice_module(hotels_section, project_path, lang = 'fa',  file_na
                                     light_star_elements = complex_element.find(class_='__star_class_light__' + str(i))
                                     dark_star_elements = complex_element.find(class_='__star_class_dark__' + str(i))
                                     if i == 1 and light_star_elements:
-                                        new_light_star = '''{for $i = 0; $i < count($__hotel_var__['StarCode']); $i++}''' + str(light_star_elements) + '''{/for}'''
+                                        new_light_star = '''{for $i = 0; $i < ($__hotel_var__['StarCode']); $i++}''' + str(light_star_elements) + '''{/for}'''
                                         new_light_star = new_light_star.replace("{0}", f'{num}')
                                         new_light_star = new_light_star.replace("__hotel_var__", section_var)
                                         new_light_star = BeautifulSoup(new_light_star, 'html.parser')
@@ -1677,7 +1677,7 @@ def hotels_webservice_module(hotels_section, project_path, lang = 'fa',  file_na
                                             light_star_elements.decompose()
 
                                     if i == 1 and dark_star_elements:
-                                        new_dark_star = '''{for $i = count($__hotel_var__['StarCode']); $i < 6; $i++}''' + str(dark_star_elements) + '''{/for}'''
+                                        new_dark_star = '''{for $i = ($__hotel_var__['StarCode']); $i < 6; $i++}''' + str(dark_star_elements) + '''{/for}'''
                                         new_dark_star = new_dark_star.replace("{0}", f'{num}')
                                         new_dark_star = new_dark_star.replace("__hotel_var__", section_var)
                                         new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
