@@ -148,18 +148,6 @@ def copy_repeated_file_folders(target_folder):
     except Exception as e:
         return f'Error copying source folders: {str(e)}'
 
-def create_file(content, path, file_name, file_format):
-    try:
-        # Combine the provided path and file name with format to create the full file path
-        full_file_path = os.path.join(path, f'{file_name}.{file_format}')
-
-        # Write the content to the file
-        with open(full_file_path, 'w', encoding='utf-8') as file:
-            file.write(content)
-
-        return f'File "{full_file_path}" created successfully'
-    except Exception as e:
-        return f'Error creating file: {str(e)}'
 
 def write_text_in_path(path, text):
     mainpage_tpl_path = os.path.join(path, 'mainPage.tpl')
@@ -353,3 +341,26 @@ def if_dosnt_exist_create_else_add(file_path, file_name ,string):
 
     return create_file(string, file_path, file_name, 'tpl')
 
+def create_or_replace_file(file_path, new_content):
+    try:
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.write(new_content)
+            return (f"File '{file_path}' created or content replaced successfully.")
+    except PermissionError:
+        return (f"Permission denied. Check if you have write permissions for '{file_path}'.")
+    except Exception as e:
+        return (f"An error occurred: {e}")
+
+
+def create_file(content, path, file_name, file_format):
+    try:
+        # Combine the provided path and file name with format to create the full file path
+        full_file_path = os.path.join(path, f'{file_name}.{file_format}')
+
+        # Write the content to the file
+        with open(full_file_path, 'w', encoding='utf-8') as file:
+            file.write(content)
+
+        return f'File "{full_file_path}" created successfully'
+    except Exception as e:
+        return f'Error creating file: {str(e)}'

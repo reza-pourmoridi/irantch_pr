@@ -9,6 +9,7 @@ import codecs
 from modular import helper_functions as helper
 from modular import unit_test
 import zipfile
+import traceback
 
 
 def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
@@ -53,12 +54,13 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
                     item_path = helper.create_folder(box_id, sections_path)
                     id_lists.append(box_id)
                 if modified_id in has_tpl_services:
-                    item_massage = has_tpl_services[modified_id](f'{b}' ,boxes_path, modified_id, box_id)
-                    items_massages.append(item_massage + '<br><br>')
+                    has_tpl_massage = has_tpl_services[modified_id](f'{b}' ,boxes_path, modified_id, box_id)
                 else:
                     helper.if_dosnt_exist_create_else_add(boxes_path, modified_id, f'{b}')
-                    item_massage = box_id + ' box has been successfully modulation'
-                    items_massages.append(item_massage + '<br><br>')
+
+                final_massage = seprate_search_box_codes(project_path,modified_id)
+                item_massage = box_id + " : " + final_massage
+                items_massages.append(item_massage + '<br><br>')
 
         # creating relational services array
         services_array = {}
@@ -74,6 +76,167 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
         return [f'{items_massages}', services_array]
     except Exception as e:
         return 'search_box()' + str(e)  # Return the exception message for now
+
+
+def seprate_search_box_codes(project_path, box_name):
+    try:
+        section = f"{helper.read_file(project_path + '/include_files/search-box/boxes/' + box_name + '.tpl')}"
+        soup = BeautifulSoup(section, 'html.parser')
+        forms = soup.find_all('form')
+        radios = soup.find_all('form')
+        form_detection_array = {
+            'Flight': {
+                'internal': {'switch-input-js':'btn_radio_internal_external.tpl',
+                             'internal-one-way-js':'btn_type_way.tpl',
+                             'departure-date-internal-js':'date_flight.tpl',
+                             'internal-arrival-date-js':'date_flight.tpl',
+                             'route_destination_internal-js':'destination_selection.tpl',
+                             'route_origin_internal-js':'origin_selection.tpl',
+                             'box-of-count-passenger-js':'passenger_count.tpl'},
+            'international': {  'select-type-way-js':'btn_type_way.tpl',
+                                'departure-date-international-js':'date_flight.tpl',
+                                'destination-international-js':'destination_search_box.tpl',
+                                'iata-origin-international-js':'origin_search_box.tpl',
+                                'international-adult-js':'passenger_count.tpl',},
+                'multi-way': {'newAdditionalExternal($(this))':'add_flight_multy_way.tpl',
+                              'click_flight_multiTrack':'btn_type_way.tpl',
+                              'multi-adult-js':'count_passenger_multi_way.tpl',
+                              'date-multi-0-js':'date_first_multi_way.tpl',
+                              'list-multi-0-origin-airport-international-js':'departure_first_multy_way.tpl',
+                              'iata-multi-0-destination-international-js':'destination_first_multi_way.tpl',
+                            # additional way
+                              'multi-1-origin-international-js': 'additional_multi_way.tpl',
+                              'iata-multi-1-destination-international-js': 'additional_multi_way.tpl',
+                              'date-multi-1-js': 'additional_multi_way.tpl',
+                              'nclick="removeAdditionalExternal($(this))"': 'additional_multi_way.tpl',
+                            # end of additional way
+
+                              },
+
+            },
+            'Tour': {
+                'internal': {'switch-input-tour-js':'btn_radio_internal_external.tpl',
+                             'internal-date-travel-tour-js':'date_teravel.tpl',
+                             'internal-destination-tour-js':'destination_city_tour.tpl',
+                             'internal-origin-tour-js':'origin_city_tour.tpl',},
+                'international': {'international-destination-city-tour-js': 'city_destination.tpl',
+                                  'international-tour-origin-city-js': 'city_origin.tpl',
+                                  'international-destination-tour-js': 'country_destination.tpl',
+                                  'tourOriginCountryPortal': 'country_origin.tpl',
+                                  'international-date-travel-tour-js': 'date_travel.tpl',},
+            },
+            'Hotel': {
+                'aa': 'aa',
+
+            },
+            'Train': {
+                'aa': 'aa',
+
+            },
+            'Package': {
+                'aa': 'aa',
+
+            },
+            'Bus': {
+                'aa': 'aa',
+
+            },
+            'Insurance': {
+                'aa': 'aa',
+
+            },
+            'GashtTransfer': {
+                'aa': 'aa',
+
+            },
+            'Europcar': {
+                'aa': 'aa',
+
+            },
+            'Entertainment': {
+                'aa': 'aa',
+
+            },
+            'Visa': {
+                'aa': 'aa',
+
+            }
+        }
+
+
+        # radios_detection_array={
+        #     'Flight': {
+        #         'internal': {'switch-input-js': 'btn_radio_internal_external.tpl',
+        #                      'internal-one-way-js': 'btn_type_way.tpl',
+        #                      'departure-date-internal-js': 'date_flight.tpl',
+        #                      'internal-arrival-date-js': 'date_flight.tpl',
+        #                      'route_destination_internal-js': 'destination_selection.tpl',
+        #                      'route_origin_internal-js': 'origin_selection.tpl',
+        #                      'box-of-count-passenger-js': 'passenger_count.tpl'},
+        #         'international': {'select-type-way-js': 'btn_type_way.tpl',
+        #                           'departure-date-international-js': 'date_flight.tpl',
+        #                           'destination-international-js': 'destination_search_box.tpl',
+        #                           'iata-origin-international-js': 'origin_search_box.tpl',
+        #                           'international-adult-js': 'passenger_count.tpl', },
+        #         'multi-way': {'newAdditionalExternal($(this))': 'add_flight_multy_way.tpl',
+        #                       'click_flight_multiTrack': 'btn_type_way.tpl',
+        #                       'multi-adult-js': 'count_passenger_multi_way.tpl',
+        #                       'date-multi-0-js': 'date_first_multi_way.tpl',
+        #                       'list-multi-0-origin-airport-international-js': 'departure_first_multy_way.tpl',
+        #                       'iata-multi-0-destination-international-js': 'destination_first_multi_way.tpl',
+        #                       # additional way
+        #                       'multi-1-origin-international-js': 'additional_multi_way.tpl',
+        #                       'iata-multi-1-destination-international-js': 'additional_multi_way.tpl',
+        #                       'date-multi-1-js': 'additional_multi_way.tpl',
+        #                       'nclick="removeAdditionalExternal($(this))"': 'additional_multi_way.tpl',
+        #                       # end of additional way
+        #
+        #                       },
+        #
+        #     },
+        # }
+        main_folder_path = project_path + '/include_files/search-box/boxes/sections/' + box_name + '/'
+
+        for form in forms:
+            compere_dic = check_how_much_class_contains_soup(form, form_detection_array[box_name])
+            sub_folder_name = max(compere_dic, key=compere_dic.get)
+            sub_folder_path = helper.create_folder(sub_folder_name, main_folder_path)
+            form_sub_tags = form.find_all(recursive=False)
+            for pattern, file_name in form_detection_array[box_name][sub_folder_name].items():
+                modified_file_name = file_name.replace('.tpl', '')
+                file_path = helper.if_dosnt_exist_create_else_add(sub_folder_path, modified_file_name, '')
+            for tag in form_sub_tags:
+                tag_string = f'{tag}'
+                modified_file_name = False
+                for pattern, file_name in form_detection_array[box_name][sub_folder_name].items():
+                    if pattern in tag_string:
+                        modified_file_name = file_name.replace('.tpl', '')
+                if modified_file_name:
+                    file_path = helper.if_dosnt_exist_create_else_add(sub_folder_path, modified_file_name, tag_string)
+                    tag.replace_with('''{include file="./sections/''' + box_name + '/' + sub_folder_name + '/' + modified_file_name + '.tpl' + '''"}''')
+
+        result = helper.create_or_replace_file(project_path + '/include_files/search-box/boxes/' + box_name + '.tpl', f'{soup}')
+        return f'{result}'
+
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
+
+def check_how_much_class_contains_soup(soup_element, detection_dict):
+    try:
+        final_dict = {}
+        for region, dic in detection_dict.items():
+            counter = 0
+            for detector, file_name in dic.items():
+                element = f'{soup_element}'
+                if detector in element:
+                    counter = counter + 1
+            final_dict[region] = counter
+        return final_dict
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
+
 
 
 def Tour(section=False, item_path=False, file_name=False, type=False):
