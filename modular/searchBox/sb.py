@@ -39,8 +39,8 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
 
 
 
-            testt = modulationSearchBoxTabs(project_path + '/include_files/search-box', parent_li)
-            modulationSearchBoxBoxes(project_path + '/include_files/search-box')
+            testTabs = modulationSearchBoxTabs(project_path + '/include_files/search-box', parent_li)
+            testBoxes = modulationSearchBoxBoxes(project_path + '/include_files/search-box')
 
         # getting the ids of boxes and add them to href array. and put them in searchbox dierctory
         id_lists = hrefs_list
@@ -82,8 +82,8 @@ def seprate_search_box_codes(project_path, box_name):
     try:
         section = f"{helper.read_file(project_path + '/include_files/search-box/boxes/' + box_name + '.tpl')}"
         soup = BeautifulSoup(section, 'html.parser')
-        forms = soup.find_all('form')
-        radios = soup.find_all('form')
+        soup = soup.find(class_='__box__')
+        forms = soup.find_all(recursive=False)
         form_detection_array = {
             'Flight': {
                 'internal': {'switch-input-js':'btn_radio_internal_external.tpl',
@@ -105,10 +105,10 @@ def seprate_search_box_codes(project_path, box_name):
                               'list-multi-0-origin-airport-international-js':'departure_first_multy_way.tpl',
                               'iata-multi-0-destination-international-js':'destination_first_multi_way.tpl',
                             # additional way
-                              'multi-1-origin-international-js': 'additional_multi_way.tpl',
-                              'iata-multi-1-destination-international-js': 'additional_multi_way.tpl',
-                              'date-multi-1-js': 'additional_multi_way.tpl',
-                              'nclick="removeAdditionalExternal($(this))"': 'additional_multi_way.tpl',
+                              'multi-1-origin-international-js': 'departure_secend_multi_way.tpl',
+                              'iata-multi-1-destination-international-js': 'destination_second_multi_way.tpl',
+                              'date-multi-1-js': 'date_second_multi_way.tpl',
+                              'nclick="removeAdditionalExternal($(this))"': 'remove_additional_multi_way.tpl',
                             # end of additional way
 
                               },
@@ -126,94 +126,106 @@ def seprate_search_box_codes(project_path, box_name):
                                   'international-date-travel-tour-js': 'date_travel.tpl',},
             },
             'Hotel': {
-                'aa': 'aa',
-
+                'internal': {
+                    '''check-in-date-js''': 'check_in_date.tpl',
+                    '''endDateForHotelLocal''': 'check_out_date.tpl',
+                    '''internal-hotel-passenger-picker-js''': 'count_passenger_room.tpl',
+                    '''searchCity''': 'destination_city.tpl',
+                },
+                'international': {
+                    'switch-input-hotel-js': 'btn_radio_internal_external.tpl',
+                    '''check-in-date-international-js''': 'check_in_date.tpl',
+                    '''endDateForExternalHotelInternational''': 'check_out_date.tpl',
+                    '''international-hotel-passenger-picker-js''': 'count_passenger_room.tpl',
+                    '''searchCity''': 'destination_city.tpl',
+                },
             },
             'Train': {
-                'aa': 'aa',
-
+                'main': {
+                    '''select-type-way-js''': 'btn-type-way.tpl',
+                    '''train-departure-date-js''': 'date_train.tpl',
+                    '''destination-train-js''': 'destination_selection.tpl',
+                    '''origin-train-js''': 'origin_selection.tpl',
+                    '''box-of-count-passenger-boxes-js''': 'passenger_count.tpl',
+                }
             },
             'Package': {
-                'aa': 'aa',
-
+                'main': {
+                    '''departure-date-package-js''': 'date_package.tpl',
+                    '''destination-package-js''': 'destination_search_box.tpl',
+                    '''origin-package-js''': 'origin_search_box.tpl',
+                    '''cbox-package-count-passenger-js''': 'passenger_count.tpl',
+                }
             },
             'Bus': {
-                'aa': 'aa',
-
+                'main': {
+                    'departure_date_bus': 'date_bus.tpl',
+                    'select-destination-route-bus-js': 'destination_selection.tpl',
+                    'select-origin-route-bus-js': 'origin_selection.tpl',
+                }
             },
             'Insurance': {
-                'aa': 'aa',
-
-            },
+                    'main': {
+                    }
+                },
             'GashtTransfer': {
-                'aa': 'aa',
-
+                'gasht': {
+                    'gasht-date-js': 'date_gasht.tpl',
+                    'gasht_destination': 'destination.tpl',
+                    'gasht-type-js': 'type_gasht.tpl',
+                },
+                'transfer': {
+                'transfer-date-js': 'date_transfer.tpl',
+                'transfer-destination-js': 'destination.tpl',
+                'transfer-type-js': 'type_accept.tpl',
+                'transfer-location-js': 'type_destination.tpl',
+                'transfer-vehicle-type-js': 'type_device.tpl',
+                },
             },
             'Europcar': {
-                'aa': 'aa',
-
+                'main': {
+                    'type_rent_car-js': 'carType.tpl',
+                    'delivery_rent-car-date-js': 'deliveryDate.tpl',
+                    'select-delivery-place-rent-car-js': 'deliveryPlace.tpl',
+                    'rent-start-date-js': 'rentDate.tpl',
+                    'select-city-rent-car-js': 'rentPlace.tpl',
+                }
             },
             'Entertainment': {
-                'aa': 'aa',
-
+                'main': {
+                    'category-entertainment-js': 'category_entertainment.tpl',
+                    'getEntertainmentCategoriesSearchBox': 'city_destination.tpl',
+                    'getEntertainmentCities': 'country_destination.tpl',
+                    'sub-category-entertainment-js': 'sub_category_entertainment.tpl',
+                }
             },
             'Visa': {
-                'aa': 'aa',
-
+                'main': {
+                    'continent-visa-js': 'continent_visa.tpl',
+                    'country-visa-js': 'country_visa.tpl',
+                    'box-of-count-passenger-boxes-js': 'passenger_count.tpl',
+                    'visa-type-js': 'type_visa.tpl',
+                }
             }
         }
 
-
-        # radios_detection_array={
-        #     'Flight': {
-        #         'internal': {'switch-input-js': 'btn_radio_internal_external.tpl',
-        #                      'internal-one-way-js': 'btn_type_way.tpl',
-        #                      'departure-date-internal-js': 'date_flight.tpl',
-        #                      'internal-arrival-date-js': 'date_flight.tpl',
-        #                      'route_destination_internal-js': 'destination_selection.tpl',
-        #                      'route_origin_internal-js': 'origin_selection.tpl',
-        #                      'box-of-count-passenger-js': 'passenger_count.tpl'},
-        #         'international': {'select-type-way-js': 'btn_type_way.tpl',
-        #                           'departure-date-international-js': 'date_flight.tpl',
-        #                           'destination-international-js': 'destination_search_box.tpl',
-        #                           'iata-origin-international-js': 'origin_search_box.tpl',
-        #                           'international-adult-js': 'passenger_count.tpl', },
-        #         'multi-way': {'newAdditionalExternal($(this))': 'add_flight_multy_way.tpl',
-        #                       'click_flight_multiTrack': 'btn_type_way.tpl',
-        #                       'multi-adult-js': 'count_passenger_multi_way.tpl',
-        #                       'date-multi-0-js': 'date_first_multi_way.tpl',
-        #                       'list-multi-0-origin-airport-international-js': 'departure_first_multy_way.tpl',
-        #                       'iata-multi-0-destination-international-js': 'destination_first_multi_way.tpl',
-        #                       # additional way
-        #                       'multi-1-origin-international-js': 'additional_multi_way.tpl',
-        #                       'iata-multi-1-destination-international-js': 'additional_multi_way.tpl',
-        #                       'date-multi-1-js': 'additional_multi_way.tpl',
-        #                       'nclick="removeAdditionalExternal($(this))"': 'additional_multi_way.tpl',
-        #                       # end of additional way
-        #
-        #                       },
-        #
-        #     },
-        # }
         main_folder_path = project_path + '/include_files/search-box/boxes/sections/' + box_name + '/'
 
         for form in forms:
             compere_dic = check_how_much_class_contains_soup(form, form_detection_array[box_name])
             sub_folder_name = max(compere_dic, key=compere_dic.get)
-            sub_folder_path = helper.create_folder(sub_folder_name, main_folder_path)
-            form_sub_tags = form.find_all(recursive=False)
+            if sub_folder_name != 'main':
+                sub_folder_path = helper.create_folder(sub_folder_name, main_folder_path)
+                if 'exists' in sub_folder_path:
+                    sub_folder_path = main_folder_path + '/' + sub_folder_name + '/'
+            else:
+                sub_folder_path = main_folder_path
+
+
             for pattern, file_name in form_detection_array[box_name][sub_folder_name].items():
                 modified_file_name = file_name.replace('.tpl', '')
                 file_path = helper.if_dosnt_exist_create_else_add(sub_folder_path, modified_file_name, '')
-            for tag in form_sub_tags:
-                tag_string = f'{tag}'
-                modified_file_name = False
-                for pattern, file_name in form_detection_array[box_name][sub_folder_name].items():
-                    if pattern in tag_string:
-                        modified_file_name = file_name.replace('.tpl', '')
-                if modified_file_name:
-                    file_path = helper.if_dosnt_exist_create_else_add(sub_folder_path, modified_file_name, tag_string)
-                    tag.replace_with('''{include file="./sections/''' + box_name + '/' + sub_folder_name + '/' + modified_file_name + '.tpl' + '''"}''')
+            tag_replace = continues_tag_rplacment(form, form_detection_array[box_name][sub_folder_name].items(), sub_folder_path, box_name, sub_folder_name)
 
         result = helper.create_or_replace_file(project_path + '/include_files/search-box/boxes/' + box_name + '.tpl', f'{soup}')
         return f'{result}'
@@ -221,6 +233,35 @@ def seprate_search_box_codes(project_path, box_name):
     except Exception as e:
         traceback_str = traceback.format_exc()
         return str(e) + '\nTraceback:\n' + traceback_str
+
+
+def continues_tag_rplacment(tag, patterns, folder_path, box_name, sub_folder_name):
+    try:
+        count = 0
+        tag_string = f'{tag}'
+        modified_file_name = False
+        for pattern, file_name in patterns:
+            if pattern in tag_string:
+                modified_file_name = file_name.replace('.tpl', '')
+                count = count + 1
+        if modified_file_name and count <= 2:
+            tag_string = helper.search_box_clean_serialize_string(tag_string)
+            file_path = helper.if_dosnt_exist_create_else_add(folder_path, modified_file_name, tag_string)
+            if 'main' != sub_folder_name:
+                tag.replace_with('''{include file="./sections/''' + box_name + '/' + sub_folder_name + '/' + modified_file_name + '.tpl' + '''"}''')
+            else:
+                tag.replace_with('''{include file="./sections/''' + box_name + '/' + modified_file_name + '.tpl' + '''"}''')
+
+        elif modified_file_name and count > 2:
+            sub_tags = tag.find_all(recursive=False)
+            for sub_tag in sub_tags:
+                continues_tag_rplacment(sub_tag, patterns, folder_path, box_name, sub_folder_name)
+
+        return tag
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
+
 
 def check_how_much_class_contains_soup(soup_element, detection_dict):
     try:
@@ -237,6 +278,80 @@ def check_how_much_class_contains_soup(soup_element, detection_dict):
         traceback_str = traceback.format_exc()
         return str(e) + '\nTraceback:\n' + traceback_str
 
+
+def modulationSearchBoxTabs(search_box_path, tab):
+    try:
+        tab = BeautifulSoup(tab, 'html.parser')
+
+        content = '''
+                    <ul class="nav" id="searchBoxTabs">
+                        {foreach $info_access_client_to_service as $key=>$client}
+                            {if  $smarty.const.GDS_SWITCH eq 'mainPage'}
+
+                                {if ($smarty.const.SOFTWARE_LANG eq 'fa') || $client['MainService'] neq 'Train' && $client['MainService'] neq 'Bus' &&
+                                $client['MainService'] neq 'Europcar' && $client['MainService'] neq 'GashtTransfer' && $client['MainService'] neq 'Package'}
+                                    <li class="nav-item">
+                                        <a onclick="changeText(`{$obj_main_page->nameBoxSearchBox($client['MainService'])}` , 'null')" class="nav-link
+                                            {if $client['MainService'] eq 'Flight' }active{/if}"
+                                             id="{$client['MainService']}-tab" data-toggle="tab" href="#{$client['MainService']}">
+                                            __put__tab__here__
+                                        </a>
+                                    </li>
+                                {/if}
+                            {else}
+                                {if $active_tab eq 'internalFlight' && $client['MainService'] eq 'Flight' || $active_tab eq $client['MainService']}
+                                    <li class="nav-item">
+                                        <a onclick="changeText(`{$obj_main_page->nameBoxSearchBox($client['MainService'])}` , 'null')" class="nav-link active"
+                                           id="{$client['MainService']}-tab" data-toggle="tab" href="#{$client['MainService']}">
+                                            __put__tab__here__
+                                        </a>
+                                    </li>
+                                {/if}
+                            {/if}
+                        {/foreach}
+                    </ul>
+        '''
+        tab = helper.remove_tag_from_soup_object(tab, 'li')
+        tab = helper.remove_tag_from_soup_object(tab, 'a')
+        helper.replace_attribute_by_tag(tab, 'h4', 'string',
+                                        '''{$obj_main_page->nameTabsSearchBox($client['MainService'])}''')
+        check_svg = tab.find_all('svg')
+        check_i = tab.find_all('i')
+        if check_svg:
+            helper.replace_attribute_by_tag(tab, 'i', 'string',
+                                            '''{$obj_main_page->classTabsSearchBox($client['MainService'])}''')
+        elif check_i:
+            helper.replace_attribute_by_tag(tab, 'i', 'class',
+                                            '''{$obj_main_page->classTabsSearchBox($client['MainService'])}''')
+
+        content = content.replace("__put__tab__here__", f'{tab}')
+
+        content = helper.clean_serialize_string(f'{content}')
+
+        return helper.create_file(content, search_box_path, 'tabs-search-box', 'tpl')
+    except Exception as e:
+        return 'searchBox/sb.py, modulationSearchBoxTabs(): ' + str(e)  # Return the exception message for no
+
+
+def modulationSearchBoxBoxes(search_box_path):
+    try:
+        content = '''{assign var="obj_main_page" value=$obj_main_page }
+                        <div class="tab-content" id="searchBoxContent">
+                            {foreach $info_access_client_to_service as $key=>$client}
+                                {if  $smarty.const.GDS_SWITCH eq 'mainPage'}
+                                    {include file="./boxes/{$client['MainService']}.tpl" client=$client}
+                                {else}
+                                    {if $active_tab eq 'internalFlight' && $client['MainService'] eq 'Flight' || $active_tab eq $client['MainService']}
+                                        {include file="./boxes/{$client['MainService']}.tpl" client=$client}
+                                    {/if}
+                                {/if}
+                            {/foreach}
+                        </div>
+                        '''
+        content = helper.clean_serialize_string(f'{content}')
+        return helper.create_file(content, search_box_path, 'boxs-search', 'tpl')
+    except Exception as e:
+        return 'searchBox/sb.py, modulationSearchBoxBoxes(): ' + str(e)  # Return the exception message for no
 
 
 def Tour(section=False, item_path=False, file_name=False, type=False):
@@ -556,71 +671,3 @@ def Europcar(section=False, item_path=False, box_id=False, type=False):
     except Exception as e:
         return 'searchBox/sb.py, Europcar(): ' + str(e)  # Return the exception message for now
 
-
-def modulationSearchBoxTabs(search_box_path, tab):
-    try:
-        tab = BeautifulSoup(tab, 'html.parser')
-
-        content = '''
-                    <ul class="nav" id="searchBoxTabs">
-                        {foreach $info_access_client_to_service as $key=>$client}
-                            {if  $smarty.const.GDS_SWITCH eq 'mainPage'}
-                    
-                                {if ($smarty.const.SOFTWARE_LANG eq 'fa') || $client['MainService'] neq 'Train' && $client['MainService'] neq 'Bus' &&
-                                $client['MainService'] neq 'Europcar' && $client['MainService'] neq 'GashtTransfer' && $client['MainService'] neq 'Package'}
-                                    <li class="nav-item">
-                                        <a onclick="changeText(`{$obj_main_page->nameBoxSearchBox($client['MainService'])}` , 'null')" class="nav-link
-                                            {if $client['MainService'] eq 'Flight' }active{/if}"
-                                             id="{$client['MainService']}-tab" data-toggle="tab" href="#{$client['MainService']}">
-                                            __put__tab__here__
-                                        </a>
-                                    </li>
-                                {/if}
-                            {else}
-                                {if $active_tab eq 'internalFlight' && $client['MainService'] eq 'Flight' || $active_tab eq $client['MainService']}
-                                    <li class="nav-item">
-                                        <a onclick="changeText(`{$obj_main_page->nameBoxSearchBox($client['MainService'])}` , 'null')" class="nav-link active"
-                                           id="{$client['MainService']}-tab" data-toggle="tab" href="#{$client['MainService']}">
-                                            __put__tab__here__
-                                        </a>
-                                    </li>
-                                {/if}
-                            {/if}
-                        {/foreach}
-                    </ul>
-        '''
-        tab = helper.remove_tag_from_soup_object(tab, 'li')
-        tab = helper.remove_tag_from_soup_object(tab, 'a')
-        helper.replace_attribute_by_tag(tab, 'h4', 'string','''{$obj_main_page->nameTabsSearchBox($client['MainService'])}''')
-        check_svg =  tab.find_all('svg')
-        check_i =  tab.find_all('i')
-        if check_svg:
-            helper.replace_attribute_by_tag(tab, 'i', 'string','''{$obj_main_page->classTabsSearchBox($client['MainService'])}''')
-        elif check_i:
-            helper.replace_attribute_by_tag(tab, 'i', 'class','''{$obj_main_page->classTabsSearchBox($client['MainService'])}''')
-
-        content = content.replace("__put__tab__here__", f'{tab}')
-
-        return helper.create_file(f'{content}', search_box_path, 'tabs-search-box', 'tpl')
-    except Exception as e:
-        return 'searchBox/sb.py, modulationSearchBoxTabs(): ' + str(e)  # Return the exception message for no
-
-
-def modulationSearchBoxBoxes(search_box_path):
-    try:
-        content = '''{assign var="obj_main_page" value=$obj_main_page }
-                        <div class="tab-content" id="searchBoxContent">
-                            {foreach $info_access_client_to_service as $key=>$client}
-                                {if  $smarty.const.GDS_SWITCH eq 'mainPage'}
-                                    {include file="./boxes/{$client['MainService']}.tpl" client=$client}
-                                {else}
-                                    {if $active_tab eq 'internalFlight' && $client['MainService'] eq 'Flight' || $active_tab eq $client['MainService']}
-                                        {include file="./boxes/{$client['MainService']}.tpl" client=$client}
-                                    {/if}
-                                {/if}
-                            {/foreach}
-                        </div>
-                        '''
-        return helper.create_file(f'{content}', search_box_path, 'tabs-search-box', 'tpl')
-    except Exception as e:
-        return 'searchBox/sb.py, modulationSearchBoxBoxes(): ' + str(e)  # Return the exception message for no

@@ -292,6 +292,28 @@ def clean_serialize_string(string):
     string = string.replace("&lt;", "<")
     return string
 
+def search_box_clean_serialize_string(string):
+    string = string.replace("https://192.168.1.100/gds/view/WW12/", "")
+    string = string.replace("http://192.168.1.100/gds/view/WW12/", "")
+    string = string.replace("http://192.168.1.100/gds/view/WW12/", "")
+    string = BeautifulSoup(string, 'html.parser')
+    string = string.prettify()
+    string = string.replace("/>", ">")
+    string = string.replace("  ", "")
+    string = string.replace("/>", ">")
+    string = string.replace("&gt;", ">")
+    string = string.replace('''[" ''', "['")
+    string = string.replace('''[" ''', "['")
+    string = string.replace('''["''', "['")
+    string = string.replace(''' "]''', "']")
+    string = string.replace('''"]''', "']")
+    string = string.replace('''"{''', "'{")
+    string = string.replace('''}"''', "}'")
+    string = string.replace('''}'=""''', "}'")
+    string = string.replace(""" id']}""", "")
+    string = string.replace("""{$country['>""", "{$country['id']}'>")
+    return string
+
 
 def value_exists_in_dict_values(dictionary, value ):
     for sub_dict in dictionary.values():
