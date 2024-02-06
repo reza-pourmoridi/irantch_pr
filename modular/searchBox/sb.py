@@ -22,6 +22,7 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
 
         # getting the tabs and put them in array adn tab.tpl file in searchbox directory
         hrefs_list = []
+        tab_icons = {}
         if tabs_section:
             all_a_tags = tabs_section.find_all('a')
             boxes_path = helper.create_folder('boxes', project_path + '/include_files/search-box')
@@ -34,10 +35,12 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
                     parent_li = f'{parent_li}'
                     parent_li = parent_li.replace("nav-link", 'nav-link {if $active} active {/if}')
                     hrefs_list.append(item)
-                    item = item.replace('_internal', '').replace('_external', '')
-                    item_path = helper.create_folder(item, sections_path)
+                    modified_id = item.replace('_internal', '').replace('_external', '')
+                    item_path = helper.create_folder(modified_id, sections_path)
 
-
+                    check_svg = a.find('svg')
+                    check_i = a.find('i')
+                    tab_icons[item] = helper.icons_clean_serialize_string(f'{check_i}')
 
             testTabs = modulationSearchBoxTabs(project_path + '/include_files/search-box', parent_li)
             testBoxes = modulationSearchBoxBoxes(project_path + '/include_files/search-box')
@@ -46,6 +49,7 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
         id_lists = hrefs_list
         boxs = boxes_section.find_all(class_='__box__')
         items_massages = []
+        ##modulation of boxes
         for b in boxs:
             box_id = b.get('id')
             modified_id = box_id.replace('_internal', '').replace('_external', '')
@@ -58,6 +62,11 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
                 else:
                     helper.if_dosnt_exist_create_else_add(boxes_path, modified_id, f'{b}')
 
+        ##separation of codes
+        for b in boxs:
+            box_id = b.get('id')
+            modified_id = box_id.replace('_internal', '').replace('_external', '')
+            if box_id:
                 final_massage = seprate_search_box_codes(project_path,modified_id)
                 item_massage = box_id + " : " + final_massage
                 items_massages.append(item_massage + '<br><br>')
@@ -73,57 +82,53 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
                 services_array[item] = modified_item
 
 
-        return [f'{items_massages}', services_array]
+        return [f'{items_massages}', tab_icons]
     except Exception as e:
         return 'search_box()' + str(e)  # Return the exception message for now
 
 
 def seprate_search_box_codes(project_path, box_name):
     try:
-        section = f"{helper.read_file(project_path + '/include_files/search-box/boxes/' + box_name + '.tpl')}"
-        soup = BeautifulSoup(section, 'html.parser')
-        soup = soup.find(class_='__box__')
-        forms = soup.find_all(recursive=False)
         form_detection_array = {
             'Flight': {
-                'internal': {'switch-input-js':'btn_radio_internal_external.tpl',
-                             'internal-one-way-js':'btn_type_way.tpl',
-                             'departure-date-internal-js':'date_flight.tpl',
-                             'internal-arrival-date-js':'date_flight.tpl',
-                             'route_destination_internal-js':'destination_selection.tpl',
-                             'route_origin_internal-js':'origin_selection.tpl',
-                             'box-of-count-passenger-js':'passenger_count.tpl'},
-            'international': {  'select-type-way-js':'btn_type_way.tpl',
-                                'departure-date-international-js':'date_flight.tpl',
-                                'destination-international-js':'destination_search_box.tpl',
-                                'iata-origin-international-js':'origin_search_box.tpl',
-                                'international-adult-js':'passenger_count.tpl',},
-                'multi-way': {'newAdditionalExternal($(this))':'add_flight_multy_way.tpl',
-                              'click_flight_multiTrack':'btn_type_way.tpl',
-                              'multi-adult-js':'count_passenger_multi_way.tpl',
-                              'date-multi-0-js':'date_first_multi_way.tpl',
-                              'list-multi-0-origin-airport-international-js':'departure_first_multy_way.tpl',
-                              'iata-multi-0-destination-international-js':'destination_first_multi_way.tpl',
-                            # additional way
+                'internal': {'switch-input-js': 'btn_radio_internal_external.tpl',
+                             'internal-one-way-js': 'btn_type_way.tpl',
+                             'departure-date-internal-js': 'date_flight.tpl',
+                             'internal-arrival-date-js': 'date_flight.tpl',
+                             'route_destination_internal-js': 'destination_selection.tpl',
+                             'route_origin_internal-js': 'origin_selection.tpl',
+                             'box-of-count-passenger-js': 'passenger_count.tpl'},
+                'international': {'select-type-way-js': 'btn_type_way.tpl',
+                                  'departure-date-international-js': 'date_flight.tpl',
+                                  'destination-international-js': 'destination_search_box.tpl',
+                                  'iata-origin-international-js': 'origin_search_box.tpl',
+                                  'international-adult-js': 'passenger_count.tpl', },
+                'multi-way': {'newAdditionalExternal($(this))': 'add_flight_multy_way.tpl',
+                              'click_flight_multiTrack': 'btn_type_way.tpl',
+                              'multi-adult-js': 'count_passenger_multi_way.tpl',
+                              'date-multi-0-js': 'date_first_multi_way.tpl',
+                              'list-multi-0-origin-airport-international-js': 'departure_first_multy_way.tpl',
+                              'iata-multi-0-destination-international-js': 'destination_first_multi_way.tpl',
+                              # additional way
                               'multi-1-origin-international-js': 'departure_secend_multi_way.tpl',
                               'iata-multi-1-destination-international-js': 'destination_second_multi_way.tpl',
                               'date-multi-1-js': 'date_second_multi_way.tpl',
                               'nclick="removeAdditionalExternal($(this))"': 'remove_additional_multi_way.tpl',
-                            # end of additional way
+                              # end of additional way
 
                               },
 
             },
             'Tour': {
-                'internal': {'switch-input-tour-js':'btn_radio_internal_external.tpl',
-                             'internal-date-travel-tour-js':'date_teravel.tpl',
-                             'internal-destination-tour-js':'destination_city_tour.tpl',
-                             'internal-origin-tour-js':'origin_city_tour.tpl',},
+                'internal': {'switch-input-tour-js': 'btn_radio_internal_external.tpl',
+                             'internal-date-travel-tour-js': 'date_teravel.tpl',
+                             'internal-destination-tour-js': 'destination_city_tour.tpl',
+                             'internal-origin-tour-js': 'origin_city_tour.tpl', },
                 'international': {'international-destination-city-tour-js': 'city_destination.tpl',
                                   'international-tour-origin-city-js': 'city_origin.tpl',
                                   'international-destination-tour-js': 'country_destination.tpl',
                                   'tourOriginCountryPortal': 'country_origin.tpl',
-                                  'international-date-travel-tour-js': 'date_travel.tpl',},
+                                  'international-date-travel-tour-js': 'date_travel.tpl', },
             },
             'Hotel': {
                 'internal': {
@@ -165,9 +170,9 @@ def seprate_search_box_codes(project_path, box_name):
                 }
             },
             'Insurance': {
-                    'main': {
-                    }
-                },
+                'main': {
+                }
+            },
             'GashtTransfer': {
                 'gasht': {
                     'gasht-date-js': 'date_gasht.tpl',
@@ -175,11 +180,11 @@ def seprate_search_box_codes(project_path, box_name):
                     'gasht-type-js': 'type_gasht.tpl',
                 },
                 'transfer': {
-                'transfer-date-js': 'date_transfer.tpl',
-                'transfer-destination-js': 'destination.tpl',
-                'transfer-type-js': 'type_accept.tpl',
-                'transfer-location-js': 'type_destination.tpl',
-                'transfer-vehicle-type-js': 'type_device.tpl',
+                    'transfer-date-js': 'date_transfer.tpl',
+                    'transfer-destination-js': 'destination.tpl',
+                    'transfer-type-js': 'type_accept.tpl',
+                    'transfer-location-js': 'type_destination.tpl',
+                    'transfer-vehicle-type-js': 'type_device.tpl',
                 },
             },
             'Europcar': {
@@ -208,26 +213,34 @@ def seprate_search_box_codes(project_path, box_name):
                 }
             }
         }
-
-        main_folder_path = project_path + '/include_files/search-box/boxes/sections/' + box_name + '/'
-
-        for form in forms:
-            compere_dic = check_how_much_class_contains_soup(form, form_detection_array[box_name])
-            sub_folder_name = max(compere_dic, key=compere_dic.get)
-            if sub_folder_name != 'main':
-                sub_folder_path = helper.create_folder(sub_folder_name, main_folder_path)
-                if 'exists' in sub_folder_path:
-                    sub_folder_path = main_folder_path + '/' + sub_folder_name + '/'
-            else:
-                sub_folder_path = main_folder_path
+        section = f"{helper.read_file(project_path + '/include_files/search-box/boxes/' + box_name + '.tpl')}"
+        soup = BeautifulSoup(section, 'html.parser')
+        boxes = soup.find_all(class_='__box__')
+        for box in boxes:
+            forms = box.find_all('form')
+            specific_elements = box.find_all(class_='radios')
+            all_main_elements = forms + specific_elements
 
 
-            for pattern, file_name in form_detection_array[box_name][sub_folder_name].items():
-                modified_file_name = file_name.replace('.tpl', '')
-                file_path = helper.if_dosnt_exist_create_else_add(sub_folder_path, modified_file_name, '')
-            tag_replace = continues_tag_rplacment(form, form_detection_array[box_name][sub_folder_name].items(), sub_folder_path, box_name, sub_folder_name)
+            main_folder_path = project_path + '/include_files/search-box/boxes/sections/' + box_name + '/'
+            for element in all_main_elements:
+                compere_dic = check_how_much_class_contains_soup(element, form_detection_array[box_name])
+                sub_folder_name = max(compere_dic, key=compere_dic.get)
+                if sub_folder_name != 'main':
+                    sub_folder_path = helper.create_folder(sub_folder_name, main_folder_path)
+                    if 'exists' in sub_folder_path:
+                        sub_folder_path = main_folder_path + '/' + sub_folder_name + '/'
+                else:
+                    sub_folder_path = main_folder_path
 
-        result = helper.create_or_replace_file(project_path + '/include_files/search-box/boxes/' + box_name + '.tpl', f'{soup}')
+
+                for pattern, file_name in form_detection_array[box_name][sub_folder_name].items():
+                    modified_file_name = file_name.replace('.tpl', '')
+                    file_path = helper.if_dosnt_exist_create_else_add(sub_folder_path, modified_file_name, '')
+                tag_replace = continues_tag_rplacment(element, form_detection_array[box_name][sub_folder_name].items(), sub_folder_path, box_name, sub_folder_name)
+
+        final_string = helper.search_box_clean_serialize_string(f'{soup}')
+        result = helper.create_or_replace_file(project_path + '/include_files/search-box/boxes/' + box_name + '.tpl', f'{final_string}')
         return f'{result}'
 
     except Exception as e:
@@ -284,32 +297,24 @@ def modulationSearchBoxTabs(search_box_path, tab):
         tab = BeautifulSoup(tab, 'html.parser')
 
         content = '''
-                    <ul class="nav" id="searchBoxTabs">
+                        {assign var='tab_counter' value=0}
                         {foreach $info_access_client_to_service as $key=>$client}
-                            {if  $smarty.const.GDS_SWITCH eq 'mainPage'}
-
-                                {if ($smarty.const.SOFTWARE_LANG eq 'fa') || $client['MainService'] neq 'Train' && $client['MainService'] neq 'Bus' &&
-                                $client['MainService'] neq 'Europcar' && $client['MainService'] neq 'GashtTransfer' && $client['MainService'] neq 'Package'}
-                                    <li class="nav-item">
-                                        <a onclick="changeText(`{$obj_main_page->nameBoxSearchBox($client['MainService'])}` , 'null')" class="nav-link
-                                            {if $client['MainService'] eq 'Flight' }active{/if}"
-                                             id="{$client['MainService']}-tab" data-toggle="tab" href="#{$client['MainService']}">
-                                            __put__tab__here__
-                                        </a>
-                                    </li>
-                                {/if}
-                            {else}
-                                {if $active_tab eq 'internalFlight' && $client['MainService'] eq 'Flight' || $active_tab eq $client['MainService']}
-                                    <li class="nav-item">
-                                        <a onclick="changeText(`{$obj_main_page->nameBoxSearchBox($client['MainService'])}` , 'null')" class="nav-link active"
-                                           id="{$client['MainService']}-tab" data-toggle="tab" href="#{$client['MainService']}">
-                                            __put__tab__here__
-                                        </a>
-                                    </li>
+                            {if $obj_main_page->newClassTabsSearchBox($client['MainService'])}
+                                {if ( $smarty.const.GDS_SWITCH eq 'mainPage' ) || ($active_tab eq 'internalFlight' && $client['MainService'] eq 'Flight' || $active_tab eq $client['MainService'])}
+                                    {foreach $obj_main_page->newClassTabsSearchBox($client['MainService']) as $tab_id => $icon}
+                                        <li class="nav-item">
+                                            <a onclick="changeText(`{$obj_main_page->nameBoxSearchBox($tab_id)}` , 'null')"
+                                               class="{$client['MainService']}-tab-pic nav-link {if $tab_counter eq 0 }active{/if}"
+                                               id="{$tab_id}-tab" data-toggle="tab" href="#{$tab_id}">
+                                                __put__tab__here__
+                                            </a>
+                                        </li>
+                                        {$tab_counter = $tab_counter + 1}
+                                    {/foreach}
                                 {/if}
                             {/if}
                         {/foreach}
-                    </ul>
+
         '''
         tab = helper.remove_tag_from_soup_object(tab, 'li')
         tab = helper.remove_tag_from_soup_object(tab, 'a')
@@ -326,7 +331,7 @@ def modulationSearchBoxTabs(search_box_path, tab):
 
         content = content.replace("__put__tab__here__", f'{tab}')
 
-        content = helper.clean_serialize_string(f'{content}')
+        content = helper.search_box_clean_serialize_string(f'{content}')
 
         return helper.create_file(content, search_box_path, 'tabs-search-box', 'tpl')
     except Exception as e:
@@ -336,19 +341,20 @@ def modulationSearchBoxTabs(search_box_path, tab):
 def modulationSearchBoxBoxes(search_box_path):
     try:
         content = '''{assign var="obj_main_page" value=$obj_main_page }
-                        <div class="tab-content" id="searchBoxContent">
-                            {foreach $info_access_client_to_service as $key=>$client}
+                        {foreach $info_access_client_to_service as $key=>$client}
+                            {if $obj_main_page->newClassTabsSearchBox($client['MainService'])}
                                 {if  $smarty.const.GDS_SWITCH eq 'mainPage'}
                                     {include file="./boxes/{$client['MainService']}.tpl" client=$client}
-                                {else}
+                                 {else}
                                     {if $active_tab eq 'internalFlight' && $client['MainService'] eq 'Flight' || $active_tab eq $client['MainService']}
-                                        {include file="./boxes/{$client['MainService']}.tpl" client=$client}
+                                        {include file="./boxes/{$client['MainService']}.tpl" client=$client active=true}
                                     {/if}
                                 {/if}
-                            {/foreach}
-                        </div>
+                            {/if}
+                        {/foreach}
+                        
                         '''
-        content = helper.clean_serialize_string(f'{content}')
+        content = helper.search_box_clean_serialize_string(f'{content}')
         return helper.create_file(content, search_box_path, 'boxs-search', 'tpl')
     except Exception as e:
         return 'searchBox/sb.py, modulationSearchBoxBoxes(): ' + str(e)  # Return the exception message for no
@@ -404,7 +410,8 @@ def Tour(section=False, item_path=False, file_name=False, type=False):
         final_section =  f'{section}'
         return helper.if_dosnt_exist_create_else_add(item_path, file_name, f'{final_section}')
     except Exception as e:
-        return 'searchBox/sb.py, Tour(): ' + str(e)  # Return the exception message for now
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 def Visa(section=False, item_path=False, box_id=False, type=False):

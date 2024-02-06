@@ -314,6 +314,16 @@ def initiation_progress():
         }
     }
 
+    moduls_array = {
+        'banner_gallery': {
+            'class': 'i_modular_banner_gallery',
+            'name': 'گالری بنر و سرچ باکس',
+            'file': 'search-box',
+            'modular': banner_gallery_module,
+            'test_function': unit_test.unit_test_banner_gallery
+        },
+    }
+
     module_messages = []
 
 
@@ -521,11 +531,11 @@ def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa',  f
             search_box_massage = search_box_modulation[0]
             if isinstance(search_box_modulation, str):
                 search_box_massage = search_box_modulation
-            services_array = search_box_modulation[1]
-            services_json = json.dumps(services_array)
+            tab_icons = search_box_modulation[1]
+            services_json = json.dumps(tab_icons)
             services_string = f'{services_json}'
-            before_html = before_html + '''{assign var="services_array_json" value= '__services_json_string__'}
-                                            {assign var="services_array" value=$services_array_json|json_decode}'''
+            before_html = before_html + '''{assign var="tab_icons_json" value= '__services_json_string__'}
+                                            {assign var="tab_icons" value=$tab_icons_json|json_decode}'''
             before_html = before_html.replace("__services_json_string__", services_string)
             search_box = banner_gallery_section.find(class_='i_modular_searchBox')
             helper.replace_attribute(search_box, '__search_box_tabs__', 'string','''{include file="./search-box/tabs-search-box.tpl"}''')

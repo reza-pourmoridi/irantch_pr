@@ -1,0 +1,121 @@
+@import "components/fonts";
+@import "components/variables";
+@import "components/mixin";
+body, html {
+  font-family: $fontFamily !important;
+  direction: rtl;
+  min-height: 100vh;
+  background: #fff;
+  overflow-x: hidden;
+  text-align: right;
+  -moz-font-feature-settings: "ss02";
+  -webkit-font-feature-settings: "ss02";
+  font-feature-settings: "ss02";
+}
+
+.owl-nav .owl-next {
+  right: unset;
+  left: -45px
+}
+
+.owl-nav .owl-prev {
+  left: unset;
+  right: -45px;
+}
+.owl-nav button {
+  right: 0;
+  outline: none;
+  margin: 0 1rem;
+  width: 45px !important;
+  transition: all .3s !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 45px !important;
+  border-radius: 50% !important;
+  background: #fff !important;
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  box-shadow: 0 5px 10px 2px rgba(0,0,0,.4509803922)
+}
+.owl-nav button>svg {
+  width: 20px;
+  height: 20px;
+  fill: #333
+}
+
+
+ul, li{
+  list-style: none;
+}
+main, .content_tech {
+  min-height: 100vh;
+}
+a, a:hover {
+  text-decoration: none
+}
+button{
+  outline: none;
+  &:focus{
+    outline: none;
+  }
+}
+
+.title{
+  color: #333;
+  font-family: $fontFamilyBold;
+  font-size: 28px;
+  margin-bottom: 0;
+}
+.parent-ul-hotel{
+  margin-bottom: 30px;
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  #pills-tab-hotel,#pills-tab-hotel1{
+    padding-right: 0;
+    gap: 20px;
+    .nav-link{
+      border: 1px solid $mainColor;
+      color: $mainColor;
+      padding: 10px 30px;
+      border-radius: 10px;
+      transition: all .3s;
+      font-size: 18px;
+      font-family: $fontFamilyBold;
+      background: rgba(0,0,0,0);
+      cursor: pointer;
+      &.active{
+        background: #1ead76;
+        color: #fff;
+        border-color: #1ead76;
+      }
+    }
+  }
+}
+
+@import "section/header";
+@import "section/tab";
+@import "section/hotel";
+@import "section/tour";
+@import "section/blog";
+@import "section/news-letters";
+@import "section/footer";
+@import "section/app";
+
+
+@media (max-width: 600px) {
+  .owl-nav .owl-next {
+    right: unset;
+    left: 0
+  }
+
+  .owl-nav .owl-prev {
+    left: unset;
+    right: 0
+  }
+}

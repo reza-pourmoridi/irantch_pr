@@ -92,10 +92,16 @@ def create_folder(folder_name , path = False):
     except Exception as e:
         return f'Error creating folder: {str(e)}'
 
-def read_file(file_path):
-    with open(file_path, 'r') as file:
-        content = file.read()
-    return content
+
+def read_file(file_path, encoding='utf-8'):
+    try:
+        with open(file_path, 'r', encoding=encoding) as file:
+            content = file.read()
+            return content
+    except FileNotFoundError:
+        return "File not found"
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
 
 def copy_directory_contents(source_directory, target_directory):
     try:
@@ -201,16 +207,6 @@ def remove_tag_from_soup_object(content, tag_name):
     return soup
 
 
-def read_file(file_path, encoding='utf-8'):
-    try:
-        with open(file_path, 'r', encoding=encoding) as file:
-            content = file.read()
-            return content
-    except FileNotFoundError:
-        return "File not found"
-    except Exception as e:
-        return f"An error occurred: {str(e)}"
-
 
 
 
@@ -275,6 +271,7 @@ def add_before_after(section, class_name, before, after):
         inner_html = f'{before}\n{complex_element}\n{after}'
         complex_element.replace_with(BeautifulSoup(inner_html, 'html.parser'))
 
+
 def clean_serialize_string(string):
     string = string.replace("https://192.168.1.100/gds/view/WW12/", "")
     string = string.replace("http://192.168.1.100/gds/view/WW12/", "")
@@ -293,25 +290,19 @@ def clean_serialize_string(string):
     return string
 
 def search_box_clean_serialize_string(string):
-    string = string.replace("https://192.168.1.100/gds/view/WW12/", "")
-    string = string.replace("http://192.168.1.100/gds/view/WW12/", "")
-    string = string.replace("http://192.168.1.100/gds/view/WW12/", "")
-    string = BeautifulSoup(string, 'html.parser')
-    string = string.prettify()
-    string = string.replace("/>", ">")
-    string = string.replace("  ", "")
-    string = string.replace("/>", ">")
     string = string.replace("&gt;", ">")
+    string = string.replace("&lt;", "<")
     string = string.replace('''[" ''', "['")
-    string = string.replace('''[" ''', "['")
-    string = string.replace('''["''', "['")
-    string = string.replace(''' "]''', "']")
-    string = string.replace('''"]''', "']")
-    string = string.replace('''"{''', "'{")
-    string = string.replace('''}"''', "}'")
-    string = string.replace('''}'=""''', "}'")
-    string = string.replace(""" id']}""", "")
-    string = string.replace("""{$country['>""", "{$country['id']}'>")
+    string = string.replace(''' "="" ''', " ")
+    string = string.replace('''}'=">{''', '''}">{''')
+    string = string.replace('''}'="">{''', '''}">{''')
+    string = string.replace(""""{$country[">""", """"{$country['id']}">""")
+    string = string.replace("""id']}'=""""", " ")
+
+    return string
+
+def icons_clean_serialize_string(string):
+    string = string.replace(r'\"', "'")
     return string
 
 
@@ -358,7 +349,6 @@ def check_if_section_built(project_path ,file_name ,section):
 def if_dosnt_exist_create_else_add(file_path, file_name ,string):
     if os.path.exists(file_path + '/' + file_name + '.tpl'):
         section = f"{read_file(file_path + '/' + file_name + '.tpl')}"
-        section = BeautifulSoup(section, 'html.parser')
         return create_file(f'{section}' + string, file_path, file_name, 'tpl')
 
     return create_file(string, file_path, file_name, 'tpl')
