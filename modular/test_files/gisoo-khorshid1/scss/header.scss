@@ -1,0 +1,230 @@
+@import "components/variables";
+@import "components/mixin";
+@import "components/fonts";
+
+.header-gisoo{
+  background-color: #fff;
+  box-shadow: 0 4px 9px -6px grey;
+  position: relative;
+  width: 100%;
+  color: #263445;
+  height: 85px;
+  z-index: 4;
+  @include flex-align-items-center();
+  justify-content: space-between;
+  padding: 0 10px;
+
+  .parent-logo{
+    @include flex-center-all();
+
+    img{
+      width: 170px;
+    }
+  }
+
+  .parent-user-follow{
+    @include flex-center-all();
+    gap: 10px;
+
+    .parent-btn-follow{
+      @include flex-center-all();
+      gap: 5px;
+      transition: $transition;
+      color: $secondColor;
+      background: #fffeb4;
+      padding: 10px 20px;
+      border-radius: 8px;
+
+      &:hover{
+        background: $mainColor;
+        text-decoration: none;
+        color: #333;
+      }
+
+      svg{
+        display: none;
+      }
+    }
+    .parent-btn-user{
+      @include flex-center-all();
+      gap: 5px;
+      transition: $transition;
+      color: $secondColor;
+      background: #fffeb4;
+      padding: 10px 20px;
+      border-radius: 8px;
+
+      &:hover{
+        background: $mainColor;
+        text-decoration: none;
+        color: #333;
+      }
+      svg{
+        display: none;
+      }
+    }
+  }
+}
+
+
+//footer
+.div-footer-parent {
+  background: #fdfdfd;
+  padding: 40px 0;
+}
+.parent-item-footer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.img-box-footer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.parent-item-footer img {
+  width: 98px;
+}
+.text-logo-footer {
+  text-align: right;
+  margin-right: 5px;
+}
+.text-logo-footer span {
+  color: #797F86;
+  font-size: 14px;
+}
+.text-logo-footer h4 {
+  color: #000;
+  font-size: 18px;
+  font-family: $fontFamilyBold;
+  margin-bottom: 0;
+}
+.child-item-footer {
+  color: #666;
+}
+.child-item-footer i {
+  margin-left: 5px;
+}
+.child-item-footer span {
+  color: #222;
+  margin-right: 5px;
+  transition: all ease .3s;
+  font-size: 16px;
+}
+.child-item-footer a {
+  color: #222;
+  margin-right: 5px;
+  transition: $transition;
+  font-size: 16px;
+
+  &:hover{
+    color: $secondColor;
+    text-decoration: none;
+  }
+}
+.footer-icon {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  margin-top: 5px;
+  gap: 30px;
+}
+.footer-icon a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: $transition;;
+  border-radius: 50%;
+  font-size: 28px;
+
+  &:hover{
+    color: $secondColor;
+    text-decoration: none;
+  }
+}
+.box-item-footer {
+  margin-top: 24px;
+}
+.box-item-footer h3 {
+  color: #333;
+  font-family: $fontFamilyBold;
+  margin-bottom: 27px;
+  font-size: 23px;
+}
+.box-item-footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+}
+.box-item-footer ul li a {
+  color: #222;
+  transition: all ease .3s;
+  display: flex;
+  align-items: center;
+
+  &:hover{
+    color: $secondColor;
+    text-decoration: none;
+  }
+}
+.box-item-footer ul li a i {
+  margin-left: 7px;
+  transition: $transition;
+}
+.parent-namad {
+  margin-top: 24px;
+  text-align: right;
+}
+.namads {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
+}
+.namads > a {
+  width: 80px;
+  height: 80px;
+  background: #fff;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+}
+.namads > a > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.last_text a {
+  color: #666;
+  transition: $transition;
+}
+.last_text p {
+  margin: 0;
+  color: #333;
+  margin-right: 3px;
+}
+.last_text a:hover {
+  color: #333;
+  text-decoration: none;
+}
+.last_text {
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid #ccc;
+  font-size: 14px;
+  padding: 10px 0;
+  align-items: center;
+  background: #ececec;
+}
+.footer-gisoo{
+  margin-top: 50px;
+  box-shadow: 0 -1px 9px -6px grey;
+}

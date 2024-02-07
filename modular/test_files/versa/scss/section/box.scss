@@ -1,0 +1,79 @@
+@import "../components/variables";
+@import "../components/mixin";
+.gym {
+  padding: 50px 0;
+  background: #fdfdfd;
+}
+.parent-gym {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 50px;
+  grid-row-gap: 30px;
+  align-items: center;
+}
+.gym-img img {
+  width: 550px;
+}
+.gym-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /*! gap: 20px; */
+}
+.gym-text h3 {
+  color: #333;
+  margin-bottom: 30px;
+}
+.gym-text p {
+  text-align: right;
+  line-height: 28px;
+  color: #5E6D77;
+  margin-bottom: 10px;
+}
+.parent-btn-gym {
+  display: flex;
+  align-items: center;
+  gap: 30px; /*! margin-bottom: 53px; */
+  margin-top: 30px;
+}
+.parent-btn-gym a {
+  background: $mainColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #fff;
+  transition: all ease .3s; /*! padding: 7px 25px; */
+  border: 1px solid $mainColor;
+  border-radius: 10px;
+  width: 100px;
+  height: 40px;
+}
+.parent-btn-gym a:hover {
+  background: $secondColor;
+  border-color: $secondColor;
+  color: $mainColor;
+  text-decoration: none;
+}
+@media (max-width: 991px) {
+  .gym-img {
+    display: none;
+  }
+  .parent-gym {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+@media (max-width: 576px) {
+  .gym-text h3 {
+    font-size: 20px;
+  }
+  .gym-text p {
+    font-size: 14px;
+    text-align: justify;
+  }
+  .parent-btn-gym {
+    width: 100%;
+    justify-content: center;
+    margin-top: 16px;
+  }
+}

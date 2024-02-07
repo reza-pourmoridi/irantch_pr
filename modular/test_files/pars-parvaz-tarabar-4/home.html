@@ -1,0 +1,1778 @@
+<!doctype html>
+<html lang="fa_IR" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>پارس پرواز</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/select2.css">
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/tabs.css">
+    <link rel="stylesheet" href="css/style.css">
+
+
+</head>
+<body>
+<header class="i_modular_menu header_area">
+    <div class="main_header_area animated">
+        <div class="container">
+            <nav id="navigation1" class="navigation">
+                <div class="nav-header">
+                    <a class="nav-brand" href="__main_link_href__ ">
+                        <img class="__logo_class__" src="images/logo.png" alt="پارس پرواز ">
+                    </a>
+                    <div class="nav-toggle"></div>
+                </div>
+                <div class="nav-menus-wrapper">
+                    <ul class="nav-menu align-to-right">
+                        <li><a href="javascript:">تور</a>
+                            <ul class="nav-dropdown">
+                                <li><a href="javascript:">تور داخلی</a>
+                                    <ul class="nav-dropdown">
+                                        <li><a href="javascript:">یزد</a></li>
+                                        <li><a href="javascript:">مشهد</a></li>
+                                        <li><a href="javascript:">کیش</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="javascript:">تور خارجی</a>
+                                    <ul class="nav-dropdown">
+                                        <li><a href="javascript:">مالزی</a></li>
+                                        <li><a href="javascript:">گرجستان</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="javascript:">جستجوی تور</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="javascript:">پرواز</a></li>
+                        <li><a href="javascript:">هتل ها</a></li>
+                        <li><a href="javascript:">اتوبوس</a></li>
+                        <li><a href="javascript:">ویزا</a></li>
+                        <li><a href="javascript:">وبلاگ</a></li>
+                        <li><a href="javascript:">اخبار</a></li>
+                        <li><a href="javascript:">آژانس ما</a>
+                            <ul class="nav-dropdown">
+                                <li><a href="javascript:">درباره ما</a></li>
+                                <li><a href="javascript:">قوانین و مقررات</a></li>
+                                <li><a href="javascript:">درگاه پرداخت</a></li>
+                                <li><a href="javascript:">تماس با ما</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="left_menu">
+                    <div class="link_header">
+                        <a class="btn_main" href="__login_register_class__ ">
+                            <span>ورود / ثبت نام</span>
+                        </a>
+                    </div>
+                    <div class="link_header">
+                        <a href="" class="btn_main"><span>پیگیری خرید</span></a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+<div class="i_modular_banner_gallery __banner_tabs__ banner">
+
+    <div class="i_modular_searchBox search_box container">
+        <h2 id="titr_searchBox">رزرو <em>بلیط</em> <span id="text_search">هواپیمای داخلی </span></h2>
+        <ul class="__search_box_tabs__ nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a onclick="changeText('هواپیمای داخلی ' , '' , 'flight')" class="nav-link active" id="flight-l-tab" data-toggle="tab" href="#Flight_internal" role="tab" aria-controls="flight-l" aria-selected="true">
+                    <h4>
+                        <i class="icon-tab icon-airplane">&#xe800;</i>
+                        <span>پرواز داخلی</span>
+                    </h4>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a onclick="changeText('هواپیمای خارجی ' , '' , 'flight-f')" class="nav-link" id="flight-f-tab" data-toggle="tab" href="#Flight_external" role="tab" aria-controls="flight-f" aria-selected="true">
+                    <h4>
+                        <i class="icon-tab icon-airplane">&#xe800;</i>
+                        <span>پرواز خارجی</span>
+                    </h4>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a onclick="changeText('هتل داخلی' , 'null' , 'hotel')" class="nav-link" id="hotel-tab" data-toggle="tab" href="#Hotel_internal" role="tab" aria-controls="hotel" aria-selected="false">
+                    <h4>
+                        <i class="icon-tab icon-bed">&#xe808;</i>
+                        <span>هتل داخلی</span>
+                    </h4>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a onclick="changeText('هتل خارجی' , 'null' , 'hotel_international')" class="nav-link" id="hotel_international-tab" data-toggle="tab" href="#Hotel_external" role="tab" aria-controls="hotel_international" aria-selected="false">
+                    <h4>
+                        <i class="icon-tab icon-bed">&#xe808;</i>
+                        <span>هتل خارجی</span>
+                    </h4>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a onclick="changeText('تور داخلی' , 'null' , 'tour')" class="nav-link" id="tour-tab" data-toggle="tab" href="#Tour_internal" role="tab" aria-controls="tour" aria-selected="false">
+                    <h4>
+                        <i class="icon-tab icon-suitcases">&#xe809;</i>
+                        <span>تور داخلی</span>
+                    </h4>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a onclick="changeText('تور خارجی' , 'null' , 'tour_international')" class="nav-link" id="tour-tab_international" data-toggle="tab" href="#Tour_external" role="tab" aria-controls="tour" aria-selected="false">
+                    <h4>
+                        <i class="icon-tab icon-suitcases">&#xe809;</i>
+                        <span>تور خارجی</span>
+                    </h4>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a onclick="changeText('اتوبوس' , 'null' , 'bus')" class="nav-link" id="bus-tab" data-toggle="tab" href="#Bus" role="tab" aria-controls="bus" aria-selected="false">
+                    <h4>
+                        <i class="icon-tab icon-bus"></i>
+                        <span>اتوبوس</span>
+                    </h4>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a onclick="changeText('ویزا' , 'null' , 'visa')" class="nav-link" id="visa-tab" data-toggle="tab" href="#Visa" role="tab" aria-controls="visa" aria-selected="true">
+                    <h4>
+                        <i class="icon-tab icon-passport"></i>
+                        <span>ویزا</span>
+                    </h4>
+                </a>
+            </li>
+        </ul>
+        <div class="__search_boxes__ tab-content" id="myTabContent">
+            <div class="__box__ tab-pane show active" id="Flight_internal" role="tabpanel" aria-labelledby="flight-l-tab">
+                <div class="col-12">
+                    <div id="flight_dakheli"  >
+                        <form data-action="https://s360online.iran-tech.com/" method="post" class="d-contents" target="_blank" id="gds_local" name="gds_local">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 col-sm-12 d-ceckboxs p-0">
+                                    <div class="cntr">
+                                        <label for="rdo-1" class="btn-radio select_multiway">
+                                            <input checked="" type="radio" id="rdo-1" name="select-rb2" value="1">
+                                            <svg width="20px" height="20px" viewBox="0 0 20 20">
+                                                <circle cx="10" cy="10" r="9"></circle>
+                                                <path d="M10,7 C8.34314575,7 7,8.34314575 7,10 C7,11.6568542 8.34314575,13 10,13 C11.6568542,13 13,11.6568542 13,10 C13,8.34314575 11.6568542,7 10,7 Z"
+                                                      class="inner"></path>
+                                                <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z"
+                                                      class="outer"></path>
+                                            </svg>
+                                            <span>یک طرفه </span>
+                                        </label>
+                                        <label for="rdo-2" class="btn-radio select_multiway">
+
+                                            <input type="radio" id="rdo-2" name="select-rb2" value="2">
+                                            <svg width="20px" height="20px" viewBox="0 0 20 20">
+                                                <circle cx="10" cy="10" r="9"></circle>
+                                                <path d="M10,7 C8.34314575,7 7,8.34314575 7,10 C7,11.6568542 8.34314575,13 10,13 C11.6568542,13 13,11.6568542 13,10 C13,8.34314575 11.6568542,7 10,7 Z"
+                                                      class="inner"></path>
+                                                <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z"
+                                                      class="outer"></path>
+                                            </svg>
+                                            <span>دو طرفه </span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search col_with_route">
+                                    <div class="form-group">
+                                        <div class="form-group origin_start">
+                                            <input
+                                                    onclick="displayCityList('origin')"
+                                                    type="text" name="route_origin_internal"
+                                                    id="route_origin_internal"
+                                                    autocomplete='off'
+                                                    class="form-control inputSearchLocal route_origin_internal-js"
+                                                    placeholder="مبدأ ( شهر )">
+                                            <input id="route_origin_internal"
+                                                   class="origin-internal-js"
+                                                   type="hidden"
+                                                   placeholder="مبدأ"
+                                                   data-border-red="#route_origin_internal"
+                                                   value=""
+                                                   name="route_origin_internal">
+                                            <div id="list_airport_origin_internal"
+                                                 class="resultUlInputSearch list-show-result list-origin-airport-internal-js">
+                                            </div>
+                                            <div id="list_origin_popular_internal"
+                                                 class="resultUlInputSearch list-show-result list_popular_origin_internal-js">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button onclick="reversRouteFlight('internal')"
+                                            class="switch_routs"
+                                            type="button"
+                                            name="button">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M443.3 139.3c6.2-6.2 6.2-16.4 0-22.6l-96-96c-6.2-6.2-16.4-6.2-22.6 0s-6.2 16.4 0 22.6L393.4 112 16 112c-8.8 0-16 7.2-16 16s7.2 16 16 16l377.4 0-68.7 68.7c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0l96-96zm-342.6 352c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6L54.6 400 432 400c8.8 0 16-7.2 16-16s-7.2-16-16-16L54.6 368l68.7-68.7c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0l-96 96c-6.2 6.2-6.2 16.4 0 22.6l96 96z"/></svg>
+                                    </button>
+                                </div>
+                                <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search search_col">
+                                    <div class="form-group">
+        <span class="destnition_start">
+        <input type="text"
+               onclick="displayCityList('destination')"
+               autocomplete='off'
+               id="route_destination_internal"
+               name="route_destination_internal"
+               class="inputSearchForeign form-control route_destination_internal-js"
+               placeholder="مقصد ( شهر )">
+        </span>
+                                        <input id="route_destination_internal"
+                                               class="destination-internal-js"
+                                               type="hidden"
+                                               value=""
+                                               placeholder="مقصد"
+                                               data-border-red="#route_destination_internal"
+                                               name="route_destination_internal">
+                                        <div id="list_destination_airport_internal"
+                                             class="resultUlInputSearch list-show-result list-destination-airport-internal-js">
+                                        </div>
+                                        <div id="list_destination_popular_internal"
+                                             class="resultUlInputSearch list-show-result list_popular_destination_internal-js">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-6 col-12 col_search date_search">
+                                    <div class="form-group">
+                                        <input readonly="" type="text"
+                                               class="deptCalendar form-control went departure-date-internal-js "
+                                               name="departure_date_internal" id="departure_date_internal" placeholder="تاریخ رفت">
+                                        <i class="fal fa-calendar-alt"></i>
+                                    </div>
+                                    <div class="form-group">
+                                        <input readonly="" disabled="" name="arrival_date_internal" id="arrival_date_internal" type="text"
+                                               class="checktest returnCalendar form-control return_input internal-arrival-date-js " placeholder="تاریخ برگشت">
+                                        <i class="fal fa-calendar-alt"></i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search">
+                                    <div class="inp-s-num adt box-of-count-passenger box-of-count-passenger-js">
+                                        <input type="hidden" class="internal-adult-js" name="count_adult_internal" id="count_adult_internal" value="1">
+                                        <input type="hidden" class="internal-child-js" name="count_child_internal" id="count_child_internal" value="0">
+                                        <input type="hidden" class="internal-infant-js" name="count_infant_internal" id="count_infant_internal" value="0">
+                                        <div class="box-of-count-passenger-boxes box-of-count-passenger-boxes-js">
+                                            <span class="text-count-passenger text-count-passenger-js">1 بزرگسال ,0 کودک ,0 نوزاد</span>
+                                            <span class="fas fa-caret-down down-count-passenger"></span>
+                                        </div>
+                                        <div class="cbox-count-passenger cbox-count-passenger-js">
+                                            <div class="col-xs-12 cbox-count-passenger-ch adult-number-js">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-6 col-6">
+                                                        <div class="type-of-count-passenger"><h6> بزرگسال </h6> (بزرگتر از ۱۲ سال)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 col-6">
+                                                        <div class="num-of-count-passenger">
+                                                            <i class="fa fa-plus counting-of-count-passenger add-to-count-passenger-js"></i>
+                                                            <i class="number-count-js number-count counting-of-count-passenger" data-number="1" data-min="1" data-search="internal" data-type="adult">1</i>
+                                                            <i class="fa fa-minus counting-of-count-passenger minus-to-count-passenger-js"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 cbox-count-passenger-ch child-number-js">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-6 col-6">
+                                                        <div class="type-of-count-passenger">
+                                                            <h6> کودک </h6>(بین 2 الی 12 سال)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 col-6">
+                                                        <div class="num-of-count-passenger"><i
+                                                                class="fa fa-plus counting-of-count-passenger add-to-count-passenger-js"></i>
+                                                            <i class="number-count-js number-count counting-of-count-passenger" data-number="0" data-min="0" data-search="internal" data-type="child">0</i>
+                                                            <i class="fa fa-minus counting-of-count-passenger minus-to-count-passenger-js"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 cbox-count-passenger-ch infant-number-js">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-6 col-6">
+                                                        <div class="type-of-count-passenger">
+                                                            <h6> نوزاد </h6>(کوچکتر از 2 سال)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 col-6">
+                                                        <div class="num-of-count-passenger">
+                                                            <i class="fa fa-plus counting-of-count-passenger add-to-count-passenger-js"></i>
+                                                            <i class="number-count-js number-count counting-of-count-passenger"
+                                                               data-number="0" data-min="0" data-search="internal" data-type="infant">0</i>
+                                                            <i class="fa fa-minus counting-of-count-passenger minus-to-count-passenger-js"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="div_btn">
+                                                <span class="btn btn-close ">تأیید</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-3 col-sm-6 col-12 btn_s col_search">
+                                    <button type="button" onclick="gds_ticket_local_check()"
+                                            class="btn theme-btn seub-btn b-0">
+                                    <span>
+                                    جستجو
+                                </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="__box__ tab-pane" id="Flight_external" role="tabpanel" aria-labelledby="flight-f-tab">
+                <div class="col-12">
+                    <div id="flight_khareji" >
+                        <form data-action="https://s360online.iran-tech.com/" method="post" target="_blank" class="d-contents" id="gds_portal" name="gds_portal">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 col-sm-12 d-ceckboxs p-0">
+                                    <div class="cntr">
+                                        <label for="rdo-3" class="btn-radio">
+
+                                            <input checked="" class="multiselectportal" type="radio" id="rdo-3"
+                                                   name="select-rb"
+                                                   value="1">
+                                            <svg width="20px" height="20px" viewBox="0 0 20 20">
+                                                <circle cx="10" cy="10" r="9"></circle>
+                                                <path d="M10,7 C8.34314575,7 7,8.34314575 7,10 C7,11.6568542 8.34314575,13 10,13 C11.6568542,13 13,11.6568542 13,10 C13,8.34314575 11.6568542,7 10,7 Z"
+                                                      class="inner"></path>
+                                                <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z"
+                                                      class="outer"></path>
+                                            </svg>
+                                            <span>یک طرفه </span>
+                                        </label>
+                                        <label for="rdo-4" class="btn-radio">
+
+                                            <input type="radio" class="multiselectportal" id="rdo-4" name="select-rb"
+                                                   value="2">
+                                            <svg width="20px" height="20px" viewBox="0 0 20 20">
+                                                <circle cx="10" cy="10" r="9"></circle>
+                                                <path d="M10,7 C8.34314575,7 7,8.34314575 7,10 C7,11.6568542 8.34314575,13 10,13 C11.6568542,13 13,11.6568542 13,10 C13,8.34314575 11.6568542,7 10,7 Z"
+                                                      class="inner"></path>
+                                                <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z"
+                                                      class="outer"></path>
+                                            </svg>
+                                            <span>دو طرفه </span>
+                                        </label>
+
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search search_col col_with_route">
+                                    <div class="form-group origin_start">
+                                        <input type="text"
+                                               onclick='displayCityListExternal("origin" , event)'
+                                               name="iata_origin_international"
+                                               id="iata_origin_international"
+                                               autocomplete='off'
+                                               class="form-control inputSearchForeign iata-origin-international-js"
+                                               placeholder="مبدأ (شهر,فرودگاه)">
+                                        <input id="origin_international"
+                                               class="origin-international-js"
+                                               type="hidden" value=""
+                                               data-border-red="#iata_origin_international"
+                                               name="iata_origin_international">
+                                        <div id="list_airport_origin_international"
+                                             class="resultUlInputSearch list-show-result list-origin-airport-international-js">
+                                        </div>
+                                        <div id="list_origin_popular_external"
+                                             class="resultUlInputSearch list-show-result list_popular_origin_external-js">
+                                        </div>
+                                    </div>
+                                    <button onclick="reversDestination('international')"
+                                            class="switch_routs"
+                                            type="button" name="button">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M443.3 139.3c6.2-6.2 6.2-16.4 0-22.6l-96-96c-6.2-6.2-16.4-6.2-22.6 0s-6.2 16.4 0 22.6L393.4 112 16 112c-8.8 0-16 7.2-16 16s7.2 16 16 16l377.4 0-68.7 68.7c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0l96-96zm-342.6 352c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6L54.6 400 432 400c8.8 0 16-7.2 16-16s-7.2-16-16-16L54.6 368l68.7-68.7c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0l-96 96c-6.2 6.2-6.2 16.4 0 22.6l96 96z"/></svg>
+                                    </button>
+                                </div>
+                                <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search search_col">
+                                    <div class="form-group">
+        <span class="destnition_start">
+        <input type="text"
+               onclick='displayCityListExternal("destination" , event)'
+               autocomplete='off'
+               id="iata_destination_international"
+               name="iata_destination_international"
+               class="inputSearchForeign form-control iata-destination-international-js"
+               placeholder="مقصد (شهر,فرودگاه)">
+        </span>
+                                        <input id="destination_international"
+                                               class="destination-international-js"
+                                               type="hidden"
+                                               value=""
+                                               data-border-red="#iata_destination_international"
+                                               name="destination_international">
+                                        <div id="list_destination_airport_international"
+                                             class="resultUlInputSearch list-show-result list-destination-airport-international-js">
+                                        </div>
+                                        <div id="list_destination_popular_external"
+                                             class="resultUlInputSearch list-show-result list_popular_destination_external-js">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-6 col-12 col_search date_search">
+                                    <div class="form-group">
+                                        <input readonly="" type="text"
+                                               class="deptCalendar form-control went  departure-date-international-js" name="departure_date_international" id="departure_date_international" placeholder="تاریخ رفت">
+                                        <i class="fal fa-calendar-alt"></i>
+                                    </div>
+                                    <div class="form-group">
+                                        <input readonly="" disabled="" type="text" name="arrival_date_international" id="arrival_date_international" class="form-control return_input2  returnCalendar international-arrival-date-js" placeholder="تاریخ برگشت">
+                                        <i class="fal fa-calendar-alt"></i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search">
+                                    <div class="inp-s-num adt box-of-count-passenger box-of-count-passenger-js">
+                                        <input type="hidden" class="international-adult-js" name="adult_number_international" id="count_adult_international" value="1">
+                                        <input type="hidden" class="international-child-js" name="child_number_international" id="count_child_international" value="0">
+                                        <input type="hidden" class="international-infant-js" name="infant_number_international" id="count_infant_international" value="0">
+                                        <div class="box-of-count-passenger-boxes box-of-count-passenger-boxes-js">
+                                            <span class="text-count-passenger text-count-passenger-js">1 بزرگسال ,0 کودک ,0 نوزاد</span>
+                                            <span class="fas fa-caret-down down-count-passenger"></span>
+                                        </div>
+                                        <div class="cbox-count-passenger cbox-count-passenger-js">
+                                            <div class="col-xs-12 cbox-count-passenger-ch adult-number-js">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-6 col-6">
+                                                        <div class="type-of-count-passenger"><h6> بزرگسال </h6> (بزرگتر از ۱۲
+                                                            سال)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 col-6">
+                                                        <div class="num-of-count-passenger">
+                                                            <i class="fa fa-plus counting-of-count-passenger add-to-count-passenger-js"></i>
+                                                            <i class="number-count-js number-count counting-of-count-passenger" data-number="1" data-min="1" data-search="international" data-type="adult">1</i>
+                                                            <i class="fa fa-minus counting-of-count-passenger minus-to-count-passenger-js"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 cbox-count-passenger-ch child-number-js">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-6 col-6">
+                                                        <div class="type-of-count-passenger"><h6> کودک </h6>(بین 2 الی 12 سال)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 col-6">
+                                                        <div class="num-of-count-passenger">
+                                                            <i class="fa fa-plus counting-of-count-passenger add-to-count-passenger-js"></i>
+                                                            <i class="number-count-js number-count counting-of-count-passenger" data-number="0" data-min="0" data-search="international" data-type="child">0</i>
+                                                            <i class="fa fa-minus counting-of-count-passenger minus-to-count-passenger-js"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 cbox-count-passenger-ch infant-number-js">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-6 col-6">
+                                                        <div class="type-of-count-passenger"><h6> نوزاد </h6>(کوچکتر از 2 سال)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 col-6">
+                                                        <div class="num-of-count-passenger">
+                                                            <i class="fa fa-plus counting-of-count-passenger add-to-count-passenger-js"></i>
+                                                            <i class="number-count-js number-count counting-of-count-passenger" data-number="0" data-min="0" data-search="international" data-type="infant">0</i>
+                                                            <i class="fa fa-minus counting-of-count-passenger minus-to-count-passenger-js"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="div_btn"><span class="btn btn-close ">تأیید</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-3 col-sm-6 col-12 btn_s col_search">
+                                    <button type="button" class="btn theme-btn seub-btn b-0"><span>جستجو</span></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="__box__ tab-pane" id="Hotel_internal" role="tabpanel" aria-labelledby="hotel-tab">
+                <div class="row">
+                    <form class="d-contents">
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12 col_search search_col">
+                            <div class="form-group destination_start">
+                                <div class="s-u-in-out-wrapper raft raft-change change-bor w-100">
+                                    <input id="autoComplateSearchIN" name="autoComplateSearchIN"
+                                           class="inputSearchForeign w-100" type="text" value=""
+                                           placeholder='انتخاب شهر'
+                                           autocomplete="off"
+                                           onkeyup="searchCity('hotel')"
+                                           onclick="openBoxPopular('hotel')">
+                                    <input type='hidden' id='autoComplateSearchIN_hidden' value='' placeholder='انتخاب شهر'>
+                                    <input type='hidden' id='autoComplateSearchIN_hidden_en' value='' placeholder='انتخاب شهر'>
+                                    <ul id="listSearchCity" class="ul-inputSearch-externalHotel displayiN"></ul>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search search_col">
+                            <div class="form-group">
+                                <input type="text"
+                                       autocomplete="off"
+                                       class="init-shamsi-datepicker form-control check-in-date-js"
+                                       name="startDateForHotelLocal"
+                                       id="startDateForHotelLocal"
+                                       placeholder="تاریخ ورود"
+                                       data-type='internal'>
+                                <i class="fal fa-calendar-alt"></i>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search search_col">
+                            <div class="form-group">
+                                <input type="text"
+                                       class="init-shamsi-return-datepicker form-control check-out-date-internal-js"
+                                       name="endDateForHotelLocal"
+                                       autocomplete="off"
+                                       id="endDateForHotelLocal"
+                                       placeholder="تاریخ خروج"
+                                       data-type='internal'>
+                                <i class="fal fa-calendar-alt"></i>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12 col_search">
+                            <div class="form-group">
+                                <div class="hotel_passenger_picker internal-hotel-passenger-picker-js">
+                                    <ul onclick="openCountPassenger('internal')">
+                                        <li><em class="number_adult internal-number-adult-js">2</em> بزرگسال ،</li>
+                                        <li class="li_number_baby"><em class="number_baby internal-number-child-js">0</em> کودک ،</li>
+                                        <li><em class="number_room_po internal-number-room-js">1</em>اتاق</li>
+                                    </ul>
+                                    <div class="myhotels-rooms internal-my-hotels-rooms-js">
+                                        <div class="hotel_select_room internal-hotel-select-room-js">
+                                            <div class="myroom-hotel-item internal-my-room-hotel-item-js" data-roomnumber="1" >
+                                                <div class="myroom-hotel-item-title internal-my-room-hotel-item-title-js">
+                            <span class="close d-none" onclick="itemsRoom($(this),'internal')">
+                                <i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M144 400C144 408.8 136.8 416 128 416C119.2 416 112 408.8 112 400V176C112 167.2 119.2 160 128 160C136.8 160 144 167.2 144 176V400zM240 400C240 408.8 232.8 416 224 416C215.2 416 208 408.8 208 400V176C208 167.2 215.2 160 224 160C232.8 160 240 167.2 240 176V400zM336 400C336 408.8 328.8 416 320 416C311.2 416 304 408.8 304 400V176C304 167.2 311.2 160 320 160C328.8 160 336 167.2 336 176V400zM310.1 22.56L336.9 64H432C440.8 64 448 71.16 448 80C448 88.84 440.8 96 432 96H416V432C416 476.2 380.2 512 336 512H112C67.82 512 32 476.2 32 432V96H16C7.164 96 0 88.84 0 80C0 71.16 7.164 64 16 64H111.1L137 22.56C145.8 8.526 161.2 0 177.7 0H270.3C286.8 0 302.2 8.526 310.1 22.56V22.56zM148.9 64H299.1L283.8 39.52C280.9 34.84 275.8 32 270.3 32H177.7C172.2 32 167.1 34.84 164.2 39.52L148.9 64zM64 432C64 458.5 85.49 480 112 480H336C362.5 480 384 458.5 384 432V96H64V432z"></path></svg>
+                                </i>
+                            </span>
+                                                    اتاق اول
+                                                </div>
+                                                <div class="myroom-hotel-item-info internal-my-room-hotel-item-info-js">
+                                                    <div class="myroom-hotel-item-tedad my-room-hotel-bozorgsal">
+
+                                                        <h6>بزرگسال</h6>
+                                                        (بزرگتر از ۱۲ سال)
+                                                        <div>
+                                                            <i class="addParent internal-add-number-adult-js hotelroom-minus plus-hotelroom-bozorgsal" onclick="addNumberAdult('internal',this)">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M432 256C432 269.3 421.3 280 408 280h-160v160c0 13.25-10.75 24.01-24 24.01S200 453.3 200 440v-160h-160c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h160v-160c0-13.25 10.75-23.99 24-23.99S248 58.75 248 72v160h160C421.3 232 432 242.8 432 256z"></path></svg>
+                                                            </i>
+                                                            <input readonly="" autocomplete="off" class="countParent internal-count-parent-js" min="0" value="2" max="5" type="number" name="adult1" id="adult1">
+                                                            <i class="minusParent internal-minus-number-adult-js hotelroom-minus minus-hotelroom-bozorgsal" onclick="minusNumberAdult('internal',this)">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M432 256C432 269.3 421.3 280 408 280H40c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h368C421.3 232 432 242.8 432 256z"></path></svg>
+                                                            </i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="myroom-hotel-item-tedad my-room-hotel-bozorgsal">
+                                                        <h6>کودک</h6>
+                                                        (کوچکتر از ۱۲ سال)
+
+                                                        <div>
+                                                            <i class="addChild internal-add-number-child-js hotelroom-minus plus-hotelroom-koodak" onclick="addNumberChild('internal',this)">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M432 256C432 269.3 421.3 280 408 280h-160v160c0 13.25-10.75 24.01-24 24.01S200 453.3 200 440v-160h-160c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h160v-160c0-13.25 10.75-23.99 24-23.99S248 58.75 248 72v160h160C421.3 232 432 242.8 432 256z"></path></svg>
+                                                            </i>
+                                                            <input readonly="" class="countChild internal-count-child-js" autocomplete="off" min="0" value="0" max="5" type="number" name="child1" id="child1">
+                                                            <i class="minusChild internal-minus-number-child-js hotelroom-minus minus-hotelroom-koodak" onclick="minusNumberChild('internal',this)">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M432 256C432 269.3 421.3 280 408 280H40c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h368C421.3 232 432 242.8 432 256z"></path></svg>
+                                                            </i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tarikh-tavalods internal-birth-days-js"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="btn_group">
+                                            <div class="btn_add_room internal-btn-add-room-js" onclick="addRoom('internal')">
+                                                <i class="fal fa-plus"></i>
+                                                افزودن اتاق
+                                            </div>
+                                            <div class="close_room btn_close_box internal-close-room-js">
+                                                <i class="fal fa-check"></i>
+                                                تایید
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-6 col-12 btn_s col_search">
+                            <button type="button" onclick="gds_hotel_local_check()" class="btn theme-btn seub-btn b-0">
+                                <span>جستجو</span></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="__box__ tab-pane" id="Hotel_external" role="tabpanel" aria-labelledby="hotel_international-tab">
+                <div class="d-flex flex-wrap">
+                    <form class="d-contents">
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12 col_search search_col">
+                            <div class="form-group destination_start">
+                                <div class="inputSearchForeign-box inputSearchForeign-pad_Fhotel w-100">
+                                    <div class="s-u-in-out-wrapper raft raft-change change-bor">
+                                        <input id="autoComplateSearchIN_2" name="autoComplateSearchIN"
+                                               class="inputSearchForeign w-100 form-control" type="text" value=""
+                                               placeholder='انتخاب شهر'
+                                               autocomplete="off"
+                                               onkeyup="searchCity('externalHotel')"
+                                               onclick="openBoxPopular('externalHotel')">
+                                        <input id="destination_country" name="destination_country" type="hidden" value="" placeholder='انتخاب شهر'>
+
+                                        <input class="destination-country-js" name="destination-country-js" type="hidden" value="" placeholder='انتخاب شهر'>
+                                        <input class="destination-city-js" name="destination-city-js" type="hidden" value="" placeholder='انتخاب شهر'>
+
+                                        <input id="destination_city_foreign" name="destination_city_foreign" type="hidden" value="" placeholder='انتخاب شهر'>
+                                        <input id="destination_city" name="destination_city" type="hidden" value="" placeholder='انتخاب شهر'>
+                                        <ul id="listSearchCity_2" class="ul-inputSearch-externalHotel displayiN"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search search_col">
+                            <div class="form-group">
+                                <input readonly="" type="text"
+                                       autocomplete="off"
+                                       class="init-shamsi-datepicker form-control check-in-date-international-js"
+                                       name="startDateForHotelInternational" id="startDateForExternalHotelInternational"
+                                       placeholder="تاریخ ورود"
+                                       data-type='international'>
+                                <i class="fal fa-calendar-alt"></i></div>
+                        </div>
+                        <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search search_col">
+                            <div class="form-group">
+                                <input readonly="" type="text"
+                                       class="init-shamsi-return-datepicker form-control check-out-date-international-js"
+                                       name="endDateForExternalHotelInternational"
+                                       autocomplete="off"
+                                       id="endDateForExternalHotelInternational"
+                                       placeholder="تاریخ خروج"
+                                       data-type='international'>
+                                <i class="fal fa-calendar-alt"></i>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12 col_search">
+                            <div class="form-group">
+                                <div class="hotel_passenger_picker international-hotel-passenger-picker-js">
+                                    <ul onclick="openCountPassenger('international')">
+                                        <li><em class="number_adult international-number-adult-js">2</em> بزرگسال ،</li>
+                                        <li class="li_number_baby"><em class="number_baby international-number-child-js">0</em> کودک ،</li>
+                                        <li><em class="number_room_po international-number-room-js">1</em>اتاق</li>
+                                    </ul>
+                                    <div class="myhotels-rooms international-my-hotels-rooms-js">
+                                        <i class="close_room international-close-room-js"></i>
+                                        <div class="hotel_select_room international-hotel-select-room-js">
+                                            <div class="myroom-hotel-item international-my-room-hotel-item-js" data-roomnumber="1" >
+                                                <div class="myroom-hotel-item-title international-my-room-hotel-item-title-js">
+                            <span class="close d-none" onclick="itemsRoom('international')">
+                                <i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M144 400C144 408.8 136.8 416 128 416C119.2 416 112 408.8 112 400V176C112 167.2 119.2 160 128 160C136.8 160 144 167.2 144 176V400zM240 400C240 408.8 232.8 416 224 416C215.2 416 208 408.8 208 400V176C208 167.2 215.2 160 224 160C232.8 160 240 167.2 240 176V400zM336 400C336 408.8 328.8 416 320 416C311.2 416 304 408.8 304 400V176C304 167.2 311.2 160 320 160C328.8 160 336 167.2 336 176V400zM310.1 22.56L336.9 64H432C440.8 64 448 71.16 448 80C448 88.84 440.8 96 432 96H416V432C416 476.2 380.2 512 336 512H112C67.82 512 32 476.2 32 432V96H16C7.164 96 0 88.84 0 80C0 71.16 7.164 64 16 64H111.1L137 22.56C145.8 8.526 161.2 0 177.7 0H270.3C286.8 0 302.2 8.526 310.1 22.56V22.56zM148.9 64H299.1L283.8 39.52C280.9 34.84 275.8 32 270.3 32H177.7C172.2 32 167.1 34.84 164.2 39.52L148.9 64zM64 432C64 458.5 85.49 480 112 480H336C362.5 480 384 458.5 384 432V96H64V432z"></path></svg>
+                                </i>
+                            </span>
+                                                    اتاق اول
+
+                                                </div>
+                                                <div class="myroom-hotel-item-info international-my-room-hotel-item-info-js">
+                                                    <div class="myroom-hotel-item-tedad my-room-hotel-bozorgsal">
+
+                                                        <h6>بزرگسال</h6>
+                                                        (بزرگتر از ۱۲ سال)
+                                                        <div>
+                                                            <i class="addParent international-add-number-adult-js hotelroom-minus plus-hotelroom-bozorgsal fas fa-plus" onclick="addNumberAdult('international',this)"></i>
+                                                            <input readonly="" autocomplete="off" class="countParent international-count-parent-js"
+                                                                   min="0" value="2"
+                                                                   max="5" type="number" name="adult1" id="adult1">
+                                                            <i
+                                                                    class="minusParent international-minus-number-adult-js hotelroom-minus minus-hotelroom-bozorgsal fas fa-minus" onclick="minusNumberAdult('international',this)"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="myroom-hotel-item-tedad my-room-hotel-bozorgsal">
+                                                        <h6>کودک</h6>
+                                                        (کوچکتر از ۱۲ سال)
+
+                                                        <div>
+                                                            <i class="addChild international-add-number-child-js hotelroom-minus plus-hotelroom-koodak fas fa-plus" onclick="addNumberChild('international',this)"></i>
+                                                            <input readonly="" class="countChild international-count-child-js" autocomplete="off"
+                                                                   min="0" value="0" max="5"
+                                                                   type="number" name="child1" id="child1"><i
+                                                                class="minusChild international-minus-number-child-js hotelroom-minus minus-hotelroom-koodak fas fa-minus" onclick="minusNumberChild('international',this)"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tarikh-tavalods international-birth-days-js"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="btn_group">
+                                            <div class="btn_add_room international-btn-add-room-js" onclick="addRoom('international')">
+                                                <i class="fal fa-plus"></i>
+                                                افزودن اتاق
+                                            </div>
+                                            <div class="close_room btn_close_box international-close-room-js">
+                                                <i class="fal fa-check"></i>
+                                                تایید
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-2 col-md-3 col-sm-6 col-12 btn_s col_search">
+                            <input type="hidden" name="nights" id="NightsForExternalHotelLocal">
+                            <button onclick="submitSearchExternalHotel()" type="button"
+                                    class="btn theme-btn seub-btn b-0">
+                                <span>جستجو</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="__box__ tab-pane" id="Tour_internal" role="tabpanel" aria-labelledby="tour-tab">
+                <div class="row">
+                    <form class="d-contents">
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-12 col_search">
+                            <div class="form-group">
+                                <select data-placeholder="نام شهر مبدأ"
+                                        onchange="getArrivalCitiesTour('internal',this)"
+                                        name="internal_origin_tour" id="internal_origin_tour"
+                                        class="select2_in select2-hidden-accessible internal-origin-tour-js"
+                                        tabindex="-1" aria-hidden="true">
+                                    <option value="">انتخاب کنید...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-12 col_search">
+                            <div class="form-group">
+                                <select data-placeholder="نام شهر مقصد"
+                                        name="tourDestinationCityLocal" id="tourDestinationCityLocal"
+                                        class="select2_in select2-hidden-accessible internal-destination-tour-js"
+                                        tabindex="-1" aria-hidden="true">
+                                    <option value="">انتخاب کنید...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search">
+                            <div class="form-group">
+                                <select data-placeholder="تاریخ مسافرت"
+                                        name="tourDeptDateLocal"
+                                        id="tourDeptDateLocal"
+                                        class="select2_in DeptYearOnChange_js select2-hidden-accessible internal-date-travel-tour-js"
+                                        tabindex="-1" aria-hidden="true">
+                                    <option value="">انتخاب کنید...</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-6 col-12 btn_s col_search">
+                            <button type="button" onclick="gds_tour_local()" class="btn theme-btn seub-btn b-0"><span>جستجو</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="__box__ tab-pane" id="Tour_external" role="tabpanel" aria-labelledby="tour_international-tab">
+                <div class="d-flex flex-wrap">
+                    <form class="d-contents">
+                        <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search">
+                            <div class="form-group">
+                                <input type="text" class="form-control " disabled placeholder="کشور مبدا: ایران">
+                                <input type="hidden" value="1" name="tourOriginCountryPortal" id="tourOriginCountryPortal">
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search">
+                            <div class="form-group">
+                                <select data-placeholder=" شهر مبدا"
+                                        name="tourOriginCityPortal"
+                                        id="tourOriginCityPortal"
+                                        onchange="getArrivalCitiesTour('international',this)"
+                                        class="select2_in select2-hidden-accessible international-tour-origin-city-js"
+                                        tabindex="-1"
+                                        aria-hidden="true">
+                                    <option value="">انتخاب کنید...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search">
+                            <div class="form-group">
+                                <select data-placeholder="کشور مقصد"
+                                        onchange="getDestinationCityTour('international',this)"
+                                        name="tourDestinationCountryPortal"
+                                        id="tourDestinationCountryPortal"
+                                        class="select2_in select2-hidden-accessible international-destination-tour-js"
+                                        tabindex="-1"
+                                        aria-hidden="true">
+                                    <option value="">انتخاب کنید...</option>
+                                </select></div>
+                        </div>
+                        <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search">
+                            <div class="form-group">
+                                <select data-placeholder="شهر مقصد"
+                                        name="tourDestinationCityPortal"
+                                        id="tourDestinationCityPortal"
+                                        class="select2_in select2-hidden-accessible international-destination-city-tour-js"
+                                        tabindex="-1" aria-hidden="true">
+                                    <option value="">انتخاب کنید...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search">
+                            <div class="form-group">
+                                <select data-placeholder="تاریخ مسافرت"
+                                        name="tourDeptDateInternational"
+                                        id="tourDeptDateInternational"
+                                        class="select2_in DeptYearOnChange_js select2-hidden-accessible international-date-travel-tour-js"
+                                        tabindex="-1" aria-hidden="true">
+                                    <option value="">انتخاب کنید...</option>
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2 col-md-6 col-sm-6 col-12 btn_s col_search">
+                            <button type="button" onclick="gds_tour_portal()" class="btn theme-btn seub-btn b-0"><span>جستجو</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="__box__ tab-pane" id="Bus" role="tabpanel" aria-labelledby="bus-tab">
+                <div class="col-12">
+                    <div class="row">
+                        <form data-action="https://s360online.iran-tech.com/" method="post" target="_blank" class="d_contents w-100 d-flex flex-wrap" id="gds_local_bus" name="gds_local_bus">
+                            <div class="col-lg-4 col-md-6 col-sm-6 col-12 col_search">
+                                <div class="form-group">
+                                    <select data-placeholder="نام شهر مبدأ"
+                                            name="origin_bus"
+                                            id="origin_bus"
+                                            class="select-route-bus-js select-origin-route-bus-js"
+                                            tabindex="-1" aria-hidden="true"></select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12 col_search">
+                                <div class="form-group">
+                                    <select data-placeholder="نام شهر مقصد"
+                                            name="destination_bus"
+                                            id="destination_bus"
+                                            class="select-route-bus-js select-destination-route-bus-js select2-hidden-accessible"
+                                            tabindex="-1" aria-hidden="true"></select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12 col_search search_col">
+                                <div class="form-group">
+                                    <input type="text"
+                                           class="shamsiDeptCalendar departure-date-bus-js form-control"
+                                           name="departure_date_bus"
+                                           id="departure_date_bus"
+                                           placeholder="تاریخ حرکت">
+                                    <i class="fal fa-calendar-alt"></i>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-6 col-sm-6 col-12 btn_s col_search">
+                                <button type="button" onclick="gds_tour_portal()" class="btn theme-btn seub-btn b-0"><span>جستجو</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="__box__ tab-pane" id="Visa" role="tabpanel" aria-labelledby="visa-tab">
+                <div class="col-12">
+                    <div class="row">
+                        <form method="post" name="gdsVisa" id="gdsVisa" target="_blank" class="d_contents w-100 d-flex flex-wrap">
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12 col_search">
+                                <div class="form-group">
+                                    <select data-placeholder=" قاره" name="visa_continent"
+                                            id="visa_continent"
+                                            class="select2_in  select2-hidden-accessible continent-visa-js"
+                                            onchange="fillComboByContinent(this)" tabindex="-1"
+                                            aria-hidden="true">
+                                        <option selected="selected" value="">انتخاب کنید...</option>
+                                    </select></div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12 col_search">
+                                <div class="form-group">
+                                    <select data-placeholder=" مقصد" onchange="getVisaTypeSpecialCountry(this)"
+                                            name="visa_destination" id="visa_destination"
+                                            class="select2_in  select2-hidden-accessible country-visa-js"
+                                            tabindex="-1" aria-hidden="true">
+                                        <option value="">انتخاب کنید...</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search">
+                                <div class="form-group">
+                                    <select data-placeholder=" نوع ویزا" name="visa_type"
+                                            id="visa_type"
+                                            class="select2_in  select2-hidden-accessible visa-type-js"
+                                            tabindex="-1" aria-hidden="true">
+                                        <option selected="selected" value="">نوع ویزا</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-6 col-sm-6 col-12 col_search">
+                                <div class="inp-s-num adt box-of-count-passenger box-of-count-passenger-js">
+                                    <input type="hidden" class="adult-visa-js"
+                                           name="count_adult_internal"
+                                           id="count_adult_internal" value="1">
+
+                                    <div class="box-of-count-passenger-boxes box-of-count-passenger-boxes-js">
+                                        <span class="text-count-passenger text-count-passenger-js">1 مسافر </span>
+                                        <span class="fas fa-caret-down down-count-passenger"></span>
+                                    </div>
+                                    <div class="cbox-count-passenger cbox-count-passenger-js">
+                                        <div class="col-xs-12 cbox-count-passenger-ch adult-number-js">
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-6 col-6">
+                                                    <div class="type-of-count-passenger"><h6> مسافر </h6>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-6 col-6">
+                                                    <div class="num-of-count-passenger">
+                                                        <i class="fa fa-plus counting-of-count-passenger add-to-count-passenger-js" data-visa="yes"></i>
+                                                        <i class="number-count-js number-count counting-of-count-passenger" data-number="1" data-min="1" data-value="internal-adult" data-type="adult">1</i>
+                                                        <i class="fa fa-minus counting-of-count-passenger minus-to-count-passenger-js " data-visa="yes"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="div_btn"><span class="btn btn-close ">تأیید</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-6 col-sm-6 col-12 btn_s col_search btn_visa">
+                                <button type="button" onclick="gds_tour_portal()" class="btn theme-btn seub-btn b-0"><span>جستجو</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="WaveStyle WaweBot" >
+        <svg viewBox="0 0 2000 128">
+            <use xlink:href="#waveStyle">
+                <symbol id="waveStyle">
+                    <path opacity="0.2" d="M1999.5,22.2c-346-0.6-524.6-4.7-878.8,4.4c-286.6,7.4-442.3,54-608.1,51.2C307.3,74.3,202.5,5-0.5,28.1v100.4l2000-0.5V22.2z"></path>
+                    <path opacity="0.2" d="M-0.3,46.1C251,15.3,440.9,84.7,499.6,98.4c54.7,12.8,122.5,12,186.7-5.3c154.2-41.6,315.5-70.9,475.2-67.5s324.6,22.4,484.3,19.7c133-2.3,302.8,1.7,352.8,3.7c0,21.3,0,80,0,80H-0.5L-0.3,46.1z"></path>
+                    <path opacity="0.4" d="M2000,41.2c-139.8-12.7-219.9-10.8-360.2-11.2c-285.5-0.8-487.5,18-736.2,51.1C647,115.4,546.7,116.4,199.2,53.6C140.3,43,59.5,45.6-0.5,52.3V130h2000L2000,41.2z"></path>
+                    <path d="M1634.6,50.1c-193.8,11.9-366.9,24.9-569,50c-110.2,13.7-221.2,21.5-332.3,19.6c-187-3.3-344.5-29.7-560.9-69.8c-122.2-22.6-172.8-4-172.8-4V130h1998V46C1997.5,46,1831,38.1,1634.6,50.1z"></path>
+                </symbol>
+            </use>
+        </svg>
+    </div>
+</div>
+
+<div class="i_modular_tours __tour__special__ section_special_tour">
+    <div class="container">
+        <div class="titr">
+            تور های برگزیده
+        </div>
+        <div class="popular_places_area">
+            <div class="row">
+                <div class="owl-carousel owl_tour_local">
+                    <div class="__i_modular_nc_item_class_0 item">
+                        <div class="single_place">
+                            <div class="thumb">
+                                <img class="__image_class__" src="images/tour/1.jpg" alt="">
+                                <a href="__link__" class="prise">
+                                    <div class="package__details__inner">
+                                        <p>شروع قیمت از</p>
+                                        <p class="packg__prize">
+                                            <span class="__price_class__">5,000,000</span>
+                                            تومان<span></span>
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="place_info">
+                                <a href="__link__"><h3 class="__title_class__">تور مشهد</h3></a>
+                                <div class="rating_days flex-wrap d-flex justify-content-between">
+                                    <span><i class="fal fa-clock"></i> مدت تور : <em> <span class="__night_class__">5</span> شب </em></span>
+                                    <span><i class="fal fa-calendar-alt"></i> تاریخ حرکت :<span class="__date_class__">1400-11-12</span></span>
+                                </div>
+                            </div>
+                            <div class="btn_theme">
+                                <a href="__link__">
+                                    <button class="btn theme-btn seub-btn b-0">
+                                        <span>جزئیات تور</span>
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="__i_modular_nc_item_class_1 item">
+                        <div class="single_place">
+                            <div class="thumb">
+                                <img src="images/tour/2.jpg" alt="">
+                                <a href=""
+                                   class="prise">
+                                    <div class="package__details__inner">
+                                        <p>شروع قیمت از</p>
+                                        <p class="packg__prize">1,200,000
+
+                                            تومان<span></span>
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="place_info">
+                                <a href="">
+                                    <h3>تور گیلان</h3></a>
+
+                                <div class="rating_days flex-wrap d-flex justify-content-between">
+                                        <span><i class="fal fa-clock"></i> مدت تور : <em> 2
+                                            شب </em>
+                                        </span>
+                                    <span>
+                                      <i class="fal fa-calendar-alt"></i> تاریخ حرکت :
+                                        <span>1400-11-12</span>
+</span>
+
+                                </div>
+                            </div>
+                            <div class="btn_theme">
+                                <a href="">
+                                    <button class="btn theme-btn seub-btn b-0">
+                                                        <span>
+                                                            جزئیات تور
+                                                        </span>
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="__i_modular_nc_item_class_2 item">
+                        <div class="single_place">
+                            <div class="thumb">
+                                <img src="images/tour/3.jpg" alt="">
+                                <a href=""
+                                   class="prise">
+                                    <div class="package__details__inner">
+                                        <p>شروع قیمت از</p>
+                                        <p class="packg__prize">2,500,000
+
+                                            تومان<span></span>
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="place_info">
+                                <a href="">
+                                    <h3>تور اصفهان</h3></a>
+
+                                <div class="rating_days flex-wrap d-flex justify-content-between">
+                                        <span><i class="fal fa-clock"></i> مدت تور : <em> 7
+                                            شب </em>
+                                        </span>
+                                    <span>
+                                      <i class="fal fa-calendar-alt"></i> تاریخ حرکت :
+                                        <span>1400-11-12</span>
+</span>
+
+                                </div>
+                            </div>
+                            <div class="btn_theme">
+                                <a href="">
+                                    <button class="btn theme-btn seub-btn b-0">
+                                                        <span>
+                                                            جزئیات تور
+                                                        </span>
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="__i_modular_nc_item_class_3 item">
+                        <div class="single_place">
+                            <div class="thumb">
+                                <img src="images/tour/4.jpg" alt="">
+                                <a href=""
+                                   class="prise">
+                                    <div class="package__details__inner">
+                                        <p>شروع قیمت از</p>
+                                        <p class="packg__prize">3,000,000
+
+                                            تومان<span></span>
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="place_info">
+                                <a href="">
+                                    <h3>تور یزد</h3></a>
+
+                                <div class="rating_days flex-wrap d-flex justify-content-between">
+                                        <span><i class="fal fa-clock"></i> مدت تور : <em> 4
+                                            شب </em>
+                                        </span>
+                                    <span>
+                                      <i class="fal fa-calendar-alt"></i> تاریخ حرکت :
+                                        <span>1400-11-12</span>
+</span>
+
+                                </div>
+                            </div>
+                            <div class="btn_theme">
+                                <a href="">
+                                    <button class="btn theme-btn seub-btn b-0">
+                                                        <span>
+                                                            جزئیات تور
+                                                        </span>
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="__i_modular_nc_item_class_4 item">
+                        <div class="single_place">
+                            <div class="thumb">
+                                <img src="images/tour/1.jpg" alt="">
+                                <a href=""
+                                   class="prise">
+                                    <div class="package__details__inner">
+                                        <p>شروع قیمت از</p>
+                                        <p class="packg__prize">5,000,000
+                                            تومان<span></span>
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="place_info">
+                                <a href="">
+                                    <h3>تور مشهد</h3></a>
+
+                                <div class="rating_days flex-wrap d-flex justify-content-between">
+                                        <span><i class="fal fa-clock"></i> مدت تور : <em> 5
+                                            شب </em>
+                                        </span>
+                                    <span>
+                                      <i class="fal fa-calendar-alt"></i> تاریخ حرکت :
+                                        <span>1400-11-12</span>
+</span>
+
+                                </div>
+                            </div>
+                            <div class="btn_theme">
+                                <a href="">
+                                    <button class="btn theme-btn seub-btn b-0">
+                                                        <span>
+                                                            جزئیات تور
+                                                        </span>
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="__i_modular_nc_item_class_5 item">
+                        <div class="single_place">
+                            <div class="thumb">
+                                <img src="images/tour/2.jpg" alt="">
+                                <a href=""
+                                   class="prise">
+                                    <div class="package__details__inner">
+                                        <p>شروع قیمت از</p>
+                                        <p class="packg__prize">1,200,000
+
+                                            تومان<span></span>
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="place_info">
+                                <a href="">
+                                    <h3>تور گیلان</h3></a>
+
+                                <div class="rating_days flex-wrap d-flex justify-content-between">
+                                        <span><i class="fal fa-clock"></i> مدت تور : <em> 2
+                                            شب </em>
+                                        </span>
+                                    <span>
+                                      <i class="fal fa-calendar-alt"></i> تاریخ حرکت :
+                                        <span>1400-11-12</span>
+</span>
+
+                                </div>
+                            </div>
+                            <div class="btn_theme">
+                                <a href="">
+                                    <button class="btn theme-btn seub-btn b-0">
+                                                        <span>
+                                                            جزئیات تور
+                                                        </span>
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="i_modular_hotels_webservice section_hotel popular_destination_area">
+    <div class="container">
+        <div class="titr">
+            هتل های برگزیده
+        </div>
+        <div class="row">
+            <div class="owl-hotel owl-carousel">
+                <div class="item">
+                    <a href="__link__">
+                        <div class="single_destination">
+                            <div class="thumb">
+                                <img class="__image_class__" src="images/hotel/h1.jpg" alt="هتل  فردوس">
+                            </div>
+                            <div class="content">
+                                <p class="__title_class__ d-flex align-items-center">هتل فردوس </p>
+                                <span class="__city_class__ d-flex align-items-center">چابهار </span>
+                                <div class="rating rating_4">
+                                    <i class="__star_class_light__1 fa fa-star"></i>
+                                    <i class="__star_class_light__2 fa fa-star"></i>
+                                    <i class="__star_class_light__3 fa fa-star"></i>
+                                    <i class="__star_class_light__4 fa fa-star"></i>
+                                    <i class="__star_class_light__5 fa fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="item">
+                    <a href="__link__">
+                        <div class="single_destination">
+                            <div class="thumb">
+                                <img class="__image_class__" src="images/hotel/h2.jpg" alt="هتل  درویشی">
+                            </div>
+                            <div class="content">
+                                <p class="__title_class__ d-flex align-items-center">
+                                    هتل درویشی </p>
+                                <span class="__city_class__ d-flex align-items-center">
+                                    مشهد </span>
+                                <div class="rating rating_5">
+                                    <div class="rating rating_4">
+                                        <i class="__star_class_light__1 fa fa-star"></i>
+                                        <i class="__star_class_light__2 fa fa-star"></i>
+                                        <i class="__star_class_light__3 fa fa-star"></i>
+                                        <i class="__star_class_light__4 fa fa-star"></i>
+                                        <i class="__star_class_light__5 fa fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="item">
+                    <a href="__link__">
+                        <div class="single_destination">
+                            <div class="thumb">
+                                <img class="__image_class__" src="images/hotel/h3.jpg" alt="هتل  درویشی">
+                            </div>
+                            <div class="content">
+                                <p class="__title_class__ d-flex align-items-center">
+                                    هتل ترنج </p>
+                                <span class="__city_class__ d-flex align-items-center">
+                                    کیش </span>
+                                <div class="rating rating_5">
+                                    <div class="rating rating_4">
+                                        <i class="__star_class_light__1 fa fa-star"></i>
+                                        <i class="__star_class_light__2 fa fa-star"></i>
+                                        <i class="__star_class_light__3 fa fa-star"></i>
+                                        <i class="__star_class_light__4 fa fa-star"></i>
+                                        <i class="__star_class_light__5 fa fa-star"></i>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                     </a>
+                 </div>
+                 <div class="item">
+                     <a href="__link__">
+                         <div class="single_destination">
+                            <div class="thumb">
+                                <img class="__image_class__" src="images/hotel/h2.jpg" alt="هتل  عباسی">
+                            </div>
+                            <div class="content">
+                                <p class="__title_class__ d-flex align-items-center">هتل عباسی </p>
+                                <span class="__city_class__ d-flex align-items-center">اصفهان </span>
+                                <div class="rating rating_5">
+                                    <div class="rating rating_4">
+                                        <i class="__star_class_light__1 fa fa-star"></i>
+                                        <i class="__star_class_light__2 fa fa-star"></i>
+                                        <i class="__star_class_light__3 fa fa-star"></i>
+                                        <i class="__star_class_light__4 fa fa-star"></i>
+                                        <i class="__star_class_light__5 fa fa-star"></i>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="item">
+                    <a href="__link__">
+                        <div class="single_destination">
+                            <div class="thumb">
+                                <img class="__image_class__" src="images/hotel/h2.jpg" alt="هتل  درویشی">
+                            </div>
+                            <div class="content">
+                                <p class="__title_class__ d-flex align-items-center">هتل درویشی </p>
+                                <span class="__city_class__ d-flex align-items-center">مشهد </span>
+                                <div class="rating rating_5">
+                                    <div class="rating rating_4">
+                                        <i class="__star_class_light__1 fa fa-star"></i>
+                                        <i class="__star_class_light__2 fa fa-star"></i>
+                                        <i class="__star_class_light__3 fa fa-star"></i>
+                                        <i class="__star_class_light__4 fa fa-star"></i>
+                                        <i class="__star_class_light__5 fa fa-star"></i>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="i_modular_blog articles">
+
+
+    <div class="container">
+        <div class="titr">
+            اطلاعات مهم و برگزیده مقالات
+        </div>
+        <div class="row">
+            <div class="__i_modular_nc_item_class_0 masonry-box">
+                <div class="post-media">
+                    <img src="images/german.jpg" alt="website template image" class="img-fluid">
+                    <div class="shadoweffect">
+                        <div class="shadow-desc">
+                            <div class="blog-meta">
+                                <h4 class="__title_class__">
+                                    <a href="__link__">چگونه به آلمان سفر کنیم</a>
+                                </h4>
+                            </div>
+                            <a href="__link__" class="btn btn_more">بیشتر بخوانید</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="__i_modular_nc_item_class_1 masonry-box">
+                <div class="post-media">
+                    <img src="images/amusement.jpg" alt="website template image" class="img-fluid">
+                    <div class="shadoweffect">
+                        <div class="shadow-desc">
+                            <div class="blog-meta">
+                                <h4 class="__title_class__">
+                                    <a href="__link__">لذت و هیجان در شهربازی استانبول</a>
+                                </h4>
+                            </div>
+                            <a href="__link__" class="btn btn_more">بیشتر بخوانید</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="__i_modular_nc_item_class_2 masonry-box">
+                <div class="post-media">
+                    <img src="images/hotel-sahand-mashhad2.jpg" alt="website template image" class="img-fluid">
+                    <div class="shadoweffect">
+                        <div class="shadow-desc">
+                            <div class="blog-meta">
+                                <h4 class="__title_class__">
+                                    <a href="__link__">بهترین هتل های مشهد نزدیک به حرم</a>
+                                </h4>
+                            </div>
+                            <a href="__link__" class="btn btn_more">بیشتر بخوانید</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="__i_modular_nc_item_class_3 masonry-box">
+                <div class="post-media">
+                    <img src="images/hotels-in-kish.jpg" alt="website template image" class="img-fluid">
+                    <div class="shadoweffect">
+                        <div class="shadow-desc">
+                            <div class="blog-meta">
+                                <h4 class="__title_class__">
+                                    <a href="__link__">هتل آذین چابهار در کنار فضای رویایی ساحل خلیج فارس!</a>
+                                </h4>
+                            </div>
+                            <a href="__link__" class="btn btn_more">بیشتر بخوانید</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="__i_modular_nc_item_class_4 masonry-box">
+                <div class="post-media">
+                    <img src="images/25.jpg" alt="website template image" class="img-fluid">
+                    <div class="shadoweffect">
+                        <div class="shadow-desc">
+                            <div class="blog-meta">
+                                <h4 class="__title_class__">
+                                    <a href="__link__">هتل گونن استانبول در قلب میدان تکسیم!</a>
+                                </h4>
+                            </div>
+                            <a href="__link__" class="btn btn_more">بیشتر بخوانید</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+<section class="i_modular_news news recent_trip_area">
+    <div class="container">
+        <div class="titr">
+            اخبار مهم
+        </div>
+        <div class="row">
+            <div class="__i_modular_nc_item_class_0 single_news">
+                <div class="single_trip eq">
+                    <div class="thumb">
+                        <img class="__image_class__" src="images/n1.jpg" alt="مزایای عضویت در باشگاه">
+                    </div>
+                    <div class="info">
+                        <div class="date">
+                            <a href="__link__">
+                                <span class="__title_class__">فوکویاما درباره سالروز تسخیر کنگره آمریکا </span>
+                            </a>
+                        </div>
+                        <h3 class="__description_class__ p-0">
+
+                            همسفر گرامی
+
+                            .به باشگاه مشتریان شرکت دموی ایران تکنولوژی خوش آمدید
+
+                            شما با عضویت و ورود به سایت ما از خدمات و سرویس های خاص بهرمند خواهید شد .
+
+                            در حال حاضر امکان دریافت ام ... </h3>
+                        <a class="more_news btn_main" href="__link__"><span>مشاهده جزئیات</span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="__i_modular_nc_item_class_1 single_news">
+                <div class="single_trip eq">
+                    <div class="thumb">
+                        <img class="__image_class__" src="images/n2.jpg" alt="امیکرون در ایران ">
+                    </div>
+                    <div class="info">
+                        <div class="date">
+                            <a href="__link__">
+                                <span class="__title_class__">امیکرون در ایران </span>
+                            </a>
+                        </div>
+                        <h3 class="__description_class__ p-0">
+
+                            همسفر گرامی
+
+                            .به باشگاه مشتریان شرکت دموی ایران تکنولوژی خوش آمدید
+
+                            شما با عضویت و ورود به سایت ما از خدمات و سرویس های خاص بهرمند خواهید شد .
+
+                            در حال حاضر امکان دریافت ام ... </h3>
+                        <a class="more_news btn_main" href="__link__"><span>مشاهده جزئیات</span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="__i_modular_nc_item_class_2 single_news">
+                <div class="single_trip eq">
+                    <div class="thumb">
+                        <img src="images/n3.jpeg" alt="سقوط ارزش لیر ">
+                    </div>
+                    <div class="info">
+                        <div class="date">
+                            <a href="__link__">
+                                <span class="__title_class__">سقوط ارزش لیر </span>
+                            </a>
+                        </div>
+                        <h3 class="__description_class__ p-0">
+
+                            همسفر گرامی
+
+                            .به باشگاه مشتریان شرکت دموی ایران تکنولوژی خوش آمدید
+
+                            شما با عضویت و ورود به سایت ما از خدمات و سرویس های خاص بهرمند خواهید شد .
+
+                            در حال حاضر امکان دریافت ام ... </h3>
+                        <a class="more_news btn_main" href="__link__"><span>مشاهده جزئیات</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="app py-5">
+    <div class="container">
+        <div class="app-main row flex-wrap">
+            <div class=" col-12 col-lg-6 ">
+                <div>
+                    <span>رزرو سفر با موبایل</span>
+                    <h6>دانلود اپلیکیشن پارس پرواز</h6>
+                    <p>آخرین قیمت&zwnj;ها و پیشنهادها را در نسخه موبایل ببینید</p>
+                    <div class="d-flex align-items-center mt-4">
+                        <a href="javascript:" class="ml-1">
+                            <img src="https://www.iran-tech.com/under_construction/roxan/roxan1/images/appstore.png" alt="appstore">
+                        </a>
+                        <a href="javascript:">
+                            <img src="https://www.iran-tech.com/under_construction/roxan/roxan1/images/android.png" alt="android">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class=" col-12 col-lg-6"><img src="images/mockup.png" alt="app"></div>
+        </div>
+    </div>
+</section>
+<div class="i_modular_newsletter newsletter">
+    <div class="container">
+        <div class="row">
+            <div class="form_news">
+                <h4 class="title_newsletter">عضویت در خبرنامه<span>برای اطلاع از  آخرین اخبار و تخفیف ها در خبرنامه عضو شوید</span></h4>
+                <form class="p-3">
+                    <div class="row">
+                        <div class="col p-1">
+                            <input type="text" class="__name_class__ form-control" placeholder=" نام و نام خانوادگی">
+                        </div>
+                        <div class="col p-1">
+                            <input type="text" class="__email_class__ form-control" placeholder=" پست الکترونیکی">
+                        </div>
+                        <div class="col p-1">
+                            <input type="text" class="__phone_class__ form-control" placeholder="شماره همراه">
+                        </div>
+                        <div class="col p-1">
+                            <button type="button" class="__submit_class__ form-control btn btn_main"><span>عضویت</span></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<svg version="1.1" id="wave_footer" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     x="0px" y="0px" viewBox="0 0 500 250" enable-background="new 0 0 500 250" xml:space="preserve"
+     preserveAspectRatio="none">
+<path id="path_footer_svg"
+      d="M250,246.5c-97.85,0-186.344-40.044-250-104.633V250h500V141.867C436.344,206.456,347.85,246.5,250,246.5z"></path>
+
+</svg>
+<footer class="i_modular_footer footer">
+    <div class="footer_top">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-3 col-md-6 col-lg-3 col_foo">
+                    <div class="footer_widget">
+                        <h3 class="footer_title">
+                            مسیر های پر تردد داخلی از تهران
+                        </h3>
+                        <ul class="links double_links">
+                            <li>
+                                <a onclick="showModal_api('THR','MHD','2022-01-10','local')" data-toggle="modal"
+                                   data-target="#exampleModalScrollable">
+                                    پرواز به مشهد </a>
+                            </li>
+                            <li>
+                                <a onclick="showModal_api('THR','TBZ','2022-01-10','local')" data-toggle="modal"
+                                   data-target="#exampleModalScrollable">
+                                    پرواز به تبریز </a>
+                            </li>
+                            <li>
+                                <a onclick="showModal_api('THR','AWZ','2022-01-10','local')" data-toggle="modal"
+                                   data-target="#exampleModalScrollable">
+                                    پرواز به اهواز </a>
+                            </li>
+                            <li>
+                                <a onclick="showModal_api('THR','AZD','2022-01-10','local')" data-toggle="modal"
+                                   data-target="#exampleModalScrollable">
+                                    پرواز به یزد </a>
+                            </li>
+                            <li>
+                                <a onclick="showModal_api('THR','KSH','2022-01-10','local')" data-toggle="modal"
+                                   data-target="#exampleModalScrollable">
+                                    پرواز به کرمانشاه </a>
+                            </li>
+                            <li>
+                                <a onclick="showModal_api('THR','RAS','2022-01-10','local')" data-toggle="modal"
+                                   data-target="#exampleModalScrollable">
+                                    پرواز به گیلان </a>
+                            </li>
+                            <li>
+                                <a onclick="showModal_api('THR','ADU','2022-01-10','local')" data-toggle="modal"
+                                   data-target="#exampleModalScrollable">
+                                    پرواز به اردبیل </a>
+                            </li>
+                            <li>
+                                <a onclick="showModal_api('THR','BND','2022-01-10','local')" data-toggle="modal"
+                                   data-target="#exampleModalScrollable">
+                                    پرواز به بندر عباس </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 col-lg-3 col_foo">
+                    <div class="footer_widget">
+                        <h3 class="footer_title">
+                            مسیر های پر تردد خارجی از تهران
+                        </h3>
+                        <ul class="links double_links">
+                            <li>
+                                <a onclick="showModal_api('THR','ISTALL','2022-01-10','international')"
+                                   data-toggle="modal" data-target="#exampleModalScrollable">
+                                    پرواز به استانبول </a>
+                            </li>
+                            <li>
+                                <a onclick="showModal_api('THR','DXB','2022-01-10','international')" data-toggle="modal"
+                                   data-target="#exampleModalScrollable">
+                                    پرواز به دوبی </a>
+                            </li>
+                            <li>
+                                <a onclick="showModal_api('THR','BON','2022-01-10','international')" data-toggle="modal"
+                                   data-target="#exampleModalScrollable">
+                                    پرواز به هلند </a>
+                            </li>
+                            <li>
+                                <a onclick="showModal_api('THR','SYD','2022-01-10','international')" data-toggle="modal"
+                                   data-target="#exampleModalScrollable">
+                                    پرواز به سیدنی </a>
+                            </li>
+                            <li>
+                                <a onclick="showModal_api('THR','DXBALL','2022-01-10','international')"
+                                   data-toggle="modal" data-target="#exampleModalScrollable">
+                                    پرواز به امارات </a>
+                            </li>
+                            <li>
+                                <a onclick="showModal_api('THR','BERALL','2022-01-10','international')"
+                                   data-toggle="modal" data-target="#exampleModalScrollable">
+                                    پرواز به برلین </a>
+                            </li>
+                            <li>
+                                <a onclick="showModal_api('THR','YXUALL','2022-01-10','international')"
+                                   data-toggle="modal" data-target="#exampleModalScrollable">
+                                    پرواز به لندن </a>
+                            </li>
+                            <li>
+                                <a onclick="showModal_api('THR','NJF','2022-01-10','international')" data-toggle="modal"
+                                   data-target="#exampleModalScrollable">
+                                    پرواز به نجف </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 col-lg-3 col_foo foo_contact">
+                    <div class="address footer_widget">
+                        <h3 class="footer_title">
+                            تماس با ما
+                        </h3>
+                        <div class="contact_info_text ">
+                            <i class="fas fa-map-marked-alt "></i>
+                            <a class="__address_class__">تهران اکباتان خیابان نفیسی انتهای نفیسی - انتهای خیابان آراسته صفت - پلاک 1 طبقه 5واحد 24 </a>
+                        </div>
+                        <div class="contact_info_text">
+                            <i class="fas fa-phone"></i>
+                            <a href="tel:02141291807" target="_top" class="__phone_class__ ">021-41291807</a>
+                        </div>
+                        <div class="contact_info_text">
+                            <i class="fas fa-phone"></i>
+                            <a href="tel:09124708857" target="_top" class="__mobile_class__ ">09124708857</a>
+                        </div>
+                        <div class="contact_info_text">
+                            <i class="fas fa-globe"></i>
+                            <a href="https://www.parsairtravel.com/" target="_top" class="SMFooterPhone">وب سایت</a>
+                        </div>
+                        <div class="contact_info_text">
+                            <i class="fas fa-envelope"></i>
+                            <a href="mailto:zafari@pars-parvaz.com" target="_top" class="__email_class__ ">zafari@pars-parvaz.com</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 col-lg-3 col_foo">
+                    <div class="col_namads">
+                        <a target="_blank" rel="nofollow" href="https://www.cao.ir/paxrights">
+                            <img src="images/certificate1.png" alt="">
+                        </a>
+                        <a target="_blank" rel="nofollow" href="https://www.cao.ir/">
+                            <img src="images/certificate2.png" alt="">
+                        </a>
+                        <a target="_blank" rel="nofollow" href="http://aira.ir/images/final3.pdf">
+                            <img src="images/certificate3.png" alt="">
+                        </a>
+                        <a target="_blank" rel="nofollow" href="javascript:">
+                            <img src="images/enamad.png" alt="">
+                        </a>
+                        <a target="_blank" rel="nofollow" href="javascript:">
+                            <img src="images/samandeh.jpg" alt="">
+                        </a>
+                    </div>
+                    <form  class="TrcBox" action="/refrense/پیگیری-کد-رهگیری" method="get" name="FormCodeRahgiriPrj" id="FormCodeRahgiriPrj">
+
+
+                    <label for="inp" class="inp">
+                        <input type="text" id="inp" placeholder="&nbsp;">
+                        <span class="label">کد رهگیری خود را وارد کنید</span>
+                        <span class="focus-bg"></span>
+                    </label>
+
+                    </form>
+                </div>
+                <div class="col-12">
+                    <div class="last_text">
+                        <a class="last_a" href="https://www.iran-tech.com/" target="_blank">طراحی سایت گردشگری</a>
+                        <p class="last_p_text">: ایران تکنولوژی</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<div class="float-sm __social_class__ ">
+    <div class="fl-fl float-gp">
+        <i class="fab fa-telegram"></i>
+        <a class="__telegram_class__ " href="https://t.me/ParsParvazZafari" target="_blank">به ما ملحق شو!</a>
+    </div>
+    <div class="fl-fl float-rs">
+        <i class="fab fa-whatsapp"></i>
+        <a class="__whatsapp_class__ " href="" target="_blank">تماس با ما!</a>
+    </div>
+    <div class="fl-fl float-ig">
+        <i class="fab fa-instagram"></i>
+        <a class="__instagram_class__ " href="http://instagram.com/parsparvaz.zafari" target="_blank">ما رو دنبال کن!</a>
+    </div>
+    <div class="fl-fl float-ph">
+        <i class="fas fa-phone"></i>
+        <a class="__phone_class__ " href="tel:02141291807" target="_blank">021-41291807</a>
+    </div>
+</div>
+<a title="بازگشت به بالا" href="javascript:" id="return-to-top">
+    <i class="fas fa-arrow-up"></i>
+</a>
+<script src="js/jquery-3.5.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/megamenu.js"></script>
+<script src="js/select2.min.js"></script>
+<script src="js/fa.js"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/scripts.js"></script>
+<script src="js/searchBox.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+$(document).ready(function () {
+    $('.owl-tour').owlCarousel({
+        loop:true,
+        rtl:true,
+        margin:30,
+        nav:false,
+        dots:true,
+        autoplay:true,
+        autoplayTimeout:3500,
+        autoplayHoverPause:true,
+        responsive:{
+            0:{
+                items:1
+            },
+            992:{
+                items:2
+            },
+            1000:{
+                items:2
+            },
+            1200:{
+                items:3
+            }
+        },
+    });
+});
