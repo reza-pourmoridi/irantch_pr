@@ -40,7 +40,14 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
 
                     check_svg = a.find('svg')
                     check_i = a.find('i')
-                    tab_icons[item] = helper.icons_clean_serialize_string(f'{check_i}')
+                    check_h4 = a.find('h4')
+                    temprary = {}
+                    if check_i:
+                        temprary['icon'] = helper.icons_clean_serialize_string(f'{check_i}')
+                    if check_h4:
+                        temprary['name'] = helper.icons_clean_serialize_string(f'{check_h4.text.strip()}')
+
+                    tab_icons[item] = temprary
 
             testTabs = modulationSearchBoxTabs(project_path + '/include_files/search-box', parent_li)
             testBoxes = modulationSearchBoxBoxes(project_path + '/include_files/search-box')
@@ -69,7 +76,7 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
             if box_id:
                 final_massage = seprate_search_box_codes(project_path,modified_id)
                 item_massage = box_id + " : " + final_massage
-                items_massages.append(item_massage + '<br><br>')
+                items_massages.append(item_massage + '<br><br> polomp')
 
         # creating relational services array
         services_array = {}
@@ -318,16 +325,10 @@ def modulationSearchBoxTabs(search_box_path, tab):
         '''
         tab = helper.remove_tag_from_soup_object(tab, 'li')
         tab = helper.remove_tag_from_soup_object(tab, 'a')
-        helper.replace_attribute_by_tag(tab, 'h4', 'string',
-                                        '''{$obj_main_page->nameTabsSearchBox($client['MainService'])}''')
-        check_svg = tab.find_all('svg')
-        check_i = tab.find_all('i')
-        if check_svg:
-            helper.replace_attribute_by_tag(tab, 'i', 'string',
-                                            '''{$obj_main_page->classTabsSearchBox($client['MainService'])}''')
-        elif check_i:
-            helper.replace_attribute_by_tag(tab, 'i', 'class',
-                                            '''{$obj_main_page->classTabsSearchBox($client['MainService'])}''')
+        helper.replace_attribute_by_tag(tab, 'h4', 'string','''{$obj_main_page->nameTabsSearchBox($tab_id)}''')
+        check_i = tab.find('i')
+        if check_i:
+            check_i.replace_with('''{$icon}''')
 
         content = content.replace("__put__tab__here__", f'{tab}')
 
@@ -352,6 +353,7 @@ def modulationSearchBoxBoxes(search_box_path):
                                 {/if}
                             {/if}
                         {/foreach}
+                        
                         
                         '''
         content = helper.search_box_clean_serialize_string(f'{content}')

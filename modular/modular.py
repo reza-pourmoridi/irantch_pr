@@ -190,6 +190,8 @@ def initiation_progress():
     if file.filename == '':
         return jsonify({"message": "No selected file"})
 
+    view_folder_path = 'z:/gds/view/'
+    controller_folder_path = 'z:/gds/controller/customers/'
 
 
     lang = request.form['project_lang']
@@ -314,15 +316,15 @@ def initiation_progress():
         }
     }
 
-    moduls_array = {
-        'banner_gallery': {
-            'class': 'i_modular_banner_gallery',
-            'name': 'گالری بنر و سرچ باکس',
-            'file': 'search-box',
-            'modular': banner_gallery_module,
-            'test_function': unit_test.unit_test_banner_gallery
-        },
-    }
+    # moduls_array = {
+    #     'banner_gallery': {
+    #         'class': 'i_modular_banner_gallery',
+    #         'name': 'گالری بنر و سرچ باکس',
+    #         'file': 'search-box',
+    #         'modular': banner_gallery_module,
+    #         'test_function': unit_test.unit_test_banner_gallery
+    #     },
+    # }
 
     module_messages = []
 
@@ -342,13 +344,19 @@ def initiation_progress():
                 first_tag = sections[0]  # Get the first tag
                 classes = first_tag.get('class')  # Get all classes of the first tag
                 if module_info['class']:
-                    file_name = helper.return_file_in_same_section(classes, moduls_array , str(index))
-                    module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name'] + str(index) + " = " + module_info['modular'](section, project_path, lang, file_name))
+                    if index == 1:
+                        file_name = module_info['file']
+                    elif index == 2:
+                        file_name = module_info['file'] + '-second'
+                    else:
+                        file_name = module_info['file'] + '-third'
+
+                    module_messages.append("<br><br> تست ماژول گذاری بخش polomp " + module_info['name'] + str(index) + " = " + module_info['modular'](section, project_path, lang, file_name))
                 elif module_info['tag']:
                     if index == tags_length:
                         file_name = module_info['file']
                         section = soup
-                        module_messages.append("<br><br> تست ماژول گذاری بخش " + module_info['name']  + " = " + module_info['modular'](section, project_path , lang , file_name))
+                        module_messages.append("<br><br> تست ماژول گذاری بخش polomp " + module_info['name']  + " = " + module_info['modular'](section, project_path , lang , file_name))
                 index = index + 1
 
     summary_message = '\n'.join(module_messages)
@@ -370,7 +378,13 @@ def initiation_progress():
             first_tag = sections[0]  # Get the first tag
             classes = first_tag.get('class')  # Get all classes of the first tag
             if module_info['class']:
-                file_name = helper.return_file_in_same_section(classes, moduls_array, str(index))
+                if index == 1:
+                    file_name = module_info['file']
+                elif index == 2:
+                    file_name = module_info['file'] + '-second'
+                else:
+                    file_name = module_info['file'] + '-third'
+
                 file_name = '{include file="include_files/' + file_name + '.tpl' + '"}'
                 if 'menu' in file_name:
                     file_name = '''{if $smarty.session.layout neq 'pwa' }''' + file_name + '''{/if}'''
@@ -405,10 +419,22 @@ def initiation_progress():
     #         module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online ,lang))
     # summary_test_message = '\n'.join(module_test_messages)
 
-    return jsonify({"message": f'{summary_message}'
-           +  '<br><br><br>' 'main_page_creation' + f'{main_page}'
-           # +  '<br><br><br>' + f'{summary_test_message}'
-                    })
+    final_massage = f'{summary_message}' +  '<br><br><br>' 'main_page_creation polomp' + f'{main_page}' # +  '<br><br><br>' + f'{summary_test_message}'
+    count_modulation = final_massage.count('polomp')
+    count_success = final_massage.count('successfully')
+
+    upload_massage = 'not successful'
+    copy_controller = 'not successful'
+    if count_success >= count_modulation:
+        controller_path = project_path + '/' + request.form['project_name'] + '.php'
+        copy_controller = helper.copy_file(controller_path , controller_folder_path)
+        helper.remove_file(controller_path)
+        create_final_folder = helper.create_folder(request.form['project_name'], view_folder_path)
+        if create_final_folder:
+            upload_massage = helper.copy_directory_contents(project_path, create_final_folder)
+
+
+    return jsonify({"message": final_massage + 'upload_massage : ' + f'{upload_massage}' + 'copy controller ' + f'{copy_controller}'})
 
 
 def upload():
@@ -532,11 +558,8 @@ def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa',  f
             if isinstance(search_box_modulation, str):
                 search_box_massage = search_box_modulation
             tab_icons = search_box_modulation[1]
-            services_json = json.dumps(tab_icons)
-            services_string = f'{services_json}'
-            before_html = before_html + '''{assign var="tab_icons_json" value= '__services_json_string__'}
-                                            {assign var="tab_icons" value=$tab_icons_json|json_decode}'''
-            before_html = before_html.replace("__services_json_string__", services_string)
+            services_json = json.dumps(tab_icons , ensure_ascii=False)
+            creat_controller = create_controller(f'{services_json}', project_path, request.form['project_name'])
             search_box = banner_gallery_section.find(class_='i_modular_searchBox')
             helper.replace_attribute(search_box, '__search_box_tabs__', 'string','''{include file="./search-box/tabs-search-box.tpl"}''')
             helper.replace_attribute(search_box, '__search_boxes__', 'string','''{include file="./search-box/boxs-search.tpl"}''')
@@ -550,10 +573,110 @@ def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa',  f
         banner_gallery_final_content = banner_gallery_final_content.replace("&lt;", "<")
 
         final_file_massage = helper.create_file(banner_gallery_final_content, include_files_directory, 'search-box', 'tpl')
-        return 'searh box : ' + search_box_massage + ' <br><br> banner : ' + final_file_massage
+        return 'searh box : ' + search_box_massage + ' <br><br> banner : ' + final_file_massage + ' <br><br> controller : ' + creat_controller
     except Exception as e:
         return str(e)  # Return the exception message for now
 
+
+def create_controller(main_array_string,project_path, contrller_name = 'test'):
+    try:
+        contrller_code = '''
+        <?php
+    //todo: ********************* CREATE ACCESS CLIENT FOR ((FLIGHT + HOTEL)) *********************
+    //if(  $_SERVER['REMOTE_ADDR']=='84.241.4.20'  ) {
+    //    error_reporting(1);
+    //    error_reporting(E_ALL | E_STRICT);
+    //    @ini_set('display_errors', 1);
+    //    @ini_set('display_errors', 'on');
+    //}
+    
+    class __controller_name__ extends mainPage {
+    
+        public function __construct() {
+    
+            parent::__construct();
+        }
+    
+        public $icons_json = '__main_array_string__';
+    
+    
+    
+        public function classTabsSearchBox($service_name) {
+            switch ($service_name) {
+                case 'Flight_internal':
+                    return 'fa-light fa-plane-circle-check';
+                    break;
+                case 'Flight_external':
+                    return 'fa-light fa-plane-circle-check';
+                    break;
+                case 'Hotel_internal':
+                    return 'fa-light fa-bell-concierge';
+                    break;
+                case 'Hotel_external':
+                    return 'fa-light fa-bell-concierge';
+                    break;
+                case 'Bus':
+                    return 'fa-light fa-bus';
+                    break;
+                case 'Tour_internal':
+                    return 'fa-light fa-suitcase-rolling';
+                    break;
+                case 'Tour_external':
+                    return 'fa-light fa-suitcase-rolling';
+                    break;
+                case 'Visa':
+                    return 'fa-light fa-book-atlas';
+                    break;
+                default:
+                    return '';
+    
+    
+            }
+        }
+    
+        public function newClassTabsSearchBox($service_name) {
+            return $this->getServicesFromIds($this->icons_json)[$service_name];
+        }
+    
+        public function getServicesFromIds($json_array) {
+            $icon_array = $this->getItemsBykeyFromJsonServicesArray($json_array, 'icon');
+            $new_array = [];
+            foreach ($icon_array as $id => $icon) {
+                $service = str_replace(['_internal', '_external'], '', $id);
+                $new_array[$service][$id] = $icon;
+            }
+            return $new_array;
+        }
+    
+        public function getItemsBykeyFromJsonServicesArray($json_array, $key) {
+            $array = json_decode($json_array, true);
+            $new_array = [];
+            foreach ($array as $service => $val) {
+                $new_array[$service] = $val[$key];
+            }
+            return $new_array;
+        }
+    
+    
+        public function nameTabsSearchBox($service_name) {
+            $result_array = $this->getItemsBykeyFromJsonServicesArray($this->icons_json, 'name');
+            return $result_array[$service_name];
+        }
+    
+    
+        public function nameBoxSearchBox($service_name) {
+            $result_array = $this->getItemsBykeyFromJsonServicesArray($this->icons_json, 'name');
+            return $result_array[$service_name];
+        }
+    
+    }'''
+
+        contrller_code = contrller_code.replace("__controller_name__", contrller_name)
+        contrller_code = contrller_code.replace("__main_array_string__", main_array_string)
+        final_file_massage = helper.create_file(contrller_code, project_path, contrller_name, 'php')
+        return 'contrller name polomp: ' + final_file_massage
+    except Exception as e:
+        return 'create_controller()' + str(e)  # Return the exception message for now
 
 def news_module(news_section, project_path , lang = 'fa',  file_name = ''):
     try:

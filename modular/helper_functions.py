@@ -376,3 +376,30 @@ def create_file(content, path, file_name, file_format):
         return f'File "{full_file_path}" created successfully'
     except Exception as e:
         return f'Error creating file: {str(e)}'
+
+
+def remove_file(file_path):
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        return True
+    else:
+        return False
+
+
+
+def copy_file(source_file, destination_folder):
+    # Check if the source file exists
+    if not os.path.exists(source_file):
+        return("Source file does not exist:", source_file)
+
+
+    # Check if the destination folder exists, if not, create it
+    if not os.path.exists(destination_folder):
+        os.makedirs(destination_folder)
+
+    # Copy the file to the destination folder
+    try:
+        shutil.copy(source_file, destination_folder)
+        return ("File copied successfully to:", destination_folder)
+    except Exception as e:
+        return ("An error occurred while copying the file:", str(e))
