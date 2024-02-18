@@ -76,7 +76,7 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
             if box_id:
                 final_massage = seprate_search_box_codes(project_path,modified_id)
                 item_massage = box_id + " : " + final_massage
-                items_massages.append(item_massage + '<br><br> polomp')
+                items_massages.append(item_massage + '<br><br> evaluation_c')
 
         # creating relational services array
         services_array = {}

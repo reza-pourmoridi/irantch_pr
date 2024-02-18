@@ -17,11 +17,6 @@ complex_items_pattern = re.compile(r'__i_modular_c_item_class_(\d+)')
 simple_items_pattern = re.compile(r'__i_modular_nc_item_class_(\d+)')
 complex_items_class = "__i_modular_c_item_class_"
 simple_items_class = "__i_modular_nc_item_class_"
-
-
-
-
-
 repeatable_links = {
         '{$smarty.const.ROOT_ADDRESS}/page/flight':
             {
@@ -177,7 +172,8 @@ repeatable_links = {
             }
 
     }
-
+view_folder_path = 'z:/gds/view/'
+controller_folder_path = 'z:/gds/controller/customers/'
 
 
 def initiation_progress():
@@ -190,9 +186,6 @@ def initiation_progress():
     file = request.files['file']
     if file.filename == '':
         return jsonify({"message": "No selected file"})
-
-    view_folder_path = 'z:/gds/view/'
-    controller_folder_path = 'z:/gds/controller/customers/'
 
 
     lang = request.form['project_lang']
@@ -317,54 +310,34 @@ def initiation_progress():
         }
     }
 
-    # moduls_array = {
-    #     'banner_gallery': {
-    #         'class': 'i_modular_banner_gallery',
-    #         'name': 'گالری بنر و سرچ باکس',
-    #         'file': 'search-box',
-    #         'modular': banner_gallery_module,
-    #         'test_function': unit_test.unit_test_banner_gallery
-    #     },
-    # }
+    modulation_summary_message = modulation(soup, moduls_array, project_path, lang)
+    main_page = creating_main_page(html_content, moduls_array, project_path)
+    summary_test_message = unit_test(html_content, moduls_array, lang)
+    final_massage = f'{modulation_summary_message}' +  '<br><br><br>' 'main_page_creation evaluation_c' + f'{main_page}' # +  '<br><br><br>' + f'{summary_test_message}'
+    upload_on_gds_massage = upload_on_gds(final_massage, project_path)
 
-    module_messages = []
+    return jsonify({"message": final_massage + 'upload_massage : ' + upload_on_gds_massage})
 
 
+def upload_on_gds(final_massage, project_path):
+    count_modulation = final_massage.count('evaluation_c')
+    count_success = final_massage.count('successfully')
 
-    classes = []
-    for module_name, module_info in moduls_array.items():
-        if module_info['class']:
-            sections = soup.find_all(class_=module_info['class'])
-        elif module_info['tag']:
-            sections = soup.find_all(module_info['tag'])
-            tags_length = len(sections)
+    upload_massage = 'not successful'
+    copy_controller = 'not successful'
+    if count_success >= count_modulation:
+        controller_path = project_path + '/' + request.form['project_name'] + '.php'
+        copy_controller = helper.copy_file(controller_path , controller_folder_path)
+        helper.remove_file(controller_path)
+        create_final_folder = helper.create_folder(request.form['project_name'], view_folder_path)
+        if create_final_folder:
+            upload_massage = helper.copy_directory_contents(project_path, create_final_folder)
 
-        index = 1
-        for section in sections:
-            if section:
-                first_tag = sections[0]  # Get the first tag
-                classes = first_tag.get('class')  # Get all classes of the first tag
-                if module_info['class']:
-                    if index == 1:
-                        file_name = module_info['file']
-                    elif index == 2:
-                        file_name = module_info['file'] + '-second'
-                    else:
-                        file_name = module_info['file'] + '-third'
-
-                    module_messages.append("<br><br> تست ماژول گذاری بخش polomp " + module_info['name'] + str(index) + " = " + module_info['modular'](section, project_path, lang, file_name))
-                elif module_info['tag']:
-                    if index == tags_length:
-                        file_name = module_info['file']
-                        section = soup
-                        module_messages.append("<br><br> تست ماژول گذاری بخش polomp " + module_info['name']  + " = " + module_info['modular'](section, project_path , lang , file_name))
-                index = index + 1
-
-    summary_message = '\n'.join(module_messages)
-
-    #creation of mainPage
+    upload_on_gds_massage = f'{upload_massage}' + 'copy controller ' + f'{copy_controller}'
+    return upload_on_gds_massage
 
 
+def creating_main_page(html_content, moduls_array, project_path):
     soup = BeautifulSoup(html_content, 'html.parser')
     classes = []
     for module_key, module_info in moduls_array.items():
@@ -403,39 +376,41 @@ def initiation_progress():
     modified_html_content = str(soup)
     soup_str = f'{modified_html_content}'
     main_page = helper.create_file(soup_str, project_path, 'mainPage', 'tpl')
-
-    # UNIT TEST
-    # soup = BeautifulSoup(html_content, 'html.parser')
-    # if not soup:
-    #     return jsonify({"message": "testing html = " + f'{soup}'})
-
-    # soup_online = unit_test.get_online_html()
-    # if 'خطایی' in soup_online:
-    #     return jsonify({"message": "testing local connection = " + f'{soup_online}'})
-    module_test_messages = []
-
-    # for module_name, module_info in moduls_array.items():
-    #     section = soup.find(class_=module_info['class'])
-    #     if section:
-    #         module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online ,lang))
-    # summary_test_message = '\n'.join(module_test_messages)
-
-    final_massage = f'{summary_message}' +  '<br><br><br>' 'main_page_creation polomp' + f'{main_page}' # +  '<br><br><br>' + f'{summary_test_message}'
-    count_modulation = final_massage.count('polomp')
-    count_success = final_massage.count('successfully')
-
-    upload_massage = 'not successful'
-    copy_controller = 'not successful'
-    # if count_success >= count_modulation:
-    #     controller_path = project_path + '/' + request.form['project_name'] + '.php'
-    #     copy_controller = helper.copy_file(controller_path , controller_folder_path)
-    #     helper.remove_file(controller_path)
-    #     create_final_folder = helper.create_folder(request.form['project_name'], view_folder_path)
-    #     if create_final_folder:
-    #         upload_massage = helper.copy_directory_contents(project_path, create_final_folder)
+    return main_page
 
 
-    return jsonify({"message": final_massage + 'upload_massage : ' + f'{upload_massage}' + 'copy controller ' + f'{copy_controller}'})
+def modulation(soup, moduls_array, project_path, lang):
+    module_messages = []
+    classes = []
+    for module_name, module_info in moduls_array.items():
+        if module_info['class']:
+            sections = soup.find_all(class_=module_info['class'])
+        elif module_info['tag']:
+            sections = soup.find_all(module_info['tag'])
+            tags_length = len(sections)
+
+        index = 1
+        for section in sections:
+            if section:
+                first_tag = sections[0]  # Get the first tag
+                classes = first_tag.get('class')  # Get all classes of the first tag
+                if module_info['class']:
+                    if index == 1:
+                        file_name = module_info['file']
+                    elif index == 2:
+                        file_name = module_info['file'] + '-second'
+                    else:
+                        file_name = module_info['file'] + '-third'
+
+                    module_messages.append("<br><br> تست ماژول گذاری بخش evaluation_c " + module_info['name'] + str(index) + " = " + module_info['modular'](section, project_path, lang, file_name))
+                elif module_info['tag']:
+                    if index == tags_length:
+                        file_name = module_info['file']
+                        section = soup
+                        module_messages.append("<br><br> تست ماژول گذاری بخش evaluation_c " + module_info['name']  + " = " + module_info['modular'](section, project_path , lang , file_name))
+                index = index + 1
+    modulation_summary_message = '\n'.join(module_messages)
+    return modulation_summary_message
 
 
 def initiation_test(class_name, module_name, module_test_function, soup, soup_online , lang):
@@ -446,6 +421,24 @@ def initiation_test(class_name, module_name, module_test_function, soup, soup_on
         return module_test_function(section, section_online , lang)
 
     return f'ماژول {module_name} بازگذاری نشد'
+
+
+def unit_test(html_content, moduls_array, lang):
+    soup = BeautifulSoup(html_content, 'html.parser')
+    if not soup:
+        return jsonify({"message": "testing html = " + f'{soup}'})
+
+    soup_online = unit_test.get_online_html()
+    if 'خطایی' in soup_online:
+        return jsonify({"message": "testing local connection = " + f'{soup_online}'})
+    module_test_messages = []
+
+    for module_name, module_info in moduls_array.items():
+        section = soup.find(class_=module_info['class'])
+        if section:
+            module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online ,lang))
+    summary_test_message = '\n'.join(module_test_messages)
+    return summary_test_message
 
 
 def create_controller(main_array_string, project_path, contrller_name='test'):
@@ -544,10 +537,17 @@ def create_controller(main_array_string, project_path, contrller_name='test'):
         contrller_code = contrller_code.replace("__controller_name__", contrller_name)
         contrller_code = contrller_code.replace("__main_array_string__", main_array_string)
         final_file_massage = helper.create_file(contrller_code, project_path, contrller_name, 'php')
-        return 'contrller name polomp: ' + final_file_massage
+        return 'contrller name evaluation_c: ' + final_file_massage
     except Exception as e:
         traceback_str = traceback.format_exc()
         return str(e) + '\nTraceback:\n' + traceback_str
+
+
+
+
+
+
+
 
 
 def header_module(header_section, project_path, lang='fa', file_name=''):
