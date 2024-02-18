@@ -9,6 +9,7 @@ import codecs
 import helper_functions as helper
 import unit_test
 from searchBox import sb
+import traceback
 
 
 
@@ -545,7 +546,8 @@ def create_controller(main_array_string, project_path, contrller_name='test'):
         final_file_massage = helper.create_file(contrller_code, project_path, contrller_name, 'php')
         return 'contrller name polomp: ' + final_file_massage
     except Exception as e:
-        return 'create_controller()' + str(e)  # Return the exception message for now
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 def header_module(header_section, project_path, lang='fa', file_name=''):
@@ -718,7 +720,8 @@ def header_module(header_section, project_path, lang='fa', file_name=''):
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         return helper.create_file(header_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
-        return str(e)  # Return the exception message for now
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 def footer_module(footer_section, project_path, lang='fa', file_name=''):
@@ -780,7 +783,8 @@ def footer_module(footer_section, project_path, lang='fa', file_name=''):
 
         return helper.create_file(footer_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
-        return str(e)  # Return the exception message for now
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 def footer_script_module(footer_script_section, project_path, lang='fa', file_name=''):
@@ -863,7 +867,8 @@ def footer_script_module(footer_script_section, project_path, lang='fa', file_na
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         return helper.create_file(footer_script_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
-        return str(e)  # Return the exception message for now
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa',  file_name = ''):
@@ -963,7 +968,8 @@ def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa',  f
         final_file_massage = helper.create_file(banner_gallery_final_content, include_files_directory, 'search-box', 'tpl')
         return 'searh box : ' + search_box_massage + ' <br><br> banner : ' + final_file_massage + ' <br><br> controller : ' + creat_controller
     except Exception as e:
-        return str(e)  # Return the exception message for now
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 def news_module(news_section, project_path , lang = 'fa',  file_name = ''):
@@ -1042,7 +1048,8 @@ def news_module(news_section, project_path , lang = 'fa',  file_name = ''):
 
         return helper.create_file(news_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
-        return str(e)  # Return the exception message for now
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 def newsletter_module(newsletter_section, project_path , lang = 'fa',  file_name = ''):
@@ -1070,7 +1077,8 @@ def newsletter_module(newsletter_section, project_path , lang = 'fa',  file_name
 
         return helper.create_file(newsletter_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
-        return str(e)  # Return the exception message for now
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
@@ -1121,7 +1129,8 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
 
         return helper.create_file(menu_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
-        return str(e)  # Return the exception message for now
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 def about_us(about_us_section, project_path, lang = 'fa',  file_name = ''):
@@ -1170,7 +1179,8 @@ def about_us(about_us_section, project_path, lang = 'fa',  file_name = ''):
 
         return helper.create_file(about_us_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
-        return str(e)  # Return the exception message for now
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 def blog_module(blog_section, project_path , lang = 'fa',  file_name = ''):
@@ -1307,7 +1317,8 @@ def blog_module(blog_section, project_path , lang = 'fa',  file_name = ''):
 
         return helper.create_file(blog_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
-        return str(e)  # Return the exception message for now
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
@@ -1521,7 +1532,8 @@ def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         return helper.create_file(tours_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
-        return str(e)  # Return the exception message for now
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 def hotels_webservice_module(hotels_section, project_path, lang = 'fa',  file_name = ''):
@@ -1720,7 +1732,8 @@ def hotels_webservice_module(hotels_section, project_path, lang = 'fa',  file_na
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         return helper.create_file(hotels_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
-        return str(e)  # Return the exception message for now
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 def hotels_External_cities_module(hotels_section, project_path, lang = 'fa',  file_name = ''):
@@ -1963,7 +1976,8 @@ def club_weather_module(club_weather_section, project_path, lang = 'fa',  file_n
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         return helper.create_file(club_weather_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
-        return str(e)  # Return the exception message for now
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 def fast_flight_search_module(fast_flight_search_section, project_path, lang = 'fa',  file_name = ''):
@@ -2177,7 +2191,8 @@ def fast_flight_search_module(fast_flight_search_section, project_path, lang = '
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         return helper.create_file(fast_flight_search_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
-        return str(e)  # Return the exception message for now
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 def new_module(new_section, project_path, lang = 'fa',  file_name = ''):
@@ -2195,7 +2210,8 @@ def new_module(new_section, project_path, lang = 'fa',  file_name = ''):
         include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
         return helper.create_file(new_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
-        return str(e)  # Return the exception message for now
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 
