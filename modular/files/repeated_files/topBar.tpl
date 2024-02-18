@@ -1,5 +1,6 @@
 {load_presentation_object filename="Session" assign="objSession"}
 {assign var="check_is_counter" value=$obj_main_page->checkIsCounter()}
+{assign var="typeMember" value=$objFunctions->TypeUser($objSession->getUserId())}
 
 {if $obj_main_page->isLogin()}
 
@@ -7,7 +8,11 @@
         <div>
             <h2>{$objSession->getNameUser()}</h2>
             <div class="d-flex justify-content-between align-items-center">
-                <span class="sup-menu-flex_span">{$objFunctions->getOnlineMemberCredit()|number_format}  ریال</span>
+                {if $typeMember eq 'Counter'}
+                    <span class="sup-menu-flex_span">{$objFunctions->CalculateCredit($objSession->getUserId())} </span>
+                {elseif $typeMember eq 'Ponline'}
+                    <span class="sup-menu-flex_span">{$objFunctions->getOnlineMemberCredit()|number_format}  ریال</span>
+                {/if}
                 {if $check_is_counter neq 1}
                 <a class="sup-menu-flex_a" href="{$smarty.const.ROOT_ADDRESS}/profile">
                     <span>##ChargeAccount##</span>

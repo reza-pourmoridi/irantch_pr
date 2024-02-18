@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify
 # from recommendation import index as recom_index  # Import the recommendation/index module
 from modular import modular as modular_index
+from modular import helper_functions as helper
 from update_data import update_main as up
 
 
@@ -42,7 +43,7 @@ def modular_back_end():
 @app.route('/upload', methods=['POST'])
 def upload_file():
     # Execute the recommendation/index module's code for the '/recom-back-end' route
-    return modular_index.upload_file()
+    return helper.upload_file()
 
 
 @app.route('/initiation_progress', methods=['POST'])
@@ -55,7 +56,7 @@ def initiation_update():
 
 @app.route('/upload_styles', methods=['POST'])
 def upload():
-    return modular_index.upload()
+    return helper.upload()
 
 
 if __name__ == '__main__':

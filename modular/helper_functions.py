@@ -403,3 +403,25 @@ def copy_file(source_file, destination_folder):
         return ("File copied successfully to:", destination_folder)
     except Exception as e:
         return ("An error occurred while copying the file:", str(e))
+
+
+
+def upload():
+    if 'file' not in request.files:
+        return jsonify({"message": "No file part"})
+
+
+    file = request.files['file']
+
+    if not is_zip(file):
+        return jsonify({"message": "file format must be zip"})
+
+    if file.filename == '':
+        return jsonify({"message": "No selected file"})
+
+    files_directory = os.path.dirname(__file__)  # Get the directory of the script
+    files_directory = os.path.join(files_directory, 'files')  # Create a 'files' subdirectory
+    files_directory = os.path.join(files_directory, 'repeated_files')  # Create a 'files' subdirectory
+    files_directory = os.path.join(files_directory, 'project_files')  # Create a 'files' subdirectory
+    unzip_to_folder(files_directory, file)
+    return jsonify({"message": 'استایل های پروژه بارگذاری شدند.'})
