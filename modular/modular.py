@@ -320,14 +320,6 @@ def initiation_progress():
             'modular': hotels_External_cities_module,
             'test_function': unit_test.test_unit_test
 
-        },
-        'tours': {
-            'class': 'i_modular_tours',
-            'name': 'تور',
-            'file': 'tours',
-            'modular': tours_module,
-            'test_function': unit_test.test_unit_test
-
         }
     }
     final_massage = ''
@@ -1023,733 +1015,6 @@ def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa',  f
         return str(e) + '\nTraceback:\n' + traceback_str
 
 
-def news_module(news_section, project_path , lang = 'fa',  file_name = ''):
-    try:
-        # create regex objects containing patterns of items classes
-        complex_items_numbers = helper.item_numbers(news_section,complex_items_pattern)
-        simple_items_numbers = helper.item_numbers(news_section,simple_items_pattern)
-        complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
-        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
-        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
-        max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
-
-        before_html = '''{assign var="main_articles" value=$obj_main_page->getNewsArticles()}
-                            {assign var="othe_itmes" value=$main_articles['data']}
-                            {assign var="i" value="2"}
-                            {assign var='counter' value=0}
-                            {if $othe_itmes > 0 }'''
-        after_html = '{/if}'
-
-        before_foreach = '''{foreach $othe_itmes as $item} {if $counter >= i_modular__min_for_limit and $counter <= i_modular__max_for_limit}'''
-        before_foreach = before_foreach.replace("i_modular__min_for_limit", simple_items_numbers_min)
-        before_foreach = before_foreach.replace("i_modular__max_for_limit", simple_items_numbers_max)
-        after_foreach = '''{/if}{$counter = $counter + 1}{/foreach}'''
-
-        for num in simple_items_numbers:
-            news_replacement_data = {
-                "__link__": '''{$item['link']}''',
-            }
-            simple_element = news_section.find(class_=simple_items_class + num)
-            if num == simple_items_numbers[0]:
-                helper.add_before_after(news_section, simple_items_class + num, before_foreach, after_foreach)
-                simple_element = news_section.find(class_=simple_items_class + num)
-                simple_element = helper.replace_placeholders(simple_element, news_replacement_data)
-                simple_element = news_section.find(class_=simple_items_class + num)
-                helper.replace_attribute(simple_element, '__image_class__', 'src','{$item["image"]}')
-                helper.replace_attribute(simple_element, '__image_class__', 'alt','{$item["alt"]}')
-                helper.replace_attribute(simple_element, '__title_class__', 'string','{$item["title"]}')
-                helper.replace_attribute(simple_element, '__heading_class__', 'string','{$item["heading"]}')
-                helper.replace_attribute(simple_element, '__date_class__', 'string','{$item["created_at"]}')
-                helper.replace_attribute(simple_element, '__description_class__', 'string','{$item["description"]}')
-
-            else:
-                simple_element.decompose()
-        for num in complex_items_numbers:
-            before_if = '''{if $othe_itmes[{0}] }'''
-            before_if = before_if.replace("{0}", num)
-            after_if = '''{/if}'''
-
-            news_complex_replacement_data = {
-                "__link__": '''{{$othe_itmes[{0}]['link']}}'''.format(num),
-                "__alt_article__": '''{{$othe_itmes[{0}]['title']}}'''.format(num),
-                'images/5497750661271-6.jpg': '''{{$othe_itmes[{0}]['image']}}'''.format(num),
-                '<span class="__date__">5 بهمن 1402</span>': '''{{$othe_itmes[{0}]['created_at']}}'''.format(num),
-                '<span class="__comments_number__">450</span>': '''{{$othe_itmes[{0}]['comments_count']['comments_count']}}'''.format(num)
-            }
-            complex_element = news_section.find(class_=complex_items_class + num)
-            helper.add_before_after(news_section, complex_items_class + num, before_if, after_if)
-            complex_element = news_section.find(class_=complex_items_class + num)
-            complex_element_final = helper.replace_placeholders(complex_element, news_complex_replacement_data)
-            complex_element = news_section.find(class_=complex_items_class + num)
-            helper.replace_attribute(complex_element, '__image_class__', 'src', '''{{$othe_itmes[{0}]['image']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__image_class__', 'alt', '''{{$othe_itmes[{0}]['alt']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__title_class__', 'string', '''{{$othe_itmes[{0}]['title']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__date_class__', 'string', '''{{$othe_itmes[{0}]['created_at']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__heading_class__', 'string', '''{{$othe_itmes[{0}]['heading']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__description_class__', 'string', '''{{$othe_itmes[{0}]['description']}}'''.format(num))
-
-
-
-        news_final_content = f'{before_html}\n{news_section}\n{after_html}'
-        news_final_content = news_final_content.replace("__all_link_href__", "{$smarty.const.ROOT_ADDRESS}/news")
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        # helper.write_text_in_path(project_path, "{inclued 'include_files/news.tpl'}")
-        news_final_content = news_final_content.replace("&gt;", ">")
-        news_final_content = news_final_content.replace("&lt;", "<")
-
-        return helper.create_file(news_final_content, include_files_directory, file_name, 'tpl')
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
-def newsletter_module(newsletter_section, project_path , lang = 'fa',  file_name = ''):
-    try:
-        helper.replace_attribute(newsletter_section, '__name_class__', 'name','NameSms')
-        helper.replace_attribute(newsletter_section, '__email_class__', 'name','EmailSms')
-        helper.replace_attribute(newsletter_section, '__phone_class__', 'name','CellSms')
-
-        helper.replace_attribute(newsletter_section, '__name_class__', 'id','NameSms')
-        helper.replace_attribute(newsletter_section, '__email_class__', 'id','EmailSms')
-        helper.replace_attribute(newsletter_section, '__phone_class__', 'id','CellSms')
-
-        helper.replace_attribute(newsletter_section, '__name_class__', 'class','full-name-js')
-        helper.replace_attribute(newsletter_section, '__email_class__', 'class','email-js')
-        helper.replace_attribute(newsletter_section, '__phone_class__', 'class','mobile-js')
-
-        helper.replace_attribute(newsletter_section, '__submit_class__', 'onclick','submitNewsLetter()')
-
-
-        newsletter_final_content = f'{newsletter_section}'
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        # helper.write_text_in_path(project_path, "{inclued 'include_files/newsletter.tpl'}")
-        newsletter_final_content = newsletter_final_content.replace("&gt;", ">")
-        newsletter_final_content = newsletter_final_content.replace("&lt;", "<")
-
-        return helper.create_file(newsletter_final_content, include_files_directory, file_name, 'tpl')
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
-def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
-    try:
-
-        before_html  = '''{load_presentation_object filename="reservationBasicInformation" assign="objResult"}'''
-
-        helper.replace_attribute_by_text(menu_section, 'ورود  |  ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
-        helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
-        helper.replace_attribute_by_text(menu_section, 'ورود / ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
-        helper.replace_attribute_by_text(menu_section, 'الدخول / يسجل' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
-
-        helper.replace_attribute(menu_section, '__login_register_class__2', 'href', '''{if $obj_main_page->isLogin()}javascript:{else}{$smarty.const.ROOT_ADDRESS}/authenticate{/if}''')
-        helper.replace_attribute(menu_section, '__login_register_class__', 'href', '''{if $obj_main_page->isLogin()}javascript:{else}{$smarty.const.ROOT_ADDRESS}/authenticate{/if}''')
-
-        helper.add_class_to_elements(menu_section, '__login_register_class__2',' {if $obj_main_page->isLogin()}show-box-login-js main-navigation__button2{else}main-navigation__button1{/if} ')
-        helper.add_class_to_elements(menu_section, '__login_register_class__',' {if $obj_main_page->isLogin()}show-box-login-js main-navigation__button2{else}main-navigation__button1{/if} ')
-        after_login = '''<div class="main-navigation__sub-menu2 arrow-up show-content-box-login-js" style="display: none">
-                            {include file="`$smarty.const.FRONT_CURRENT_THEME`topBar.tpl"}
-                        </div>'''
-        helper.add_before_after(menu_section, '__login_register_class__', '', after_login)
-
-        # return f'{menu_section}'
-
-        for key, val_set in repeatable_links.items():
-            for text in val_set:
-                helper.replace_attribute_by_text(menu_section, text, 'href', key)
-
-
-
-        helper.replace_attribute(menu_section, '__mobile_class__', 'string', '''{$smarty.const.CLIENT_MOBILE}''')
-        helper.replace_attribute(menu_section, '__mobile_class__', 'href', '''tel:{$smarty.const.CLIENT_MOBILE}''')
-        helper.replace_attribute(menu_section, '__phone_class__', 'string', '''{$smarty.const.CLIENT_PHONE}''')
-        helper.replace_attribute(menu_section, '__phone_class__', 'href', '''tel:{$smarty.const.CLIENT_PHONE}''')
-        helper.replace_attribute(menu_section, '__email_class__', 'string', '''{$smarty.const.CLIENT_EMAIL}''')
-        helper.replace_attribute(menu_section, '__email_class__', 'href', '''mailto:{$smarty.const.CLIENT_EMAIL}''')
-        helper.replace_attribute(menu_section, '__logo_class__', 'alt', '''{$obj->Title_head()}''')
-
-
-        menu_final_content = f'{menu_section}'
-        menu_final_content = f'{before_html}\n{menu_section}'
-
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        # helper.write_text_in_path(project_path, "{inclued 'include_files/menu.tpl'}")
-        menu_final_content = menu_final_content.replace("__main_link_href__", "https://{$smarty.const.CLIENT_MAIN_DOMAIN}")
-        menu_final_content = menu_final_content.replace("&gt;", ">")
-        menu_final_content = menu_final_content.replace("&lt;", "<")
-
-        return helper.create_file(menu_final_content, include_files_directory, file_name, 'tpl')
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
-def about_us(about_us_section, project_path, lang = 'fa',  file_name = ''):
-    try:
-        befor_social_media = '''{assign var="socialLinks"  value=$about['social_links']|json_decode:true}
-                                {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref','aparat' => 'aparatHref','youtube' => 'youtubeHref','facebook' => 'facebookHref','linkeDin' => 'linkeDinHref']}
-
-                                {foreach $socialLinks as $key => $val}
-                                        {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}
-                                {/foreach}'''
-        befor_social_media_soup = BeautifulSoup(befor_social_media, "html.parser")
-        social_element = about_us_section.find(class_=lambda classes: classes and '__social_class__' in classes)
-        if social_element:
-            social_element.insert_before(befor_social_media_soup)
-            social_element = about_us_section.find(class_=lambda classes: classes and '__social_class__' in classes)
-            repeatable_social_links = {
-                '__telegram_class__': '{if $telegramHref}{$telegramHref}{/if}',
-                '__whatsapp_class__': '{if $whatsappHref}{$whatsappHref}{/if}',
-                '__instagram_class__': '{if $instagramHref}{$instagramHref}{/if}',
-                '__linkdin_class__': '{if $linkeDinHref}{$linkeDinHref}{/if}',
-                '__aparat_class__': '{if $aparatHref}{$aparatHref}{/if}',
-                '__youtube_class__': '{if $youTubeHref}{$youTubeHref}{/if}',
-            }
-            for key, val in repeatable_social_links.items():
-                helper.replace_attribute(social_element, key, 'href', val)
-
-        helper.replace_attribute(about_us_section, '__aboutUs_class__', 'string',
-                                 '''{$htmlContent = $about['body']|strip_tags}{$htmlContent|truncate:300}''')
-        helper.replace_attribute(about_us_section, '__aboutUs_class_href__', 'href',
-                                 '''{$smarty.const.ROOT_ADDRESS}/mag''')
-        helper.replace_attribute(about_us_section, '__address_class__', 'string',
-                                 ''' آدرس :  {$smarty.const.CLIENT_ADDRESS} ''')
-        helper.replace_attribute(about_us_section, '__mobile_class__', 'string', '''{$smarty.const.CLIENT_MOBILE}''')
-        helper.replace_attribute(about_us_section, '__mobile_class__', 'href', '''tel:{$smarty.const.CLIENT_MOBILE}''')
-        helper.replace_attribute(about_us_section, '__phone_class__', 'string', '''{$smarty.const.CLIENT_PHONE}''')
-        helper.replace_attribute(about_us_section, '__phone_class__', 'href', '''tel:{$smarty.const.CLIENT_PHONE}''')
-        helper.replace_attribute(about_us_section, '__email_class__', 'string', '''{$smarty.const.CLIENT_EMAIL}''')
-        helper.replace_attribute(about_us_section, '__email_class__', 'href', '''mailto:{$smarty.const.CLIENT_EMAIL}''')
-        about_us_section = helper.replace_placeholders(about_us_section,
-                                                     {'__aboutUsLink__': '{$smarty.const.ROOT_ADDRESS}/aboutUs'})
-        about_us_final_content = f'{about_us_section}'
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        # helper.write_text_in_path(project_path, "{inclued 'include_files/about_us.tpl'}")
-        about_us_final_content = about_us_final_content.replace("&gt;", ">")
-        about_us_final_content = about_us_final_content.replace("&lt;", "<")
-
-        return helper.create_file(about_us_final_content, include_files_directory, file_name, 'tpl')
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
-def blog_module(blog_section, project_path , lang = 'fa',  file_name = ''):
-    try:
-        # create regex objects containing patterns of items classes
-        complex_items_numbers = helper.item_numbers(blog_section,complex_items_pattern)
-        simple_items_numbers = helper.item_numbers(blog_section,simple_items_pattern)
-        complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
-        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
-        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
-        max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
-
-        before_html = '''
-                        {*with category*}
-                        {*{assign var="search_array" value=['section'=>'mag','category'=>1,'limit'=>'1i_modular__max_limit']}*}
-                        {*{assign var='articles' value=$obj_main_page->getCategoryArticles($search_array)}*}
-                        {*{assign var='counter' value=0}*}
-                        {*{assign var="article_count" value=$articles|count}*}
-        
-                        {assign var="data_search_blog" value=['service'=>'Public','section'=>'article', 'limit' =>1i_modular__max_limit]}
-                        {assign var='articles' value=$obj_main_page->articlesPosition($data_search_blog)}
-                        {assign var='counter' value=0}
-                        {assign var="article_count" value=$articles|count}
-                        {if $articles}
-                    '''
-        before_html = before_html.replace("i_modular__max_limit", max_item_number)
-        after_html = '{/if}'
-
-        before_foreach = '''{foreach $articles as $key => $article} {if $counter >= i_modular__min_for_limit and $counter <= i_modular__max_for_limit}'''
-        before_foreach = before_foreach.replace("i_modular__min_for_limit", simple_items_numbers_min)
-        before_foreach = before_foreach.replace("i_modular__max_for_limit", simple_items_numbers_max)
-        after_foreach = '''{/if}{$counter = $counter + 1}{/foreach}'''
-
-        for num in simple_items_numbers:
-            blog_replacement_data = {
-                "__airline__": '''{$article['link']}''',
-                "__link__": '''{$article['link']}''',
-            }
-            simple_element = blog_section.find(class_=simple_items_class + num)
-            if num == simple_items_numbers[0]:
-                helper.add_before_after(blog_section, simple_items_class + num, before_foreach, after_foreach)
-
-                simple_element = blog_section.find(class_=simple_items_class + num)
-                simple_element = helper.replace_placeholders(simple_element, blog_replacement_data)
-                simple_element = blog_section.find(class_=simple_items_class + num)
-                helper.replace_attribute(simple_element, '__image_class__', 'src','{$article["image"]}')
-                helper.replace_attribute(simple_element, '__image_class__', 'alt','{$article["alt"]}')
-                helper.replace_attribute(simple_element, '__title_class__', 'string','{$article["title"]}')
-                helper.replace_attribute(simple_element, '__degree_class__', 'string','{$article["rates"]["average"]}')
-                helper.replace_attribute(simple_element, '__category_class__', 'string','''{$article['categories_array'][0]['title']}''')
-                helper.replace_attribute(simple_element, '__heading_class__', 'string','{$article["heading"]}')
-                helper.replace_attribute(simple_element, '__date_class__', 'string','{$article["created_at"]}')
-                for i in range(1, 6):
-                    light_star_elements = simple_element.find(
-                        class_='__star_class_light__' + str(i))
-                    dark_star_elements = simple_element.find(class_='__star_class_dark__' + str(i))
-                    if i == 1 and light_star_elements:
-                        new_light_star = '''{for $i = 0; $i < count($item['rates']); $i++}''' + str(
-                            light_star_elements) + '''{/for}'''
-                        new_light_star = BeautifulSoup(new_light_star, 'html.parser')
-                        light_star_elements.replace_with(new_light_star)
-                    else:
-                        if light_star_elements:
-                            light_star_elements.decompose()
-
-                    if i == 1 and dark_star_elements:
-                        new_dark_star = '''{for $i = count($item['rates']); $i < 6; $i++}''' + str(
-                            dark_star_elements) + '''{/for}'''
-                        new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
-                        dark_star_elements.replace_with(new_dark_star)
-                    else:
-                        if dark_star_elements:
-                            dark_star_elements.decompose()
-
-            else:
-                simple_element.decompose()
-        for num in complex_items_numbers:
-            before_if = '''{if $articles[{0}] }'''
-            before_if = before_if.replace("{0}", num)
-            after_if = '''{/if}'''
-
-            blog_complex_replacement_data = {
-                "__link__": '''{{$articles[{0}]['link']}}'''.format(num),
-                "__alt_article__": '''{{$articles[{0}]['title']}}'''.format(num),
-                'images/5497750661271-6.jpg': '''{{$articles[{0}]['image']}}'''.format(num),
-                '<span class="__date__">5 بهمن 1402</span>': '''{{$articles[{0}]['created_at']}}'''.format(num),
-                '<span class="__comments_number__">450</span>': '''{{$articles[{0}]['comments_count']['comments_count']}}'''.format(num)
-            }
-            helper.add_before_after(blog_section, complex_items_class + num, before_if, after_if)
-
-
-            complex_element = blog_section.find(class_=complex_items_class + num)
-            complex_element_final = helper.replace_placeholders(complex_element, blog_complex_replacement_data)
-            complex_element = blog_section.find(class_=complex_items_class + num)
-            helper.replace_attribute(complex_element, '__image_class__', 'src', '''{{$articles[{0}]['image']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__title_class__', 'string', '''{{$articles[{0}]['title']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__degree_class__', 'string', '''{{$articles[{0}]["rates"]["average"]}}'''.format(num))
-            helper.replace_attribute(complex_element, '__category_class__', 'string', '''{{$articles[{0}]["categories_array"][0]['title']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__heading_class__', 'string', '''{{$articles[{0}]['heading']}}'''.format(num))
-            helper.replace_attribute(complex_element, '__date_class__', 'string', '''{{$articles[{0}]['created_at']}}'''.format(num))
-
-            for i in range(1, 6):
-                light_star_elements = complex_element.find(class_='__star_class_light__' + str(i))
-                dark_star_elements = complex_element.find(class_='__star_class_dark__' + str(i))
-                if i == 1 and light_star_elements:
-                    new_light_star = '''{for $i = 0; $i < count($articles[{0}]['rates']); $i++}'''.format(num) + str(
-                        light_star_elements) + '''{/for}'''
-                    new_light_star = new_light_star.replace("{0}", f'{num}')
-                    # new_light_star = new_light_star.replace("__hotel_var__", section_var)
-                    new_light_star = BeautifulSoup(new_light_star, 'html.parser')
-                    light_star_elements.replace_with(new_light_star)
-                else:
-                    if light_star_elements:
-                        light_star_elements.decompose()
-
-                if i == 1 and dark_star_elements:
-                    new_dark_star = '''{for $i = count($articles[{0}]['rates']); $i < 6; $i++}'''.format(num) + str(
-                        dark_star_elements) + '''{/for}'''
-                    new_dark_star = new_dark_star.replace("{0}", f'{num}')
-                    new_dark_star = new_dark_star.replace("__hotel_var__", section_var)
-                    new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
-                    dark_star_elements.replace_with(new_dark_star)
-                else:
-                    if dark_star_elements:
-                        dark_star_elements.decompose()
-
-
-        blog_final_content = f'{before_html}\n{blog_section}\n{after_html}'
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        helper.write_text_in_path(project_path, "{inclued 'include_files/blog.tpl'}")
-        blog_final_content = blog_final_content.replace("__all_link_href__", "{$smarty.const.ROOT_ADDRESS}/mag")
-        blog_final_content = blog_final_content.replace("&gt;", ">")
-        blog_final_content = blog_final_content.replace("&lt;", "<")
-
-        return helper.create_file(blog_final_content, include_files_directory, file_name, 'tpl')
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
-def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
-    try:
-        tours_section = helper.check_if_section_built(project_path ,file_name ,tours_section)
-
-        modul_data_array = {
-            'general_region_array': ['internal', 'external', ''],
-            'general_type_array': ['', 'special'],
-            'before_html': '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}''',
-            'before_html_local': '''{assign var="__params_var__" value=['type'=>'__type__','limit'=> '__local_max_limit__','dateNow' => $dateNow, 'country' =>'__country__','city' => null]}
-                                {assign var='__general_var__' value=$obj_main_page->getToursReservation($__params_var__)}
-                                {if $__general_var__}
-                                    {assign var='check_general' value=true}
-                                {/if}
-                                {assign var="__local_min_var__" value=__local_min__}
-                                {assign var="__local_max_var__" value=__local_max__}
-                            ''',
-            'after_html': '''{/if}''',
-            'before_foreach_local':'''
-                                {foreach $__general_var__ as $item}
-                                    {if $__local_min_var__ <= $__local_max_var__}
-                                ''',
-            'after_foreach_local':'''
-                                    {$__local_min_var__ = $__local_min_var__ + 1}
-                                    {/if}
-                                {/foreach}
-                                ''',
-            'replace_classes_local': {
-            '___price_class__': {'string': '''{$item['min_price']['discountedMinPriceR']|number_format}'''},
-            '__title_class__': {'string': '''{$item['tour_name']}'''},
-            '__airline_class__': {'string': '''{$item['airline_name']}'''},
-            '__night_class__': {'string': '''{$item['night']}'''},
-            '__day_class__': {'string': '''{$item['night'] + 1}'''},
-            '__city_class__': {'string': '''{$item['destination_city_name']}'''},
-            '__description_class__': {'string': '''{$item['description']}'''},
-            '__degree_class__': {'string': '''{$item['StarCode']}'''},
-            '__image_class__': {
-                'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$item['tour_pic']}''',
-                'alt': '''{$item['tour_name']}'''},
-            '__date_class__': {'string': '''{assign var="year" value=substr($item['start_date'], 0, 4)}
-                                        {assign var="month" value=substr($item['start_date'], 4, 2)}
-                                        {assign var="day" value=substr($item['start_date'], 6)}
-                                        {$year}/{$month}/{$day}
-                                        '''},
-        },
-            'replace_comlex_classes_local': {
-            '___price_class__': {
-                'string': '''{$__general_var__[{0}]['min_price']['discountedMinPriceR']|number_format}'''},
-            '__title_class__': {'string': '''{$__general_var__[{0}]['tour_name']}'''},
-            '__airline_class__': {'string': '''{$__general_var__[{0}]['airline_name']}'''},
-            '__night_class__': {'string': '''{$__general_var__[{0}]['night']}'''},
-            '__city_class__': {'string': '''{$__general_var__[{0}]['destination_city_name']}'''},
-            '__description_class__': {'string': '''{$__general_var__[{0}]['description']}'''},
-            '__day_class__': {'string': '''{$__general_var__[{0}]['night'] + 1}'''},
-            '__degree_class__': {'string': '''{$__general_var__[{0}]['StarCode']}'''},
-            '__image_class__': {
-                'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$__general_var__[{0}]['tour_pic']}''',
-                'alt': '''{$__general_var__[{0}]['tour_name']}'''},
-            '__date_class__': {'string': '''{assign var="year" value=substr($__general_var__[{0}]['start_date'], 0, 4)}
-                                        {assign var="month" value=substr($__general_var__[{0}]['start_date'], 4, 2)}
-                                        {assign var="day" value=substr($__general_var__[{0}]['start_date'], 6)}
-                                        {$year}/{$month}/{$day}
-                                        '''},
-        },
-            'generals_simple_replacements': {
-            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$item['id']}/{$item['tour_slug']}''',
-        },
-            'generals_complex_replacements': {
-            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$__general_var__[{0}]['id']}/{$__general_var__[{0}]['tour_slug']}''',
-        },
-            'unique_key': 'tour',
-        }
-        modulation = general_module(tours_section, project_path, lang, file_name, modul_data_array)
-        return modulation
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
-def hotels_webservice_module(hotels_section, project_path, lang = 'fa',  file_name = ''):
-    try:
-        modul_data_array = {
-            'general_region_array': ['internal', 'external'],
-            'general_type_array': [''],
-            'before_html': '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}''',
-            'before_html_local': '''
-                                {assign var="__params_var__" value=['Count'=> '__local_max_limit__', 'type' =>'__country__']}
-                                {assign var='__general_var__' value=$obj_main_page->getHotelWebservice($__params_var__)}
-                                {if $__general_var__}
-                                    {assign var='check_general' value=true}
-                                {/if}
-                                {assign var="__local_min_var__" value=__local_min__}
-                                {assign var="__local_max_var__" value=__local_max__}
-                            ''',
-            'after_html': '''{/if}''',
-            'before_foreach_local':'''
-                                {foreach $__general_var__ as $item}
-                                    {if $__local_min_var__ <= $__local_max_var__}
-                                ''',
-            'after_foreach_local':'''
-                                    {$__local_min_var__ = $__local_min_var__ + 1}
-                                    {/if}
-                                {/foreach}
-                                ''',
-            'replace_classes_local': {
-            '__title_class__': {'string': '''{$item['Name']}'''},
-            '__city_class__': {'string': '''{$item['City']}'''},
-            '__image_class__': {
-                'src': '''{$item['Picture']}''',
-                'alt': '''{$item['City']}'''},
-        },
-            'replace_comlex_classes_local': {
-            '__title_class__': {'string': '''{$__general_var__[{0}]['Name']}'''},
-            '__city_class__': {'string': '''{$__general_var__[{0}]['City']}'''},
-            '__image_class__': {
-                'src': '''{$__general_var__[{0}]['Picture']}''',
-                'alt': '''{$__general_var__[{0}]['City']}'''},
-        },
-            'generals_simple_replacements': {
-            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailHotel/api/{$item['HotelIndex']}''',
-        },
-            'generals_complex_replacements': {
-            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailHotel/api/{$__general_var__[{0}]['HotelIndex']}''',
-        },
-            'unique_key': 'hotel',
-        }
-
-        modulation = general_module(hotels_section, project_path, lang, file_name, modul_data_array)
-        return modulation
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
-def hotels_External_cities_module(hotels_section, project_path, lang = 'fa',  file_name = ''):
-    try:
-        hotels_section = helper.check_if_section_built(project_path ,file_name ,hotels_section)
-
-
-        before_html = ''''''
-        after_html = '''{/if}'''
-
-        hotel_region_array = ['external']
-        hotel_type_array = ['city']
-
-        for region in hotel_region_array:
-            for type in hotel_type_array:
-                before_html_local = '''                                        
-                                        {assign var='__hotel_var__' value=$obj_main_page->getExternalHotelCity()}
-                                        {if $__hotel_var__}
-                                            {assign var='check_hotel' value=true}
-                                        {/if}
-                                        {assign var="__local_min_var__" value=__local_min__}
-                                        {assign var="__local_max_var__" value=__local_max__}
-                                    '''
-                before_foreach_local = '''
-                                        {foreach $__hotel_var__ as $item}
-                                            {if $__local_min_var__ <= $__local_max_var__}
-                                        '''
-                after_foreach_local = '''
-                                            {$__local_min_var__ = $__local_min_var__ + 1}
-                                            {/if}
-                                        {/foreach}
-                                        '''
-                replace_classes_local = {
-                    '__title_class__': {'string': '''{$item['DepartureCityFa']}'''},
-                    '__city_class__': {'string': '''{$item['City']}'''},
-                    '__image_class__': {
-                        'src': '''assets/images/hotel/{$item['DepartureCode']}.jpg''',
-                        'alt': '''{$item['DepartureCityFa']}'''},
-                }
-
-                section_class= '__hotel_function__'
-                section_var= 'hotel_function'
-                section_params= 'hotel_function_params'
-                local_min_var = 'min'
-                local_max_var = 'max'
-                if region:
-                    section_class =  section_class + region + '__'
-                    section_var =  section_var + '_' + region
-                    section_params =  section_params + '_' + region
-                    local_min_var =  local_min_var + '_' + region
-                    local_max_var =  local_max_var + '_' + region
-                if type:
-                    section_class = section_class + type + '__'
-                    section_var =  section_var + '_' + type
-                    local_min_var =  local_min_var + '_' + region
-                    local_max_var =  local_max_var + '_' + region
-
-
-                sections = hotels_section.find_all(class_=section_class)
-                if sections:
-                    for local_section in sections:
-                        before_html_local = before_html_local.replace("__type__", type)
-                        before_html_local = before_html_local.replace("__country__", region)
-                        before_html_local = before_html_local.replace("__hotel_var__", section_var)
-                        before_html_local = before_html_local.replace("__params_var__", section_params)
-                        before_html_local = before_html_local.replace("__local_min_var__", local_min_var)
-                        before_html_local = before_html_local.replace("__local_max_var__", local_max_var)
-                        before_foreach_local = before_foreach_local.replace("__local_min_var__", local_min_var)
-                        before_foreach_local = before_foreach_local.replace("__local_max_var__", local_max_var)
-                        before_foreach_local = before_foreach_local.replace("__hotel_var__", section_var)
-                        after_foreach_local = after_foreach_local.replace("__local_min_var__", local_min_var)
-
-                        before_html = before_html + '\n' + before_html_local
-                        complex_items_numbers = helper.item_numbers(local_section, complex_items_pattern)
-                        simple_items_numbers = helper.item_numbers(local_section, simple_items_pattern)
-                        complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
-                        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
-                        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
-                        max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
-                        before_html = before_html.replace("__local_min__", simple_items_numbers_min)
-                        before_html = before_html.replace("__local_max__", simple_items_numbers_max)
-                        before_html = before_html.replace("__local_max_limit__", max_item_number)
-                        for num in simple_items_numbers:
-                            hotels_simple_replacements = {
-                                "__link__": '''{$smarty.const.ROOT_ADDRESS}/resultExternalHotel/{$item['CountryEn']}/{$item['DepartureCityEn']}/{$objDate->daysAfterToday('7')}/{$objDate->daysAfterToday('8')}/1/R:2-0-0''',
-                            }
-                            simple_element = local_section.find(class_=simple_items_class + num)
-                            if num == simple_items_numbers[0]:
-                                simple_element = helper.replace_placeholders(simple_element, hotels_simple_replacements)
-                                simple_element = local_section.find(class_=simple_items_class + num)
-                                helper.add_before_after(local_section, simple_items_class + num, before_foreach_local, after_foreach_local)
-                                simple_element = local_section.find(class_=simple_items_class + num)
-                                for class_name, val in replace_classes_local.items():
-                                    for atr, value in val.items():
-                                        helper.replace_attribute(simple_element, class_name, atr, value)
-
-                                for i in range(1, 6):
-                                    light_star_elements = simple_element.find(class_='__star_class_light__' + str(i))
-                                    dark_star_elements = simple_element.find(class_='__star_class_dark__' + str(i))
-                                    if i == 1 and light_star_elements:
-                                        new_light_star = '''{for $i = 0; $i < count($item['StarCode']); $i++}''' + str(light_star_elements) + '''{/for}'''
-                                        new_light_star = BeautifulSoup(new_light_star, 'html.parser')
-                                        light_star_elements.replace_with(new_light_star)
-                                    else:
-                                        if light_star_elements:
-                                            light_star_elements.decompose()
-
-                                    if i == 1 and dark_star_elements:
-                                        new_dark_star = '''{for $i = count($item['StarCode']); $i < 6; $i++}''' + str(dark_star_elements) + '''{/for}'''
-                                        new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
-                                        dark_star_elements.replace_with(new_dark_star)
-                                    else:
-                                        if dark_star_elements:
-                                            dark_star_elements.decompose()
-
-
-
-
-
-
-
-                            else:
-                                simple_element.decompose()
-
-
-
-                        for num in complex_items_numbers:
-                            hotels_complex_replacements = {
-                                "__link__": '''{$smarty.const.ROOT_ADDRESS}/resultExternalHotel/{$__hotel_var__[{0}]['CountryEn']}/{$__hotel_var__[{0}]['DepartureCityEn']}/{$objDate->daysAfterToday('7')}/{$objDate->daysAfterToday('8')}/1/R:2-0-0'''  ,
-                            }
-                            replace_comlex_classes_local = {
-                                '__title_class__': {'string': '''{$__hotel_var__[{0}]['Name']}'''},
-                                '__city_class__': {'string': '''{$__hotel_var__[{0}]['City']}'''},
-                                '__image_class__': {
-                                    'src': '''assets/images/hotel/{$__hotel_var__[{0}]['DepartureCode']}.jpg''',
-                                    'alt': '''{$__hotel_var__[{0}]['DepartureCityFa']}'''},
-                            }
-                            before_c_item_local = '''{if $__hotel_var__[{0}]}'''
-                            after_c_item_local = '''{/if}'''
-
-                            before_c_item_local = before_c_item_local.replace("{0}", f'{num}')
-                            before_c_item_local = before_c_item_local.replace("__hotel_var__", section_var)
-                            hotels_complex_replacements['__link__'] = hotels_complex_replacements['__link__'].replace("{0}", f'{num}')
-                            hotels_complex_replacements['__link__'] = hotels_complex_replacements['__link__'].replace("__hotel_var__", section_var)
-
-
-                            complex_element = local_section.find(class_=complex_items_class + num)
-                            complex_element = helper.replace_placeholders(complex_element, hotels_complex_replacements)
-
-                            complex_element = local_section.find(class_=complex_items_class + num)
-                            helper.add_before_after(local_section, complex_items_class + num, before_c_item_local, after_c_item_local)
-                            complex_element = local_section.find(class_=complex_items_class + num)
-                            for class_name, val in replace_comlex_classes_local.items():
-                                for atr, value in val.items():
-                                    value = value.replace("{0}", f'{num}')
-                                    value = value.replace("__hotel_var__", section_var)
-                                    helper.replace_attribute(complex_element, class_name, atr, value)
-
-                                for i in range(1, 6):
-                                    light_star_elements = complex_element.find(class_='__star_class_light__' + str(i))
-                                    dark_star_elements = complex_element.find(class_='__star_class_dark__' + str(i))
-                                    if i == 1 and light_star_elements:
-                                        new_light_star = '''{for $i = 0; $i < count($__hotel_var__['StarCode']); $i++}''' + str(light_star_elements) + '''{/for}'''
-                                        new_light_star = new_light_star.replace("{0}", f'{num}')
-                                        new_light_star = new_light_star.replace("__hotel_var__", section_var)
-                                        new_light_star = BeautifulSoup(new_light_star, 'html.parser')
-                                        light_star_elements.replace_with(new_light_star)
-                                    else:
-                                        if light_star_elements:
-                                            light_star_elements.decompose()
-
-                                    if i == 1 and dark_star_elements:
-                                        new_dark_star = '''{for $i = count($__hotel_var__['StarCode']); $i < 6; $i++}''' + str(dark_star_elements) + '''{/for}'''
-                                        new_dark_star = new_dark_star.replace("{0}", f'{num}')
-                                        new_dark_star = new_dark_star.replace("__hotel_var__", section_var)
-                                        new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
-                                        dark_star_elements.replace_with(new_dark_star)
-                                    else:
-                                        if dark_star_elements:
-                                            dark_star_elements.decompose()
-
-
-        if not os.path.exists(project_path + '/include_files/' + file_name + '.tpl'):
-            before_html = before_html + '\n' + '''{if $check_hotel}'''
-        else:
-            before_html = before_html + '\n' + '''{if 1 == 1}'''
-
-        hotels_final_content = f'{before_html}\n{hotels_section}\n{after_html}'
-        hotels_final_content = hotels_final_content.replace("__all_link_href__", "{$smarty.const.ROOT_ADDRESS}/page/hotel")
-
-        hotels_final_content = hotels_final_content.replace("&gt;", ">")
-        hotels_final_content = hotels_final_content.replace("&lt;", "<")
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(hotels_final_content, include_files_directory, file_name, 'tpl')
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
-def club_weather_module(club_weather_section, project_path, lang = 'fa',  file_name = ''):
-    try:
-        repeatable_links_club = {
-        '{$smarty.const.ROOT_ADDRESS}/loginUser':
-            {
-                'ورود'
-            },
-        '{$smarty.const.ROOT_ADDRESS}/weather':
-            {
-                'علم الارصاد الجوية', 'meteorology', 'weather', 'هواشناسی'
-            },
-        '{$smarty.const.ROOT_ADDRESS}/currency':
-            {
-                'نرخ ارز'
-            },
-        }
-
-        helper.replace_attribute(club_weather_section, '__JalaliToMiladi_button__', 'onclick', '''convertJalaliToMiladi()''')
-        helper.replace_attribute(club_weather_section, '__MiladiToJalali_button__', 'onclick', '''convertMiladiToJalali()''')
-
-        helper.add_class_to_elements(club_weather_section, '__JalaliToMiladi_input__','convertShamsiMiladiCalendar')
-        helper.add_class_to_elements(club_weather_section, '__MiladiToJalali_input__','convertMiladiShamsiCalendar')
-
-        helper.replace_attribute(club_weather_section, '__JalaliToMiladi_input__', 'name', '''txtShamsiCalendar''')
-        helper.replace_attribute(club_weather_section, '__JalaliToMiladi_input__', 'id', '''txtShamsiCalendar''')
-
-        helper.replace_attribute(club_weather_section, '__MiladiToJalali_input__', 'name', '''txtMiladiCalendar''')
-        helper.replace_attribute(club_weather_section, '__MiladiToJalali_input__', 'id', '''txtMiladiCalendar''')
-
-
-
-        helper.replace_attribute(club_weather_section, '__email_class__', 'string', '''{$smarty.const.CLIENT_EMAIL}''')
-        helper.replace_attribute(club_weather_section, '__email_class__', 'href', '''mailto:{$smarty.const.CLIENT_EMAIL}''')
-
-        for key, val in repeatable_links.items():
-            for item in val:
-                helper.replace_attribute_by_text(club_weather_section, item, 'href', key)
-
-        club_weather_final_content = f'{club_weather_section}'
-        club_weather_final_content = club_weather_final_content.replace("&gt;", ">")
-        club_weather_final_content = club_weather_final_content.replace("&lt;", "<")
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
-        return helper.create_file(club_weather_final_content, include_files_directory, file_name, 'tpl')
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
 def fast_flight_search_module(fast_flight_search_section, project_path, lang = 'fa',  file_name = ''):
     try:
         fast_flight_search_section = helper.check_if_section_built(project_path ,file_name ,fast_flight_search_section)
@@ -1965,6 +1230,616 @@ def fast_flight_search_module(fast_flight_search_section, project_path, lang = '
         return str(e) + '\nTraceback:\n' + traceback_str
 
 
+def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
+    try:
+
+        before_html  = '''{load_presentation_object filename="reservationBasicInformation" assign="objResult"}'''
+
+        helper.replace_attribute_by_text(menu_section, 'ورود  |  ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
+        helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
+        helper.replace_attribute_by_text(menu_section, 'ورود / ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
+        helper.replace_attribute_by_text(menu_section, 'الدخول / يسجل' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
+
+        helper.replace_attribute(menu_section, '__login_register_class__2', 'href', '''{if $obj_main_page->isLogin()}javascript:{else}{$smarty.const.ROOT_ADDRESS}/authenticate{/if}''')
+        helper.replace_attribute(menu_section, '__login_register_class__', 'href', '''{if $obj_main_page->isLogin()}javascript:{else}{$smarty.const.ROOT_ADDRESS}/authenticate{/if}''')
+
+        helper.add_class_to_elements(menu_section, '__login_register_class__2',' {if $obj_main_page->isLogin()}show-box-login-js main-navigation__button2{else}main-navigation__button1{/if} ')
+        helper.add_class_to_elements(menu_section, '__login_register_class__',' {if $obj_main_page->isLogin()}show-box-login-js main-navigation__button2{else}main-navigation__button1{/if} ')
+        after_login = '''<div class="main-navigation__sub-menu2 arrow-up show-content-box-login-js" style="display: none">
+                            {include file="`$smarty.const.FRONT_CURRENT_THEME`topBar.tpl"}
+                        </div>'''
+        helper.add_before_after(menu_section, '__login_register_class__', '', after_login)
+
+        # return f'{menu_section}'
+
+        for key, val_set in repeatable_links.items():
+            for text in val_set:
+                helper.replace_attribute_by_text(menu_section, text, 'href', key)
+
+
+
+        helper.replace_attribute(menu_section, '__mobile_class__', 'string', '''{$smarty.const.CLIENT_MOBILE}''')
+        helper.replace_attribute(menu_section, '__mobile_class__', 'href', '''tel:{$smarty.const.CLIENT_MOBILE}''')
+        helper.replace_attribute(menu_section, '__phone_class__', 'string', '''{$smarty.const.CLIENT_PHONE}''')
+        helper.replace_attribute(menu_section, '__phone_class__', 'href', '''tel:{$smarty.const.CLIENT_PHONE}''')
+        helper.replace_attribute(menu_section, '__email_class__', 'string', '''{$smarty.const.CLIENT_EMAIL}''')
+        helper.replace_attribute(menu_section, '__email_class__', 'href', '''mailto:{$smarty.const.CLIENT_EMAIL}''')
+        helper.replace_attribute(menu_section, '__logo_class__', 'alt', '''{$obj->Title_head()}''')
+
+
+        menu_final_content = f'{menu_section}'
+        menu_final_content = f'{before_html}\n{menu_section}'
+
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        # helper.write_text_in_path(project_path, "{inclued 'include_files/menu.tpl'}")
+        menu_final_content = menu_final_content.replace("__main_link_href__", "https://{$smarty.const.CLIENT_MAIN_DOMAIN}")
+        menu_final_content = menu_final_content.replace("&gt;", ">")
+        menu_final_content = menu_final_content.replace("&lt;", "<")
+
+        return helper.create_file(menu_final_content, include_files_directory, file_name, 'tpl')
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
+
+
+
+
+
+
+def news_module(news_section, project_path , lang = 'fa',  file_name = ''):
+    try:
+        # create regex objects containing patterns of items classes
+        complex_items_numbers = helper.item_numbers(news_section,complex_items_pattern)
+        simple_items_numbers = helper.item_numbers(news_section,simple_items_pattern)
+        complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
+        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
+        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
+        max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
+
+        before_html = '''{assign var="main_articles" value=$obj_main_page->getNewsArticles()}
+                            {assign var="othe_itmes" value=$main_articles['data']}
+                            {assign var="i" value="2"}
+                            {assign var='counter' value=0}
+                            {if $othe_itmes > 0 }'''
+        after_html = '{/if}'
+
+        before_foreach = '''{foreach $othe_itmes as $item} {if $counter >= i_modular__min_for_limit and $counter <= i_modular__max_for_limit}'''
+        before_foreach = before_foreach.replace("i_modular__min_for_limit", simple_items_numbers_min)
+        before_foreach = before_foreach.replace("i_modular__max_for_limit", simple_items_numbers_max)
+        after_foreach = '''{/if}{$counter = $counter + 1}{/foreach}'''
+
+        for num in simple_items_numbers:
+            news_replacement_data = {
+                "__link__": '''{$item['link']}''',
+            }
+            simple_element = news_section.find(class_=simple_items_class + num)
+            if num == simple_items_numbers[0]:
+                helper.add_before_after(news_section, simple_items_class + num, before_foreach, after_foreach)
+                simple_element = news_section.find(class_=simple_items_class + num)
+                simple_element = helper.replace_placeholders(simple_element, news_replacement_data)
+                simple_element = news_section.find(class_=simple_items_class + num)
+                helper.replace_attribute(simple_element, '__image_class__', 'src','{$item["image"]}')
+                helper.replace_attribute(simple_element, '__image_class__', 'alt','{$item["alt"]}')
+                helper.replace_attribute(simple_element, '__title_class__', 'string','{$item["title"]}')
+                helper.replace_attribute(simple_element, '__heading_class__', 'string','{$item["heading"]}')
+                helper.replace_attribute(simple_element, '__date_class__', 'string','{$item["created_at"]}')
+                helper.replace_attribute(simple_element, '__description_class__', 'string','{$item["description"]}')
+
+            else:
+                simple_element.decompose()
+        for num in complex_items_numbers:
+            before_if = '''{if $othe_itmes[{0}] }'''
+            before_if = before_if.replace("{0}", num)
+            after_if = '''{/if}'''
+
+            news_complex_replacement_data = {
+                "__link__": '''{{$othe_itmes[{0}]['link']}}'''.format(num),
+                "__alt_article__": '''{{$othe_itmes[{0}]['title']}}'''.format(num),
+                'images/5497750661271-6.jpg': '''{{$othe_itmes[{0}]['image']}}'''.format(num),
+                '<span class="__date__">5 بهمن 1402</span>': '''{{$othe_itmes[{0}]['created_at']}}'''.format(num),
+                '<span class="__comments_number__">450</span>': '''{{$othe_itmes[{0}]['comments_count']['comments_count']}}'''.format(num)
+            }
+            complex_element = news_section.find(class_=complex_items_class + num)
+            helper.add_before_after(news_section, complex_items_class + num, before_if, after_if)
+            complex_element = news_section.find(class_=complex_items_class + num)
+            complex_element_final = helper.replace_placeholders(complex_element, news_complex_replacement_data)
+            complex_element = news_section.find(class_=complex_items_class + num)
+            helper.replace_attribute(complex_element, '__image_class__', 'src', '''{{$othe_itmes[{0}]['image']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__image_class__', 'alt', '''{{$othe_itmes[{0}]['alt']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__title_class__', 'string', '''{{$othe_itmes[{0}]['title']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__date_class__', 'string', '''{{$othe_itmes[{0}]['created_at']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__heading_class__', 'string', '''{{$othe_itmes[{0}]['heading']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__description_class__', 'string', '''{{$othe_itmes[{0}]['description']}}'''.format(num))
+
+
+
+        news_final_content = f'{before_html}\n{news_section}\n{after_html}'
+        news_final_content = news_final_content.replace("__all_link_href__", "{$smarty.const.ROOT_ADDRESS}/news")
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        # helper.write_text_in_path(project_path, "{inclued 'include_files/news.tpl'}")
+        news_final_content = news_final_content.replace("&gt;", ">")
+        news_final_content = news_final_content.replace("&lt;", "<")
+
+        return helper.create_file(news_final_content, include_files_directory, file_name, 'tpl')
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
+
+
+def newsletter_module(newsletter_section, project_path , lang = 'fa',  file_name = ''):
+    try:
+        helper.replace_attribute(newsletter_section, '__name_class__', 'name','NameSms')
+        helper.replace_attribute(newsletter_section, '__email_class__', 'name','EmailSms')
+        helper.replace_attribute(newsletter_section, '__phone_class__', 'name','CellSms')
+
+        helper.replace_attribute(newsletter_section, '__name_class__', 'id','NameSms')
+        helper.replace_attribute(newsletter_section, '__email_class__', 'id','EmailSms')
+        helper.replace_attribute(newsletter_section, '__phone_class__', 'id','CellSms')
+
+        helper.replace_attribute(newsletter_section, '__name_class__', 'class','full-name-js')
+        helper.replace_attribute(newsletter_section, '__email_class__', 'class','email-js')
+        helper.replace_attribute(newsletter_section, '__phone_class__', 'class','mobile-js')
+
+        helper.replace_attribute(newsletter_section, '__submit_class__', 'onclick','submitNewsLetter()')
+
+
+        newsletter_final_content = f'{newsletter_section}'
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        # helper.write_text_in_path(project_path, "{inclued 'include_files/newsletter.tpl'}")
+        newsletter_final_content = newsletter_final_content.replace("&gt;", ">")
+        newsletter_final_content = newsletter_final_content.replace("&lt;", "<")
+
+        return helper.create_file(newsletter_final_content, include_files_directory, file_name, 'tpl')
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
+
+
+def about_us(about_us_section, project_path, lang = 'fa',  file_name = ''):
+    try:
+        befor_social_media = '''{assign var="socialLinks"  value=$about['social_links']|json_decode:true}
+                                {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref','aparat' => 'aparatHref','youtube' => 'youtubeHref','facebook' => 'facebookHref','linkeDin' => 'linkeDinHref']}
+
+                                {foreach $socialLinks as $key => $val}
+                                        {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}
+                                {/foreach}'''
+        befor_social_media_soup = BeautifulSoup(befor_social_media, "html.parser")
+        social_element = about_us_section.find(class_=lambda classes: classes and '__social_class__' in classes)
+        if social_element:
+            social_element.insert_before(befor_social_media_soup)
+            social_element = about_us_section.find(class_=lambda classes: classes and '__social_class__' in classes)
+            repeatable_social_links = {
+                '__telegram_class__': '{if $telegramHref}{$telegramHref}{/if}',
+                '__whatsapp_class__': '{if $whatsappHref}{$whatsappHref}{/if}',
+                '__instagram_class__': '{if $instagramHref}{$instagramHref}{/if}',
+                '__linkdin_class__': '{if $linkeDinHref}{$linkeDinHref}{/if}',
+                '__aparat_class__': '{if $aparatHref}{$aparatHref}{/if}',
+                '__youtube_class__': '{if $youTubeHref}{$youTubeHref}{/if}',
+            }
+            for key, val in repeatable_social_links.items():
+                helper.replace_attribute(social_element, key, 'href', val)
+
+        helper.replace_attribute(about_us_section, '__aboutUs_class__', 'string',
+                                 '''{$htmlContent = $about['body']|strip_tags}{$htmlContent|truncate:300}''')
+        helper.replace_attribute(about_us_section, '__aboutUs_class_href__', 'href',
+                                 '''{$smarty.const.ROOT_ADDRESS}/mag''')
+        helper.replace_attribute(about_us_section, '__address_class__', 'string',
+                                 ''' آدرس :  {$smarty.const.CLIENT_ADDRESS} ''')
+        helper.replace_attribute(about_us_section, '__mobile_class__', 'string', '''{$smarty.const.CLIENT_MOBILE}''')
+        helper.replace_attribute(about_us_section, '__mobile_class__', 'href', '''tel:{$smarty.const.CLIENT_MOBILE}''')
+        helper.replace_attribute(about_us_section, '__phone_class__', 'string', '''{$smarty.const.CLIENT_PHONE}''')
+        helper.replace_attribute(about_us_section, '__phone_class__', 'href', '''tel:{$smarty.const.CLIENT_PHONE}''')
+        helper.replace_attribute(about_us_section, '__email_class__', 'string', '''{$smarty.const.CLIENT_EMAIL}''')
+        helper.replace_attribute(about_us_section, '__email_class__', 'href', '''mailto:{$smarty.const.CLIENT_EMAIL}''')
+        about_us_section = helper.replace_placeholders(about_us_section,
+                                                     {'__aboutUsLink__': '{$smarty.const.ROOT_ADDRESS}/aboutUs'})
+        about_us_final_content = f'{about_us_section}'
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        # helper.write_text_in_path(project_path, "{inclued 'include_files/about_us.tpl'}")
+        about_us_final_content = about_us_final_content.replace("&gt;", ">")
+        about_us_final_content = about_us_final_content.replace("&lt;", "<")
+
+        return helper.create_file(about_us_final_content, include_files_directory, file_name, 'tpl')
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
+
+
+def blog_module(blog_section, project_path , lang = 'fa',  file_name = ''):
+    try:
+        # create regex objects containing patterns of items classes
+        complex_items_numbers = helper.item_numbers(blog_section,complex_items_pattern)
+        simple_items_numbers = helper.item_numbers(blog_section,simple_items_pattern)
+        complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
+        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
+        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
+        max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
+
+        before_html = '''
+                        {*with category*}
+                        {*{assign var="search_array" value=['section'=>'mag','category'=>1,'limit'=>'1i_modular__max_limit']}*}
+                        {*{assign var='articles' value=$obj_main_page->getCategoryArticles($search_array)}*}
+                        {*{assign var='counter' value=0}*}
+                        {*{assign var="article_count" value=$articles|count}*}
+        
+                        {assign var="data_search_blog" value=['service'=>'Public','section'=>'article', 'limit' =>1i_modular__max_limit]}
+                        {assign var='articles' value=$obj_main_page->articlesPosition($data_search_blog)}
+                        {assign var='counter' value=0}
+                        {assign var="article_count" value=$articles|count}
+                        {if $articles}
+                    '''
+        before_html = before_html.replace("i_modular__max_limit", max_item_number)
+        after_html = '{/if}'
+
+        before_foreach = '''{foreach $articles as $key => $article} {if $counter >= i_modular__min_for_limit and $counter <= i_modular__max_for_limit}'''
+        before_foreach = before_foreach.replace("i_modular__min_for_limit", simple_items_numbers_min)
+        before_foreach = before_foreach.replace("i_modular__max_for_limit", simple_items_numbers_max)
+        after_foreach = '''{/if}{$counter = $counter + 1}{/foreach}'''
+
+        for num in simple_items_numbers:
+            blog_replacement_data = {
+                "__airline__": '''{$article['link']}''',
+                "__link__": '''{$article['link']}''',
+            }
+            simple_element = blog_section.find(class_=simple_items_class + num)
+            if num == simple_items_numbers[0]:
+                helper.add_before_after(blog_section, simple_items_class + num, before_foreach, after_foreach)
+
+                simple_element = blog_section.find(class_=simple_items_class + num)
+                simple_element = helper.replace_placeholders(simple_element, blog_replacement_data)
+                simple_element = blog_section.find(class_=simple_items_class + num)
+                helper.replace_attribute(simple_element, '__image_class__', 'src','{$article["image"]}')
+                helper.replace_attribute(simple_element, '__image_class__', 'alt','{$article["alt"]}')
+                helper.replace_attribute(simple_element, '__title_class__', 'string','{$article["title"]}')
+                helper.replace_attribute(simple_element, '__degree_class__', 'string','{$article["rates"]["average"]}')
+                helper.replace_attribute(simple_element, '__category_class__', 'string','''{$article['categories_array'][0]['title']}''')
+                helper.replace_attribute(simple_element, '__heading_class__', 'string','{$article["heading"]}')
+                helper.replace_attribute(simple_element, '__date_class__', 'string','{$article["created_at"]}')
+                for i in range(1, 6):
+                    light_star_elements = simple_element.find(
+                        class_='__star_class_light__' + str(i))
+                    dark_star_elements = simple_element.find(class_='__star_class_dark__' + str(i))
+                    if i == 1 and light_star_elements:
+                        new_light_star = '''{for $i = 0; $i < count($item['rates']); $i++}''' + str(
+                            light_star_elements) + '''{/for}'''
+                        new_light_star = BeautifulSoup(new_light_star, 'html.parser')
+                        light_star_elements.replace_with(new_light_star)
+                    else:
+                        if light_star_elements:
+                            light_star_elements.decompose()
+
+                    if i == 1 and dark_star_elements:
+                        new_dark_star = '''{for $i = count($item['rates']); $i < 6; $i++}''' + str(
+                            dark_star_elements) + '''{/for}'''
+                        new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
+                        dark_star_elements.replace_with(new_dark_star)
+                    else:
+                        if dark_star_elements:
+                            dark_star_elements.decompose()
+
+            else:
+                simple_element.decompose()
+        for num in complex_items_numbers:
+            before_if = '''{if $articles[{0}] }'''
+            before_if = before_if.replace("{0}", num)
+            after_if = '''{/if}'''
+
+            blog_complex_replacement_data = {
+                "__link__": '''{{$articles[{0}]['link']}}'''.format(num),
+                "__alt_article__": '''{{$articles[{0}]['title']}}'''.format(num),
+                'images/5497750661271-6.jpg': '''{{$articles[{0}]['image']}}'''.format(num),
+                '<span class="__date__">5 بهمن 1402</span>': '''{{$articles[{0}]['created_at']}}'''.format(num),
+                '<span class="__comments_number__">450</span>': '''{{$articles[{0}]['comments_count']['comments_count']}}'''.format(num)
+            }
+            helper.add_before_after(blog_section, complex_items_class + num, before_if, after_if)
+
+
+            complex_element = blog_section.find(class_=complex_items_class + num)
+            complex_element_final = helper.replace_placeholders(complex_element, blog_complex_replacement_data)
+            complex_element = blog_section.find(class_=complex_items_class + num)
+            helper.replace_attribute(complex_element, '__image_class__', 'src', '''{{$articles[{0}]['image']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__title_class__', 'string', '''{{$articles[{0}]['title']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__degree_class__', 'string', '''{{$articles[{0}]["rates"]["average"]}}'''.format(num))
+            helper.replace_attribute(complex_element, '__category_class__', 'string', '''{{$articles[{0}]["categories_array"][0]['title']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__heading_class__', 'string', '''{{$articles[{0}]['heading']}}'''.format(num))
+            helper.replace_attribute(complex_element, '__date_class__', 'string', '''{{$articles[{0}]['created_at']}}'''.format(num))
+
+            for i in range(1, 6):
+                light_star_elements = complex_element.find(class_='__star_class_light__' + str(i))
+                dark_star_elements = complex_element.find(class_='__star_class_dark__' + str(i))
+                if i == 1 and light_star_elements:
+                    new_light_star = '''{for $i = 0; $i < count($articles[{0}]['rates']); $i++}'''.format(num) + str(
+                        light_star_elements) + '''{/for}'''
+                    new_light_star = new_light_star.replace("{0}", f'{num}')
+                    # new_light_star = new_light_star.replace("__hotel_var__", section_var)
+                    new_light_star = BeautifulSoup(new_light_star, 'html.parser')
+                    light_star_elements.replace_with(new_light_star)
+                else:
+                    if light_star_elements:
+                        light_star_elements.decompose()
+
+                if i == 1 and dark_star_elements:
+                    new_dark_star = '''{for $i = count($articles[{0}]['rates']); $i < 6; $i++}'''.format(num) + str(
+                        dark_star_elements) + '''{/for}'''
+                    new_dark_star = new_dark_star.replace("{0}", f'{num}')
+                    new_dark_star = new_dark_star.replace("__hotel_var__", section_var)
+                    new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
+                    dark_star_elements.replace_with(new_dark_star)
+                else:
+                    if dark_star_elements:
+                        dark_star_elements.decompose()
+
+
+        blog_final_content = f'{before_html}\n{blog_section}\n{after_html}'
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        helper.write_text_in_path(project_path, "{inclued 'include_files/blog.tpl'}")
+        blog_final_content = blog_final_content.replace("__all_link_href__", "{$smarty.const.ROOT_ADDRESS}/mag")
+        blog_final_content = blog_final_content.replace("&gt;", ">")
+        blog_final_content = blog_final_content.replace("&lt;", "<")
+
+        return helper.create_file(blog_final_content, include_files_directory, file_name, 'tpl')
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
+
+
+
+
+
+
+
+
+def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
+    try:
+        tours_section = helper.check_if_section_built(project_path ,file_name ,tours_section)
+
+        modul_data_array = {
+            'general_region_array': ['internal', 'external', ''],
+            'general_type_array': ['', 'special'],
+            'before_html': '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}''',
+            'before_html_local': '''{assign var="__params_var__" value=['type'=>'__type__','limit'=> '__local_max_limit__','dateNow' => $dateNow, 'country' =>'__country__','city' => null]}
+                                {assign var='__general_var__' value=$obj_main_page->getToursReservation($__params_var__)}
+                                {if $__general_var__}
+                                    {assign var='check_general' value=true}
+                                {/if}
+                                {assign var="__local_min_var__" value=__local_min__}
+                                {assign var="__local_max_var__" value=__local_max__}
+                            ''',
+            'after_html': '''{/if}''',
+            'before_foreach_local':'''
+                                {foreach $__general_var__ as $item}
+                                    {if $__local_min_var__ <= $__local_max_var__}
+                                ''',
+            'after_foreach_local':'''
+                                    {$__local_min_var__ = $__local_min_var__ + 1}
+                                    {/if}
+                                {/foreach}
+                                ''',
+            'replace_classes_local': {
+            '___price_class__': {'string': '''{$item['min_price']['discountedMinPriceR']|number_format}'''},
+            '__title_class__': {'string': '''{$item['tour_name']}'''},
+            '__airline_class__': {'string': '''{$item['airline_name']}'''},
+            '__night_class__': {'string': '''{$item['night']}'''},
+            '__day_class__': {'string': '''{$item['night'] + 1}'''},
+            '__city_class__': {'string': '''{$item['destination_city_name']}'''},
+            '__description_class__': {'string': '''{$item['description']}'''},
+            '__degree_class__': {'string': '''{$item['StarCode']}'''},
+            '__image_class__': {
+                'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$item['tour_pic']}''',
+                'alt': '''{$item['tour_name']}'''},
+            '__date_class__': {'string': '''{assign var="year" value=substr($item['start_date'], 0, 4)}
+                                        {assign var="month" value=substr($item['start_date'], 4, 2)}
+                                        {assign var="day" value=substr($item['start_date'], 6)}
+                                        {$year}/{$month}/{$day}
+                                        '''},
+        },
+            'replace_comlex_classes_local': {
+            '___price_class__': {
+                'string': '''{$__general_var__[{0}]['min_price']['discountedMinPriceR']|number_format}'''},
+            '__title_class__': {'string': '''{$__general_var__[{0}]['tour_name']}'''},
+            '__airline_class__': {'string': '''{$__general_var__[{0}]['airline_name']}'''},
+            '__night_class__': {'string': '''{$__general_var__[{0}]['night']}'''},
+            '__city_class__': {'string': '''{$__general_var__[{0}]['destination_city_name']}'''},
+            '__description_class__': {'string': '''{$__general_var__[{0}]['description']}'''},
+            '__day_class__': {'string': '''{$__general_var__[{0}]['night'] + 1}'''},
+            '__degree_class__': {'string': '''{$__general_var__[{0}]['StarCode']}'''},
+            '__image_class__': {
+                'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$__general_var__[{0}]['tour_pic']}''',
+                'alt': '''{$__general_var__[{0}]['tour_name']}'''},
+            '__date_class__': {'string': '''{assign var="year" value=substr($__general_var__[{0}]['start_date'], 0, 4)}
+                                        {assign var="month" value=substr($__general_var__[{0}]['start_date'], 4, 2)}
+                                        {assign var="day" value=substr($__general_var__[{0}]['start_date'], 6)}
+                                        {$year}/{$month}/{$day}
+                                        '''},
+        },
+            'generals_simple_replacements': {
+            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$item['id']}/{$item['tour_slug']}''',
+        },
+            'generals_complex_replacements': {
+            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$__general_var__[{0}]['id']}/{$__general_var__[{0}]['tour_slug']}''',
+        },
+
+            'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
+            'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
+            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
+            'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
+
+            'unique_key': 'tour',
+        }
+        modulation = general_module(tours_section, project_path, lang, file_name, modul_data_array)
+        return modulation
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
+
+
+def hotels_webservice_module(hotels_section, project_path, lang = 'fa',  file_name = ''):
+    try:
+        modul_data_array = {
+            'general_region_array': ['internal', 'external'],
+            'general_type_array': [''],
+            'before_html': '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}''',
+            'before_html_local': '''
+                                {assign var="__params_var__" value=['Count'=> '__local_max_limit__', 'type' =>'__country__']}
+                                {assign var='__general_var__' value=$obj_main_page->getHotelWebservice($__params_var__)}
+                                {if $__general_var__}
+                                    {assign var='check_general' value=true}
+                                {/if}
+                                {assign var="__local_min_var__" value=__local_min__}
+                                {assign var="__local_max_var__" value=__local_max__}
+                            ''',
+            'after_html': '''{/if}''',
+            'before_foreach_local':'''
+                                {foreach $__general_var__ as $item}
+                                    {if $__local_min_var__ <= $__local_max_var__}
+                                ''',
+            'after_foreach_local':'''
+                                    {$__local_min_var__ = $__local_min_var__ + 1}
+                                    {/if}
+                                {/foreach}
+                                ''',
+            'replace_classes_local': {
+            '__title_class__': {'string': '''{$item['Name']}'''},
+            '__city_class__': {'string': '''{$item['City']}'''},
+            '__image_class__': {
+                'src': '''{$item['Picture']}''',
+                'alt': '''{$item['City']}'''},
+        },
+            'replace_comlex_classes_local': {
+            '__title_class__': {'string': '''{$__general_var__[{0}]['Name']}'''},
+            '__city_class__': {'string': '''{$__general_var__[{0}]['City']}'''},
+            '__image_class__': {
+                'src': '''{$__general_var__[{0}]['Picture']}''',
+                'alt': '''{$__general_var__[{0}]['City']}'''},
+        },
+            'generals_simple_replacements': {
+            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailHotel/api/{$item['HotelIndex']}''',
+        },
+            'generals_complex_replacements': {
+            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailHotel/api/{$__general_var__[{0}]['HotelIndex']}''',
+        },
+
+            'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
+            'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
+            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
+            'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
+            'unique_key': 'hotel',
+        }
+
+        modulation = general_module(hotels_section, project_path, lang, file_name, modul_data_array)
+        return modulation
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
+
+
+def hotels_External_cities_module(hotels_section, project_path, lang = 'fa',  file_name = ''):
+    try:
+        modul_data_array = {
+            'general_region_array': ['external'],
+            'general_type_array': ['city'],
+            'before_html': '''''',
+            'before_html_local': '''                                        
+                                {assign var='__general_var__' value=$obj_main_page->getExternalHotelCity()}
+                                {if $__general_var__}
+                                    {assign var='check_general' value=true}
+                                {/if}
+                                {assign var="__local_min_var__" value=__local_min__}
+                                {assign var="__local_max_var__" value=__local_max__}
+                            ''',
+            'after_html': '''{/if}''',
+            'before_foreach_local':'''
+                                {foreach $__general_var__ as $item}
+                                    {if $__local_min_var__ <= $__local_max_var__}
+                                ''',
+            'after_foreach_local':'''
+                                    {$__local_min_var__ = $__local_min_var__ + 1}
+                                    {/if}
+                                {/foreach}
+                                ''',
+            'replace_classes_local': {
+            '__title_class__': {'string': '''{$item['DepartureCityFa']}'''},
+            '__city_class__': {'string': '''{$item['City']}'''},
+            '__image_class__': {
+                'src': '''assets/images/hotel/{$item['DepartureCode']}.jpg''',
+                'alt': '''{$item['DepartureCityFa']}'''},
+        },
+            'replace_comlex_classes_local': {
+            '__title_class__': {'string': '''{$__general_var__[{0}]['Name']}'''},
+            '__city_class__': {'string': '''{$__general_var__[{0}]['City']}'''},
+            '__image_class__': {
+                'src': '''assets/images/hotel/{$__general_var__[{0}]['DepartureCode']}.jpg''',
+                'alt': '''{$__general_var__[{0}]['DepartureCityFa']}'''},
+        },
+            'generals_simple_replacements': {
+            "__link__": '''{$smarty.const.ROOT_ADDRESS}/resultExternalHotel/{$item['CountryEn']}/{$item['DepartureCityEn']}/{$objDate->daysAfterToday('7')}/{$objDate->daysAfterToday('8')}/1/R:2-0-0''',
+        },
+            'generals_complex_replacements': {
+            "__link__": '''{$smarty.const.ROOT_ADDRESS}/resultExternalHotel/{$__general_var__[{0}]['CountryEn']}/{$__general_var__[{0}]['DepartureCityEn']}/{$objDate->daysAfterToday('7')}/{$objDate->daysAfterToday('8')}/1/R:2-0-0''',
+        },
+
+            'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
+            'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
+            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
+            'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
+            'unique_key': 'hotel_function',
+        }
+        modulation = general_module(hotels_section, project_path, lang, file_name, modul_data_array)
+        return modulation
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
+
+
+def club_weather_module(club_weather_section, project_path, lang = 'fa',  file_name = ''):
+    try:
+        repeatable_links_club = {
+        '{$smarty.const.ROOT_ADDRESS}/loginUser':
+            {
+                'ورود'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/weather':
+            {
+                'علم الارصاد الجوية', 'meteorology', 'weather', 'هواشناسی'
+            },
+        '{$smarty.const.ROOT_ADDRESS}/currency':
+            {
+                'نرخ ارز'
+            },
+        }
+
+        helper.replace_attribute(club_weather_section, '__JalaliToMiladi_button__', 'onclick', '''convertJalaliToMiladi()''')
+        helper.replace_attribute(club_weather_section, '__MiladiToJalali_button__', 'onclick', '''convertMiladiToJalali()''')
+
+        helper.add_class_to_elements(club_weather_section, '__JalaliToMiladi_input__','convertShamsiMiladiCalendar')
+        helper.add_class_to_elements(club_weather_section, '__MiladiToJalali_input__','convertMiladiShamsiCalendar')
+
+        helper.replace_attribute(club_weather_section, '__JalaliToMiladi_input__', 'name', '''txtShamsiCalendar''')
+        helper.replace_attribute(club_weather_section, '__JalaliToMiladi_input__', 'id', '''txtShamsiCalendar''')
+
+        helper.replace_attribute(club_weather_section, '__MiladiToJalali_input__', 'name', '''txtMiladiCalendar''')
+        helper.replace_attribute(club_weather_section, '__MiladiToJalali_input__', 'id', '''txtMiladiCalendar''')
+
+
+
+        helper.replace_attribute(club_weather_section, '__email_class__', 'string', '''{$smarty.const.CLIENT_EMAIL}''')
+        helper.replace_attribute(club_weather_section, '__email_class__', 'href', '''mailto:{$smarty.const.CLIENT_EMAIL}''')
+
+        for key, val in repeatable_links.items():
+            for item in val:
+                helper.replace_attribute_by_text(club_weather_section, item, 'href', key)
+
+        club_weather_final_content = f'{club_weather_section}'
+        club_weather_final_content = club_weather_final_content.replace("&gt;", ">")
+        club_weather_final_content = club_weather_final_content.replace("&lt;", "<")
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        return helper.create_file(club_weather_final_content, include_files_directory, file_name, 'tpl')
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
+
+
+
 def general_module(generals_section, project_path, lang = 'fa',  file_name = '', modul_data_array = {} ):
     try:
         generals_section = helper.check_if_section_built(project_path ,file_name ,generals_section)
@@ -1985,6 +1860,11 @@ def general_module(generals_section, project_path, lang = 'fa',  file_name = '',
 
         generals_simple_replacements = modul_data_array['generals_simple_replacements']
         generals_complex_replacements = modul_data_array['generals_complex_replacements']
+
+        before_star_simple = modul_data_array['before_star_simple']
+        before_dark_star_simple = modul_data_array['before_dark_star_simple']
+        before_star_complex = modul_data_array['before_star_complex']
+        before_dark_star_complex = modul_data_array['before_dark_star_complex']
 
         unique_key = modul_data_array['unique_key']
         section_class_init = '__'+ unique_key + '__'
@@ -2058,7 +1938,7 @@ def general_module(generals_section, project_path, lang = 'fa',  file_name = '',
                                     light_star_elements = simple_element.find(class_='__star_class_light__' + str(i))
                                     dark_star_elements = simple_element.find(class_='__star_class_dark__' + str(i))
                                     if i == 1 and light_star_elements:
-                                        new_light_star = '''{for $i = 0; $i < ($item['StarCode']); $i++}''' + str(light_star_elements) + '''{/for}'''
+                                        new_light_star = before_star_simple + str(light_star_elements) + '''{/for}'''
                                         new_light_star = BeautifulSoup(new_light_star, 'html.parser')
                                         light_star_elements.replace_with(new_light_star)
                                     else:
@@ -2066,7 +1946,7 @@ def general_module(generals_section, project_path, lang = 'fa',  file_name = '',
                                             light_star_elements.decompose()
 
                                     if i == 1 and dark_star_elements:
-                                        new_dark_star = '''{for $i = ($item['StarCode']); $i < 6; $i++}''' + str(dark_star_elements) + '''{/for}'''
+                                        new_dark_star = before_dark_star_simple + str(dark_star_elements) + '''{/for}'''
                                         new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
                                         dark_star_elements.replace_with(new_dark_star)
                                     else:
@@ -2101,7 +1981,7 @@ def general_module(generals_section, project_path, lang = 'fa',  file_name = '',
                                     light_star_elements = complex_element.find(class_='__star_class_light__' + str(i))
                                     dark_star_elements = complex_element.find(class_='__star_class_dark__' + str(i))
                                     if i == 1 and light_star_elements:
-                                        new_light_star = '''{for $i = 0; $i < ($__general_var__['StarCode']); $i++}''' + str(light_star_elements) + '''{/for}'''
+                                        new_light_star = before_star_complex + str(light_star_elements) + '''{/for}'''
                                         new_light_star = new_light_star.replace("{0}", f'{num}')
                                         new_light_star = new_light_star.replace("__general_var__", section_var)
                                         new_light_star = BeautifulSoup(new_light_star, 'html.parser')
@@ -2111,7 +1991,7 @@ def general_module(generals_section, project_path, lang = 'fa',  file_name = '',
                                             light_star_elements.decompose()
 
                                     if i == 1 and dark_star_elements:
-                                        new_dark_star = '''{for $i = ($__general_var__['StarCode']); $i < 6; $i++}''' + str(dark_star_elements) + '''{/for}'''
+                                        new_dark_star = before_dark_star_complex + str(dark_star_elements) + '''{/for}'''
                                         new_dark_star = new_dark_star.replace("{0}", f'{num}')
                                         new_dark_star = new_dark_star.replace("__general_var__", section_var)
                                         new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
