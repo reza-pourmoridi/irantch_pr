@@ -6,9 +6,9 @@ import re
 import requests
 import json
 import codecs
-import helper_functions as helper
-import unit_test
-from searchBox import sb
+from modular import helper_functions as helper
+from modular import unit_test
+from modular.searchBox import sb
 
 
 
@@ -425,13 +425,12 @@ def initiation_progress():
 
     upload_massage = 'not successful'
     copy_controller = 'not successful'
-    # if count_success >= count_modulation:
-    #     controller_path = project_path + '/' + request.form['project_name'] + '.php'
-    #     copy_controller = helper.copy_file(controller_path , controller_folder_path)
-    #     helper.remove_file(controller_path)
-    #     create_final_folder = helper.create_folder(request.form['project_name'], view_folder_path)
-    #     if create_final_folder:
-    #         upload_massage = helper.copy_directory_contents(project_path, create_final_folder)
+    if count_success >= count_modulation:
+        controller_path = project_path + '/' + request.form['project_name'] + '.php'
+        copy_controller = helper.copy_file(controller_path , controller_folder_path)
+        create_final_folder = helper.create_folder(request.form['project_name'], view_folder_path)
+        if create_final_folder:
+            upload_massage = helper.copy_directory_contents(project_path, create_final_folder)
 
 
     return jsonify({"message": final_massage + 'upload_massage : ' + f'{upload_massage}' + 'copy controller ' + f'{copy_controller}'})
