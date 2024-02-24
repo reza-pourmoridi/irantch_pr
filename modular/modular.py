@@ -124,7 +124,7 @@ repeatable_links = {
             },
         '{$smarty.const.ROOT_ADDRESS}/aboutIran':
             {
-                'مقدمة عن إيران', 'Introduction to Iran', 'info of Iran', 'Introduction of Iran', 'معرفی ايران', 'معرفی ایران'
+                'مقدمة عن إيران', 'Introduction to Iran', 'info of Iran', 'Introduction of Iran', 'معرفی ايران', 'معرفی ایران', 'درباره ایران'
             },
         '{$smarty.const.ROOT_ADDRESS}/rules':
             {
@@ -183,6 +183,10 @@ def initiation_progress():
     if 'project_name' not in request.form or not request.form['project_name']:
         return jsonify({"message": "No project name"})
 
+    if bool(re.match('^[a-zA-Z]+(?:[A-Z][a-z0-9]*)*$', request.form['project_name'])) != True:
+        return jsonify({"message": "text must folows camelCase ."})
+
+
     file = request.files['file']
     if file.filename == '':
         return jsonify({"message": "No selected file"})
@@ -217,6 +221,13 @@ def initiation_progress():
             'file': 'newsletter',
             'modular': newsletter_module,
             'test_function': unit_test.unit_test_newsletter
+        },
+        'advertisement': {
+            'class': 'i_modular_adds',
+            'name': 'تبلیغات',
+            'file': 'advertisement',
+            'modular': advertisment_module,
+            'test_function': unit_test.test_unit_test
         },
         'news': {
             'class': 'i_modular_news',
@@ -312,15 +323,8 @@ def initiation_progress():
 
         }
     }
-    moduls_array = {
-        'news': {
-            'class': 'i_modular_news',
-            'name': 'اخبار',
-            'file': 'news',
-            'modular': news_module,
-            'test_function': unit_test.unit_test_news
-        },
-    }
+
+
     final_massage = ''
     modulation_summary_message = modulation(soup, moduls_array, project_path, lang)
     final_massage = f'{modulation_summary_message}'
@@ -597,7 +601,7 @@ def header_module(header_section, project_path, lang='fa', file_name=''):
         style_links = [link.get('href') for link in header_section.find_all('link', rel='stylesheet')]
 
         header_contents = '''
-{load_presentation_object filename="test" assign="obj_main_page" subName="customers"}
+{load_presentation_object filename="__controller_name__" assign="obj_main_page" subName="customers"}
 {load_presentation_object filename="Session" assign="objSession" }
 {load_presentation_object filename="functions" assign="objFunctions"}
 {load_presentation_object filename="frontMaster" assign="obj"}
@@ -695,7 +699,7 @@ def header_module(header_section, project_path, lang='fa', file_name=''):
     {if $smarty.const.GDS_SWITCH eq 'mainPage' || $smarty.const.GDS_SWITCH eq 'page'}
         <meta class='__after__all_pags_mainpage__' test="test">
 
-    {/fi}
+    {/if}
 
     <meta class='__after__all__' test="test">
 
@@ -755,6 +759,9 @@ def header_module(header_section, project_path, lang='fa', file_name=''):
             element.replace_with(helper.turn_to_styl_links_assames(inside_assets))
 
         header_final_content = f'{header_section}'
+        header_final_content = header_final_content.replace("__controller_name__", request.form['project_name'])
+        header_final_content = header_final_content.replace("</link></link>", "")
+        header_final_content = header_final_content.replace("&gt;", ">")
         header_final_content = header_final_content.replace("&gt;", ">")
         header_final_content = header_final_content.replace("&lt;", "<")
         header_final_content = header_final_content.replace("&amp;", "&")
@@ -1265,6 +1272,29 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
         helper.replace_attribute(menu_section, '__email_class__', 'href', '''mailto:{$smarty.const.CLIENT_EMAIL}''')
         helper.replace_attribute(menu_section, '__logo_class__', 'alt', '''{$obj->Title_head()}''')
 
+        befor_social_media = '''{assign var="socialLinks"  value=$about['social_links']|json_decode:true}
+                                {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref','aparat' => 'aparatHref','youtube' => 'youtubeHref','facebook' => 'facebookHref','linkeDin' => 'linkeDinHref']}
+
+                                {foreach $socialLinks as $key => $val}
+                                        {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}
+                                {/foreach}'''
+        befor_social_media_soup = BeautifulSoup(befor_social_media, "html.parser")
+        social_element = menu_section.find(class_='__social_class__')
+        if social_element:
+            social_element.insert_before(befor_social_media_soup)
+            social_element = menu_section.find(
+                class_=lambda classes: classes and '__social_class__' in classes)
+            repeatable_social_links = {
+                '__telegram_class__': '{if $telegramHref}{$telegramHref}{/if}',
+                '__whatsapp_class__': '{if $whatsappHref}{$whatsappHref}{/if}',
+                '__instagram_class__': '{if $instagramHref}{$instagramHref}{/if}',
+                '__linkdin_class__': '{if $linkeDinHref}{$linkeDinHref}{/if}',
+                '__aparat_class__': '{if $aparatHref}{$aparatHref}{/if}',
+                '__youtube_class__': '{if $youTubeHref}{$youTubeHref}{/if}',
+            }
+            for key, val in repeatable_social_links.items():
+                helper.replace_attribute(social_element, key, 'href', val)
+
 
         menu_final_content = f'{menu_section}'
         menu_final_content = f'{before_html}\n{menu_section}'
@@ -1283,6 +1313,56 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
 
 
 
+def advertisment_module(advertisement_section, project_path , lang = 'fa',  file_name = ''):
+    try:
+        modul_data_array = {
+            'general_region_array': [''],
+            'general_type_array': [''],
+            'before_html': '''''',
+            'before_html_local': '''{load_presentation_object filename="functions" assign="objFunctions"}
+                                    {assign var="advertises" value=$objFunctions->getConfigContentByTitle('home_page_advertise')}
+                            ''',
+            'after_html': '''{/if}''',
+            'before_foreach_local':'''{foreach $__general_var__ as $item} {if $__local_min_var__ <= $__local_max_var__}''',
+            'after_foreach_local':'''
+                                    {$__local_min_var__ = $__local_min_var__ + 1}
+                                    {/if}
+                                {/foreach}
+                                ''',
+
+            'replace_classes_local': {
+            '__image_class__': {'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/{$item['image']}''', 'alt': '''{$item['title']}'''},
+            '__title_class__': {'string': '''{$item['title']}'''},
+        },
+            'replace_comlex_classes_local': {
+            '__image_class__': {
+                'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/{$__general_var__[{0}]['image']}''',
+                'alt': '''{$__general_var__[{0}]['alt']}'''},
+            '__title_class__': {'string': '''{$__general_var__[{0}]['title']}'''},
+        },
+
+            'generals_simple_replacements': {
+            "__link__": '''{$item['link']}''',
+                 },
+            'generals_complex_replacements': {
+            "__link__": '''{$__general_var__[{0}]['link']}''',
+        },
+
+            'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
+            'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
+            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
+            'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
+
+            'unique_key': 'advertisement',
+            'no_chiled': 'yes',
+            'replace_classes_general': {
+            },
+        }
+        modulation = general_module(advertisement_section, project_path, lang, file_name, modul_data_array)
+        return modulation
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 def news_module(news_section, project_path , lang = 'fa',  file_name = ''):
@@ -1442,12 +1522,12 @@ def blog_module(blog_section, project_path , lang = 'fa',  file_name = ''):
             'before_html': '''''',
             'before_html_local': '''
                         {*with category*}
-                        {*{assign var="search_array" value=['section'=>'mag','category'=>1,'limit'=>'1i_modular__max_limit']}*}
+                        {*{assign var="search_array" value=['section'=>'mag','category'=>1,'limit'=>'__local_max_limit__']}*}
                         {*{assign var='__general_var__' value=$obj_main_page->getCategoryArticles($search_array)}*}
                         {*{assign var='counter' value=0}*}
                         {*{assign var="article_count" value=$__general_var__|count}*}
 
-                        {assign var="data_search_blog" value=['service'=>'Public','section'=>'article', 'limit' =>1i_modular__max_limit]}
+                        {assign var="data_search_blog" value=['service'=>'Public','section'=>'article', 'limit' =>'__local_max_limit__']}
                         {assign var='__general_var__' value=$obj_main_page->articlesPosition($data_search_blog)}
                         {assign var='counter' value=0}
                         {assign var="article_count" value=$__general_var__|count}
@@ -1542,6 +1622,7 @@ def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
             '__night_class__': {'string': '''{$item['night']}'''},
             '__day_class__': {'string': '''{$item['night'] + 1}'''},
             '__city_class__': {'string': '''{$item['destination_city_name']}'''},
+            '__rate_count_class__': {'string': '''{$item['rate_count']}'''},
             '__description_class__': {'string': '''{$item['description']}'''},
             '__degree_class__': {'string': '''{$item['StarCode']}'''},
             '__image_class__': {
@@ -1560,6 +1641,7 @@ def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
             '__airline_class__': {'string': '''{$__general_var__[{0}]['airline_name']}'''},
             '__night_class__': {'string': '''{$__general_var__[{0}]['night']}'''},
             '__city_class__': {'string': '''{$__general_var__[{0}]['destination_city_name']}'''},
+            '__rate_count_class__': {'string': '''{$__general_var__[{0}]['rate_count']}'''},
             '__description_class__': {'string': '''{$__general_var__[{0}]['description']}'''},
             '__day_class__': {'string': '''{$__general_var__[{0}]['night'] + 1}'''},
             '__degree_class__': {'string': '''{$__general_var__[{0}]['StarCode']}'''},
@@ -1579,10 +1661,10 @@ def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
             "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$__general_var__[{0}]['id']}/{$__general_var__[{0}]['tour_slug']}''',
         },
 
-            'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
-            'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
-            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
-            'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
+            'before_star_simple': '''{for $i = 0; $i < count($item['rate_average']); $i++}''',
+            'before_dark_star_simple': '''{for $i = count($item['rate_average']); $i < 6; $i++}''',
+            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['rate_average']); $i++}''',
+            'before_dark_star_complex': '''{for $i = count($__general_var__['rate_average']); $i < 6; $i++}''',
 
             'unique_key': 'tour',
             'no_chiled': '',
@@ -1625,6 +1707,9 @@ def hotels_webservice_module(hotels_section, project_path, lang = 'fa',  file_na
             'replace_classes_local': {
             '__title_class__': {'string': '''{$item['Name']}'''},
             '__city_class__': {'string': '''{$item['City']}'''},
+            '__degree_class__': {'string': '''{$item['StarCode']}'''},
+            # '___price_class__': {'string': '''{$item['StarCode']}'''},
+            '__description_class__': {'string': '''{$item['comment']|truncate:300}'''},
             '__image_class__': {
                 'src': '''{$item['Picture']}''',
                 'alt': '''{$item['City']}'''},
@@ -1632,6 +1717,9 @@ def hotels_webservice_module(hotels_section, project_path, lang = 'fa',  file_na
             'replace_comlex_classes_local': {
             '__title_class__': {'string': '''{$__general_var__[{0}]['Name']}'''},
             '__city_class__': {'string': '''{$__general_var__[{0}]['City']}'''},
+            '__degree_class__': {'string': '''{$__general_var__[{0}]['StarCode']}'''},
+            # '___price_class__': {'string': '''{$__general_var__[{0}]['StarCode']}'''},
+            '__description_class__': {'string': '''{$__general_var__[{0}]['comment']|truncate:300}'''},
             '__image_class__': {
                 'src': '''{$__general_var__[{0}]['Picture']}''',
                 'alt': '''{$__general_var__[{0}]['City']}'''},
@@ -1769,7 +1857,6 @@ def club_weather_module(club_weather_section, project_path, lang = 'fa',  file_n
     except Exception as e:
         traceback_str = traceback.format_exc()
         return str(e) + '\nTraceback:\n' + traceback_str
-
 
 
 def general_module(generals_section, project_path, lang = 'fa',  file_name = '', modul_data_array = {} ):

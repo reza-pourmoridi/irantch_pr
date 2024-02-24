@@ -63,6 +63,19 @@ hooks:
         __date_class__     : کلاس تاریخ
 
 
+    advertising: i_modular_adds
+        __link__            : لینک
+        __image_class__     : کلاس عکس
+        __title_class__     : کلاس تایتل
+
+    tour: i_modular_tours
+    __tour__
+    __tour__internal__
+    __tour__special__
+    __tour__external__
+    __tour__internal__special__
+    __tour__external__special__
+
     tour: i_modular_tours
     __tour__
     __tour__internal__
@@ -88,15 +101,18 @@ hooks:
         __day_class__     : کلاس روز
         __degree_class__     : کلاس درجه
         __star_class_light__1
+        __rate_count_class__     : کلاس تعداد ارا
 
     hotel webservice: i_modular_hotels_webservice
     __hotel__internal__
     __hotel__external__
+        __all_link_href__ : لینک همه هتل ها
         __link__            : لینک
         __title_class__   : کلاس نام
         __city_class__     : کلاس شهر
         __image_class__     : کلاس عکس
-        __date_class__     : کلاس توضیحات
+        __description_class__     : کلاس توضیحات
+        __degree_class__     : کلاس درجه
         __star_class_light__1     : کلاس ستاره ها(توضیح خواسته شود)
 
     hotel external cities : i_modular_hotels_external_cities
