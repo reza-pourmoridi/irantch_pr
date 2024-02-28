@@ -158,7 +158,7 @@ repeatable_links = {
             {
                 'الخدمات السياحية', 'Tourism services'
             },
-        '{$smarty.const.ROOT_ADDRESS}/worldclock':
+        '{$smarty.const.ROOT_ADDRESS}/clock':
             {
                 'ساعة البلدان', 'Countries clock', 'ساعت کشورها'
             },
@@ -195,6 +195,7 @@ def initiation_progress():
     lang = request.form['project_lang']
     test_checked = request.form['project_test']
     upload_checked = request.form['project_upload']
+    modulation_checked = request.form['project_modulation']
 
 
     project_path = helper.create_folder(request.form['project_name'])
@@ -324,13 +325,24 @@ def initiation_progress():
         }
     }
 
+    moduls_array = {
+        'tours': {
+            'class': 'i_modular_tours',
+            'name': 'تور',
+            'file': 'tours',
+            'modular': tours_module,
+            'test_function': unit_test.unit_test_tour
 
-    final_massage = ''
-    modulation_summary_message = modulation(soup, moduls_array, project_path, lang)
-    final_massage = f'{modulation_summary_message}'
+         },
+    }
 
-    main_page = creating_main_page(html_content, moduls_array, project_path)
-    final_massage = final_massage +  '<br><br><br>' 'main_page_creation evaluation_c' + f'{main_page}'
+    final_massage = '--'
+    if modulation_checked == '1':
+        modulation_summary_message = modulation(soup, moduls_array, project_path, lang)
+        final_massage = f'{modulation_summary_message}'
+
+        main_page = creating_main_page(html_content, moduls_array, project_path)
+        final_massage = final_massage +  '<br><br><br>' 'main_page_creation evaluation_c' + f'{main_page}'
 
     if test_checked == '1':
         summary_test_message = unit_test_process(html_content, moduls_array, lang)
@@ -451,13 +463,16 @@ def modulation(soup, moduls_array, project_path, lang):
         return str(e) + '\nTraceback:\n' + traceback_str
 
 
-def initiation_test(class_name, module_name, module_test_function, soup, soup_online , lang):
+def initiation_test(class_name, module_name, module_test_function, soup, soup_online , lang , online_index):
     try:
         section = soup.find(class_=class_name)
-        section_online = soup_online.find(class_=class_name) if section else None
+        sections_online = soup_online.find_all(class_=class_name) if section else None
+        sections_online_length = len(sections_online)
 
-        if section_online:
-            return module_test_function(section, section_online , lang)
+        if online_index <= sections_online_length - 1:
+            section_online = sections_online[online_index]
+            if section_online:
+                return module_test_function(section, section_online , lang)
 
         return f'ماژول {module_name} بازگذاری نشد'
     except Exception as e:
@@ -471,15 +486,18 @@ def unit_test_process(html_content, moduls_array, lang):
         if not soup:
             return jsonify({"message": "testing html = " + f'{soup}'})
 
-        soup_online = unit_test.get_online_html()
+        soup_online = helper.get_online_html()
         if 'خطایی' in soup_online:
             return jsonify({"message": "testing local connection = " + f'{soup_online}'})
         module_test_messages = []
 
         for module_name, module_info in moduls_array.items():
-            section = soup.find(class_=module_info['class'])
-            if section:
-                module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online ,lang))
+            sections = soup.find_all(class_=module_info['class'])
+            i = 0
+            for section in sections:
+                if section:
+                    module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online ,lang , i))
+                    i = i + 1
         summary_test_message = '\n'.join(module_test_messages)
         return summary_test_message
     except Exception as e:

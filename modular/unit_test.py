@@ -20,115 +20,6 @@ script_directory = os.path.dirname(__file__)  # Get the directory of the script
 unit_test_json_files_directory = os.path.join(script_directory, '../update_data/unit_test_data')
 
 
-def get_online_html():
-    url = "http://192.168.1.100/"
-
-    try:
-        response = requests.get(url)
-
-        # Check if the request was successful (status code 200)
-        if response.status_code == 200:
-            html_content_online = response.text
-            if "i_modular_modulation" in html_content_online:
-                soup = BeautifulSoup(html_content_online, 'html.parser')
-                return soup
-            else:
-                return "خطایی پیش آمده و دیتایی نمایش ندارد1."
-
-        else:
-            return f"خطایی در گرفتن اطلاعات پیش آمده2.{response.status_code}"
-
-
-    except requests.exceptions.RequestException as e:
-        trace = traceback.format_exc()
-        error_message = f"خطایی در گرفتن اطلاعات پیش آمده3.: {trace}"
-        return error_message
-
-
-def unit_test_blog(blog_section, blog_section_online , lang = 'fa'):
-    try:
-        json_file_path = os.path.join(unit_test_json_files_directory, 'article_data.json')
-
-
-        complex_items_numbers = []
-        simple_items_numbers = []
-
-        complex_items_numbers = helper.item_numbers(blog_section, complex_items_pattern)
-        simple_items_numbers = helper.item_numbers(blog_section, simple_items_pattern)
-        complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
-        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
-        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
-        max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
-
-        # Initialize an empty list to store the data
-        blog_data = []
-        json_string = codecs.open(json_file_path, 'r', encoding='utf-8').read()
-        blog_data = json.loads(json_string)
-
-        for num in simple_items_numbers:
-            simple_element = blog_section.find(class_=simple_items_class + num)
-            if int(num) < len(blog_data):
-                blog_replacement_data = {
-                    simple_items_class + num: simple_items_class + simple_items_numbers[0],
-                    "__airline__": blog_data[int(num)]['link'],
-                    "__link__": blog_data[int(num)]['link'],
-                    "__image__": blog_data[int(num)]['image'],
-                    "__alt_article__": blog_data[int(num)]['title']
-                }
-                helper.replace_attribute(simple_element, '__image_class__', 'src', blog_data[int(num)]['image'])
-                helper.replace_attribute(simple_element, '__title_class__', 'string', blog_data[int(num)]['title'])
-                helper.replace_attribute(simple_element, '__heading_class__', 'string', blog_data[int(num)]['heading'])
-                simple_element = blog_section.find(class_=simple_items_class + num)
-                simple_element = helper.replace_placeholders(simple_element, blog_replacement_data)
-            else:
-                simple_element.decompose()
-
-
-        for num in complex_items_numbers:
-            complex_element = blog_section.find(class_=complex_items_class + num)
-            num = int(num)  # Convert 'num' to an integer
-            if 0 <= num < len(blog_data) and blog_data[num]:
-                blog_complex_replacement_data = {
-                    "__airline__": blog_data[int(num)]['link'],
-                    "__link__": blog_data[int(num)]['link'],
-                    "__image__": blog_data[int(num)]['image'],
-                    "__alt_article__": blog_data[int(num)]['title']
-                }
-                num = str(num)
-                helper.replace_attribute(complex_element, '__image_class__', 'src', blog_data[int(num)]['image'])
-                helper.replace_attribute(complex_element, '__title_class__', 'string', blog_data[int(num)]['title'])
-                helper.replace_attribute(complex_element, '__heading_class__', 'string', blog_data[int(num)]['heading'])
-                complex_element = blog_section.find(class_=complex_items_class + num)
-                complex_element_final = helper.replace_placeholders(complex_element, blog_complex_replacement_data)
-            else:
-                complex_element.decompose()
-
-
-
-        blog_section_online = blog_section_online.prettify()
-        blog_section = blog_section.prettify()
-
-        blog_section = f'{blog_section}'
-        blog_section_online = f'{blog_section_online}'
-
-
-        for num in simple_items_numbers:
-            blog_section = blog_section.replace(simple_items_class + num,simple_items_class + simple_items_numbers[0])
-
-        blog_section_online = helper.clean_serialize_string(blog_section_online)
-        blog_section = helper.clean_serialize_string(blog_section)
-
-        if compare_html_strings(blog_section_online, blog_section):
-            return '<div style="background: green;padding: 15px;">' + "تست سکشن خبرنامه موفقیت آمیز بود." + "</div>"
-
-        return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="unit-test-section" > ' + blog_section + ' </div><div class="online section"> ' + blog_section_online +' </div></section></div>'
-        return 'طرح و سکشن بلاگ ماژول گذاری شده هماهنگ نیستند.'
-
-    except requests.exceptions.RequestException as e:
-        trace = traceback.format_exc()
-        error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
-        return error_message
-
 def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_online, lang='fa'):
     try:
         complex_items_numbers = []
@@ -187,7 +78,7 @@ def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_onli
         banner_gallery_section = f'{banner_gallery_section}'
         banner_gallery_section_online = f'{banner_gallery_section_online}'
 
-        if compare_html_strings(banner_gallery_section_online, banner_gallery_section):
+        if helper.compare_html_strings(banner_gallery_section_online, banner_gallery_section):
             return '<div style="background: green;padding: 15px;">' + "تست سکشن بنر موفقیت آمیز بود." + "</div>"
 
         return '<div style="background: red;padding: 15px;">سکشن بنر خطا دارد..<section class="debug" style="display:none;"><div class="unit-test-section" >' + banner_gallery_section + '</div><div class="online section"> ' + banner_gallery_section_online + '</div></section></div>'
@@ -196,7 +87,8 @@ def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_onli
         error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
         return error_message
 
-def unit_test_news(news_section, news_section_online , lang = 'fa'):
+
+def unit_test_news_old(news_section, news_section_online , lang = 'fa'):
     try:
         json_file_path = os.path.join(unit_test_json_files_directory, 'news_data.json')
 
@@ -258,6 +150,9 @@ def unit_test_news(news_section, news_section_online , lang = 'fa'):
         news_section_online = news_section_online.prettify()
         news_section = news_section.prettify()
 
+        news_section = news_section.replace("__all_link_href__", "://192.168.1.100/gds/fa/news")
+
+
         news_section = f'{news_section}'
 
         for num in simple_items_numbers:
@@ -274,11 +169,10 @@ def unit_test_news(news_section, news_section_online , lang = 'fa'):
         news_section = news_section.replace("/>", ">")
 
 
-        if compare_html_strings(news_section_online, news_section):
+        if helper.compare_html_strings(news_section_online, news_section):
             return '<div style="background: green;padding: 15px;">' + "تست سکشن اخبار موفقیت آمیز بود." + "</div>"
 
-        return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="unit-test-section" >' + news_section + '</div><div class="online section"> ' + news_section_online +'</div></section></div>'
-        return 'طرح و سکشن بلاگ ماژول گذاری شده هماهنگ نیستند.'
+        return '<div style="background: red;padding: 15px;">طرح و سکشن بلاگ ماژول گذاری شده هماهنگ نیستند.<section class="debug" style="display:none;"><div class="unit-test-section" >' + news_section + '</div><div class="online section"> ' + news_section_online +'</div></section></div>'
 
     except requests.exceptions.RequestException as e:
         trace = traceback.format_exc()
@@ -313,7 +207,7 @@ def unit_test_newsletter(newsletter_section, newsletter_section_online, lang='fa
         newsletter_section = newsletter_section.replace("/>", ">")
 
         # Usage
-        if compare_html_strings(newsletter_section_online, newsletter_section):
+        if helper.compare_html_strings(newsletter_section_online, newsletter_section):
             return '<div style="background: green;padding: 15px;">' + "تست سکشن خبرنامه موفقیت آمیز بود." + "</div>"
 
         return '<div style="background: red;padding: 15px;">سکشن خبرنامه خطا دارد..<section class="debug" style="display:none;"><div class="unit-test-section" >' + newsletter_section + '</div><div class="online section"> ' + newsletter_section_online + '</div></section></div>'
@@ -321,6 +215,7 @@ def unit_test_newsletter(newsletter_section, newsletter_section_online, lang='fa
         trace = traceback.format_exc()
         error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
         return error_message
+
 
 def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
     try:
@@ -389,7 +284,7 @@ def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
         menu_section = helper.clean_serialize_string(menu_section)
 
 
-        if compare_html_strings(menu_section_online, menu_section):
+        if helper.compare_html_strings(menu_section_online, menu_section):
             return '<div style="background: green;padding: 15px;">' + "تست سکشن منوی هدر موفقیت آمیز بود." + "</div>"
 
         return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="unit-test-section" >' + menu_section + '</div><div class="online section"> ' + menu_section_online +'</div></section></div>'
@@ -398,6 +293,7 @@ def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
         trace = traceback.format_exc()
         error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
         return error_message
+
 
 def unit_test_footer(footer_section, footer_section_online , lang = 'fa'):
     try:
@@ -452,7 +348,7 @@ def unit_test_footer(footer_section, footer_section_online , lang = 'fa'):
 
 
 
-        if compare_html_strings(footer_section_online, footer_section):
+        if helper.compare_html_strings(footer_section_online, footer_section):
             return '<div style="background: green;padding: 15px;">' + "تست سکشن فوتر موفقیت آمیز بود." + "</div>"
 
         return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="unit-test-section" >' + footer_section + '</div><div class="online section"> ' + footer_section_online +'</div></section></div>'
@@ -462,16 +358,471 @@ def unit_test_footer(footer_section, footer_section_online , lang = 'fa'):
         error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
         return error_message
 
-def compare_html_strings(html1, html2):
-    # Parse the HTML strings
-    soup1 = BeautifulSoup(html1, 'html.parser')
-    soup2 = BeautifulSoup(html2, 'html.parser')
-
-    soup1 = soup1.prettify()
-    soup2 = soup2.prettify()
-
-    # Compare the serialized HTML strings
-    return soup1 == soup2
 
 def test_unit_test(a, b, c):
     return 'test'
+
+
+def unit_test_tour(tour_section, tour_section_online , lang = 'fa'):
+    try:
+        modul_data_array = {
+            'general_region_array': ['internal', 'external', ''],
+            'general_type_array': ['', 'special'],
+            'before_html': '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}''',
+            'before_html_local': '''{assign var="__params_var__" value=['type'=>'__type__','limit'=> '__local_max_limit__','dateNow' => $dateNow, 'country' =>'__country__','city' => null]}
+                                {assign var='__general_var__' value=$obj_main_page->getToursReservation($__params_var__)}
+                                {if $__general_var__}
+                                    {assign var='check_general' value=true}
+                                {/if}
+                                {assign var="__local_min_var__" value=__local_min__}
+                                {assign var="__local_max_var__" value=__local_max__}
+                            ''',
+            'after_html': '''{/if}''',
+            'before_foreach_local':'''
+                                {foreach $__general_var__ as $item}
+                                    {if $__local_min_var__ <= $__local_max_var__}
+                                ''',
+            'after_foreach_local':'''
+                                    {$__local_min_var__ = $__local_min_var__ + 1}
+                                    {/if}
+                                {/foreach}
+                                ''',
+            'replace_classes_local': {
+            '___price_class__': {'string': '''{$item['min_price']['discountedMinPriceR']|number_format}'''},
+            '__title_class__': {'string': '''{$item['tour_name']}'''},
+            '__airline_class__': {'string': '''{$item['airline_name']}'''},
+            '__night_class__': {'string': '''{$item['night']}'''},
+            '__day_class__': {'string': '''{$item['night'] + 1}'''},
+            '__city_class__': {'string': '''{$item['destination_city_name']}'''},
+            '__rate_count_class__': {'string': '''{$item['rate_count']}'''},
+            '__description_class__': {'string': '''{$item['description']}'''},
+            '__degree_class__': {'string': '''{$item['StarCode']}'''},
+            '__image_class__': {
+                'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$item['tour_pic']}''',
+                'alt': '''{$item['tour_name']}'''},
+            '__date_class__': {'string': '''{assign var="year" value=substr($item['start_date'], 0, 4)}
+                                        {assign var="month" value=substr($item['start_date'], 4, 2)}
+                                        {assign var="day" value=substr($item['start_date'], 6)}
+                                        {$year}/{$month}/{$day}
+                                        '''},
+        },
+            'replace_comlex_classes_local': {
+            '___price_class__': {
+                'string': '''{$__general_var__[{0}]['min_price']['discountedMinPriceR']|number_format}'''},
+            '__title_class__': {'string': '''{$__general_var__[{0}]['tour_name']}'''},
+            '__airline_class__': {'string': '''{$__general_var__[{0}]['airline_name']}'''},
+            '__night_class__': {'string': '''{$__general_var__[{0}]['night']}'''},
+            '__city_class__': {'string': '''{$__general_var__[{0}]['destination_city_name']}'''},
+            '__rate_count_class__': {'string': '''{$__general_var__[{0}]['rate_count']}'''},
+            '__description_class__': {'string': '''{$__general_var__[{0}]['description']}'''},
+            '__day_class__': {'string': '''{$__general_var__[{0}]['night'] + 1}'''},
+            '__degree_class__': {'string': '''{$__general_var__[{0}]['StarCode']}'''},
+            '__image_class__': {
+                'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$__general_var__[{0}]['tour_pic']}''',
+                'alt': '''{$__general_var__[{0}]['tour_name']}'''},
+            '__date_class__': {'string': '''{assign var="year" value=substr($__general_var__[{0}]['start_date'], 0, 4)}
+                                        {assign var="month" value=substr($__general_var__[{0}]['start_date'], 4, 2)}
+                                        {assign var="day" value=substr($__general_var__[{0}]['start_date'], 6)}
+                                        {$year}/{$month}/{$day}
+                                        '''},
+        },
+            'generals_simple_replacements': {
+            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$item['id']}/{$item['tour_slug']}''',
+        },
+            'generals_complex_replacements': {
+            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$__general_var__[{0}]['id']}/{$__general_var__[{0}]['tour_slug']}''',
+        },
+
+            'before_star_simple': '''{for $i = 0; $i < count($item['rate_average']); $i++}''',
+            'before_dark_star_simple': '''{for $i = count($item['rate_average']); $i < 6; $i++}''',
+            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['rate_average']); $i++}''',
+            'before_dark_star_complex': '''{for $i = count($__general_var__['rate_average']); $i < 6; $i++}''',
+
+            'unique_key': 'tour',
+            'no_chiled': '',
+
+            'replace_classes_general': {},
+
+        }
+
+        unit_test = general_test(tour_section, tour_section_online, lang, modul_data_array)
+        return unit_test
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
+
+
+
+
+
+def unit_test_blog(blog_section, blog_section_online , lang = 'fa'):
+    try:
+        modul_data_array = {
+            'general_region_array': [''],
+            'general_type_array': [''],
+            'before_html': '''''',
+            'before_html_local': '''
+                        {*with category*}
+                        {*{assign var="search_array" value=['section'=>'mag','category'=>1,'limit'=>'__local_max_limit__']}*}
+                        {*{assign var='__general_var__' value=$obj_main_page->getCategoryArticles($search_array)}*}
+                        {*{assign var='counter' value=0}*}
+                        {*{assign var="article_count" value=$__general_var__|count}*}
+
+                        {assign var="data_search_blog" value=['service'=>'Public','section'=>'article', 'limit' =>'__local_max_limit__']}
+                        {assign var='__general_var__' value=$obj_main_page->articlesPosition($data_search_blog)}
+                        {assign var='counter' value=0}
+                        {assign var="article_count" value=$__general_var__|count}
+                        {if $__general_var__[0]}
+                            {assign var='check_general' value=true}
+                        {/if}
+                    ''',
+            'after_html': '''{/if}''',
+            'before_foreach_local':'''
+                                {foreach $__general_var__ as $key => $item}
+                                    {if $__local_min_var__ <= $__local_max_var__}
+                                ''',
+            'after_foreach_local':'''
+                                    {$__local_min_var__ = $__local_min_var__ + 1}
+                                    {/if}
+                                {/foreach}
+                                ''',
+
+            'replace_classes_local': {
+            '__image_class__': {'src': '''{$item["image"]}''', 'alt': '''{$item["alt"]}'''},
+            '__title_class__': {'string': '''{$item["title"]}'''},
+            '__degree_class__': {'string': '''{$item["rates"]["average"]}'''},
+            '__category_class__': {'string': '''{$item['categories_array'][0]['title']}'''},
+            '__heading_class__': {'string': '''{$item["heading"]}'''},
+            '__date_class__': {'string': '''{$item["created_at"]}'''},
+        },
+            'replace_comlex_classes_local': {
+            '__image_class__': {
+                'src': '''{$__general_var__[{0}]['image']}''',
+                'alt': '''{$__general_var__[{0}]['alt']}'''},
+            '__title_class__': {'string': '''{$__general_var__[{0}]['title']}'''},
+            '__degree_class__': {'string': '''{$__general_var__[{0}]["rates"]["average"]}'''},
+            '__category_class__': {'string': '''{$__general_var__[{0}]['categories_array'][0]['title']}'''},
+            '__heading_class__': {'string': '''{$__general_var__[{0}]['heading']}'''},
+            '__date_class__': {'string': '''{$__general_var__[{0}]['created_at']}'''},
+        },
+
+            'generals_simple_replacements': {
+            "__airline__": '''{$item['link']}''',
+            "__link__": '''{$item['link']}''',
+                 },
+            'generals_complex_replacements': {
+            "__link__": '''{$__general_var__[{0}]['link']}''',
+        },
+
+            'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
+            'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
+            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
+            'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
+
+            'unique_key': 'blog',
+            'no_chiled': 'yes',
+            'replace_classes_general': {},
+        }
+
+        unit_test = general_test(blog_section, blog_section_online, lang, modul_data_array)
+        return unit_test
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
+
+
+def unit_test_news(news_section, news_section_online , lang = 'fa'):
+    try:
+        modul_data_array = {
+            'general_region_array': [''],
+            'general_type_array': [''],
+            'before_html': '''''',
+            'before_html_local': '''{assign var="__general_var__" value=$obj_main_page->getNewsArticles()}
+                            {assign var="othe_itmes" value=$__general_var__['data']}
+                            {assign var="i" value="2"}
+                            {assign var='counter' value=0}
+                            {if $othe_itmes > 0 }
+                            {if $__general_var__[0]}
+                                {assign var='check_general' value=true}
+                            {/if}
+                            ''',
+            'after_html': '''{/if}''',
+            'before_foreach_local':'''{foreach $__general_var__ as $item} {if $__local_min_var__ <= $__local_max_var__}''',
+            'after_foreach_local':'''
+                                    {$__local_min_var__ = $__local_min_var__ + 1}
+                                    {/if}
+                                {/foreach}
+                                ''',
+
+            'replace_classes_local': {
+            '__image_class__': {'src': '''{$item["image"]}''', 'alt': '''{$item["alt"]}'''},
+            '__title_class__': {'string': '''{$item["title"]}'''},
+            '__heading_class__': {'string': '''{$item["heading"]}'''},
+            '__date_class__': {'string': '''{$item["created_at"]}'''},
+            '__description_class__': {'string': '''{$item["description"]}'''},
+        },
+            'replace_comlex_classes_local': {
+            '__image_class__': {
+                'src': '''{$__general_var__[{0}]['image']}''',
+                'alt': '''{$__general_var__[{0}]['alt']}'''},
+            '__title_class__': {'string': '''{$__general_var__[{0}]['title']}'''},
+            '__heading_class__': {'string': '''{$__general_var__[{0}]["created_at"]}'''},
+            '__date_class__': {'string': '''{$__general_var__[{0}]['heading']}'''},
+            '__description_class__': {'string': '''{$__general_var__[{0}]['description']}'''},
+        },
+
+            'generals_simple_replacements': {
+            "__link__": '''{$item['link']}''',
+                 },
+            'generals_complex_replacements': {
+            "__link__": '''{$__general_var__[{0}]['link']}''',
+        },
+
+            'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
+            'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
+            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
+            'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
+
+            'unique_key': 'news',
+            'no_chiled': 'yes',
+            'replace_classes_general': {
+                '__all_link_href_class__': {'href': '''{$smarty.const.ROOT_ADDRESS}/news'''},
+            },
+        }
+        unit_test = general_test(news_section, news_section_online, lang, modul_data_array)
+        return unit_test
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
+
+
+def general_test(generals_section, general_section_online, lang = 'fa', modul_data_array = {} ):
+    try:
+
+        before_html = ''
+        after_html = ''
+
+        general_region_array = modul_data_array['general_region_array']
+        general_type_array = modul_data_array['general_type_array']
+        before_html_local = ''
+
+
+        before_foreach_local = ''
+        after_foreach_local = ''
+
+        replace_classes_local = modul_data_array['replace_classes_local']
+        replace_comlex_classes_local = modul_data_array['replace_comlex_classes_local']
+
+        generals_simple_replacements = modul_data_array['generals_simple_replacements']
+        generals_complex_replacements = modul_data_array['generals_complex_replacements']
+
+        before_star_simple = modul_data_array['before_star_simple']
+        before_dark_star_simple = modul_data_array['before_dark_star_simple']
+        before_star_complex = modul_data_array['before_star_complex']
+        before_dark_star_complex = ''
+
+        unique_key = modul_data_array['unique_key']
+        no_chiled = modul_data_array['no_chiled']
+        section_class_init = '__'+ unique_key + '__'
+        section_var_init = unique_key
+        section_params_init = unique_key + '_params'
+        special_page = unique_key
+
+        replace_classes_general = modul_data_array['replace_classes_general']
+
+
+        local_min_var_init = 'min'
+        local_max_var_init = 'max'
+
+        for region in general_region_array:
+            for type in general_type_array:
+
+                section_class = section_class_init
+                section_var = section_var_init
+                section_params = section_params_init
+                local_min_var = local_min_var_init
+                local_max_var = local_max_var_init
+                if region:
+                    section_class =  section_class + region + '__'
+                    section_var =  section_var + '_' + region
+                    section_params =  section_params + '_' + region
+                    local_min_var =  local_min_var + '_' + region
+                    local_max_var =  local_max_var + '_' + region
+                if type:
+                    section_class = section_class + type + '__'
+                    section_var =  section_var + '_' + type
+                    local_min_var =  local_min_var + '_' + region
+                    local_max_var =  local_max_var + '_' + region
+
+
+                if no_chiled == 'yes':
+                    sections = [1]
+                    json_html = helper.extract_json_data_from_url(unique_key)
+                else:
+                    sections = generals_section.find_all(class_=section_class)
+                    json_html = helper.extract_json_data_from_url(section_class)
+
+                json_html = BeautifulSoup(json_html, 'html.parser')
+                json_element = json_html.find(class_='data_modular')
+                if json_element:
+                    json_string = json_element.get_text()
+                    general_data = json.loads(json_string)
+                else:
+                    general_data = []
+
+                if  sections:
+                    for local_section in sections:
+                        if no_chiled == 'yes':
+                            local_section = generals_section
+
+                        complex_items_numbers = helper.item_numbers(local_section, complex_items_pattern)
+                        simple_items_numbers = helper.item_numbers(local_section, simple_items_pattern)
+                        complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
+                        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
+                        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
+                        max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
+
+                        for num in simple_items_numbers:
+                            simple_element = local_section.find(class_=simple_items_class + num)
+                            numInt = int(num)
+                            
+                            if num != simple_items_numbers[0]:
+                                simple_element_text = local_section.find(class_=simple_items_class + simple_items_numbers[0])
+                                simple_element_text = f'{simple_element_text}'
+                                simple_element_text = simple_element_text.replace(f'{simple_items_class + simple_items_numbers[0]}', f'{simple_items_class + num}')
+                                simple_element_text = BeautifulSoup(simple_element_text, 'html.parser')
+                                simple_element.replace_with(simple_element_text)
+                                simple_element = local_section.find(class_=simple_items_class + num)
+                                helper.replace_attribute(local_section, simple_items_class + num, 'href', '__link__')
+
+                            if 0 <= numInt < len(general_data):
+                                final_generals_simple_replacements = {}
+                                for item_pointer ,item_val in generals_simple_replacements.items():
+                                    pattern = r"\{\$item\[['\"](.+?)['\"]\](?:\[['\"](.+?)['\"]\])?\}"
+                                    output_string = helper.get_element_data_key_by_pattern(general_data[int(numInt)],pattern, item_val)
+                                    final_generals_simple_replacements[item_pointer] = output_string
+
+                                simple_element = helper.replace_placeholders(simple_element, final_generals_simple_replacements)
+                                simple_element = local_section.find(class_=simple_items_class + num)
+                                for class_name, val in replace_classes_local.items():
+                                    for atr, value in val.items():
+                                        pattern = r"\{\$item\[['\"](.+?)['\"]\](?:\[['\"](.+?)['\"]\])?\}"
+                                        value = helper.get_element_data_key_by_pattern(general_data[int(numInt)], pattern, value)
+                                        helper.replace_attribute(simple_element, class_name, atr, value)
+
+                                for i in range(1, 6):
+                                    light_star_elements = simple_element.find(class_='__star_class_light__' + str(i))
+                                    dark_star_elements = simple_element.find(class_='__star_class_dark__' + str(i))
+                                    if i == 1 and light_star_elements:
+                                        new_light_star = before_star_simple + str(light_star_elements) + '''{/for}'''
+                                        new_light_star = BeautifulSoup(new_light_star, 'html.parser')
+                                        light_star_elements.replace_with(new_light_star)
+                                    else:
+                                        if light_star_elements:
+                                            light_star_elements.decompose()
+
+                                    if i == 1 and dark_star_elements:
+                                        new_dark_star = before_dark_star_simple + str(dark_star_elements) + '''{/for}'''
+                                        new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
+                                        dark_star_elements.replace_with(new_dark_star)
+                                    else:
+                                        if dark_star_elements:
+                                            dark_star_elements.decompose()
+
+                            else:
+                                simple_element.decompose()
+
+
+                        for num in complex_items_numbers:
+                            numInt = int(num)
+                            if 0 <= numInt < len(general_data):
+                                complex_element = local_section.find(class_=complex_items_class + num)
+                                final_gcr = {}
+                                for gcr_key, gcr_val in generals_complex_replacements.items():
+                                    pattern = r"\{\$__general_var__\[\{0}\]\[['\"](.+?)['\"]\](?:\[['\"](.+?)['\"]\])?\}"
+                                    valuefinal = helper.get_element_data_key_by_pattern(general_data[int(numInt)],pattern, gcr_val)
+                                    final_gcr = {
+                                        f'{gcr_key}': f'{valuefinal}'
+                                    }
+
+                                complex_element = helper.replace_placeholders(complex_element, final_gcr)
+
+                                complex_element = local_section.find(class_=complex_items_class + num)
+                                for class_name, val in replace_comlex_classes_local.items():
+                                    for atr, value in val.items():
+                                        pattern = r"\{\$__general_var__\[\{0}\]\[['\"](.+?)['\"]\](?:\[['\"](.+?)['\"]\])?\}"
+                                        valuefinal = helper.get_element_data_key_by_pattern(general_data[int(numInt)], pattern, value )
+                                        helper.replace_attribute(complex_element, class_name, atr, valuefinal)
+
+                                    for i in range(1, 6):
+                                        light_star_elements = complex_element.find(class_='__star_class_light__' + str(i))
+                                        dark_star_elements = complex_element.find(class_='__star_class_dark__' + str(i))
+                                        if i == 1 and light_star_elements:
+                                            new_light_star = before_star_complex + str(light_star_elements) + '''{/for}'''
+                                            new_light_star = new_light_star.replace("{0}", f'{num}')
+                                            new_light_star = new_light_star.replace("__general_var__", section_var)
+                                            new_light_star = BeautifulSoup(new_light_star, 'html.parser')
+                                            light_star_elements.replace_with(new_light_star)
+                                        else:
+                                            if light_star_elements:
+                                                light_star_elements.decompose()
+
+                                        if i == 1 and dark_star_elements:
+                                            new_dark_star = str(dark_star_elements)
+                                            new_dark_star = new_dark_star.replace("{0}", f'{num}')
+                                            new_dark_star = new_dark_star.replace("__general_var__", section_var)
+                                            new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
+                                            dark_star_elements.replace_with(new_dark_star)
+                                        else:
+                                            if dark_star_elements:
+                                                dark_star_elements.decompose()
+
+                        befor_social_media = '''{assign var="socialLinks"  value=$about['social_links']|json_decode:true}
+                                                {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref','aparat' => 'aparatHref','youtube' => 'youtubeHref','facebook' => 'facebookHref','linkeDin' => 'linkeDinHref']}
+
+                                                {foreach $socialLinks as $key => $val}
+                                                        {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}
+                                                {/foreach}'''
+                        befor_social_media_soup = BeautifulSoup(befor_social_media, "html.parser")
+                        social_element = local_section.find(class_='__social_class__')
+                        if social_element:
+                            social_element.insert_before(befor_social_media_soup)
+                            social_element = local_section.find(
+                                class_=lambda classes: classes and '__social_class__' in classes)
+                            repeatable_social_links = {
+                                '__telegram_class__': '{if $telegramHref}{$telegramHref}{/if}',
+                                '__whatsapp_class__': '{if $whatsappHref}{$whatsappHref}{/if}',
+                                '__instagram_class__': '{if $instagramHref}{$instagramHref}{/if}',
+                                '__linkdin_class__': '{if $linkeDinHref}{$linkeDinHref}{/if}',
+                                '__aparat_class__': '{if $aparatHref}{$aparatHref}{/if}',
+                                '__youtube_class__': '{if $youTubeHref}{$youTubeHref}{/if}',
+                            }
+                            for key, val in repeatable_social_links.items():
+                                helper.replace_attribute(social_element, key, 'href', val)
+
+                        if replace_classes_general != '':
+                            for class_name, val in replace_classes_general.items():
+                                for atr, value in val.items():
+                                    if atr != 'class':
+                                        helper.replace_attribute(local_section, class_name, atr, value)
+                                    else:
+                                        helper.add_class_to_elements(local_section, class_name,value)
+
+
+        general_section_online = general_section_online.prettify()
+        generals_final_content = f'{before_html}\n{generals_section}\n{after_html}'
+
+        general_section_online = helper.unit_test_clean_string(general_section_online)
+        generals_final_content = helper.unit_test_clean_string(generals_final_content)
+
+        general_section_online_serialized = helper.serialize_string(general_section_online)
+        generals_final_content_serialized = helper.serialize_string(generals_final_content)
+
+        if helper.compare_html_strings(general_section_online_serialized, generals_final_content_serialized):
+            return '<div style="background: green;padding: 15px;">' + "تست سکشن اخبار موفقیت آمیز بود." + "</div>"
+
+        return '<div style="background: red;padding: 15px;">طرح و سکشن بلاگ ماژول گذاری شده هماهنگ نیستند.<section class="debug" style="display:none;"><div class="online-section" >' + general_section_online + '</div><div class="unit-test-section"> ' + generals_final_content +'</div></section></div>'
+
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str

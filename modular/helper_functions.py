@@ -8,6 +8,7 @@ import json
 import codecs
 import zipfile
 from collections import OrderedDict
+import traceback
 
 
 def item_numbers(section, pattern):
@@ -289,6 +290,36 @@ def clean_serialize_string(string):
     string = string.replace("&lt;", "<")
     return string
 
+
+def unit_test_clean_string(string):
+    string = BeautifulSoup(string, 'html.parser')
+    string = string.prettify()
+    pattern = re.compile(r'__i_modular_nc_item_class_[0-9]+')
+    string = pattern.sub('', string)
+    pattern = re.compile(r'192\.168\.1\.100/gds/view/[^/]+/project_files')
+    string = pattern.sub('', string)
+    string = string.replace("{$smarty.const.ROOT_ADDRESS}", "://192.168.1.100/gds/fa")
+    string = string.replace("https://192.168.1.100/gds/view/WW12/", "")
+    string = string.replace("http://192.168.1.100/gds/view/WW12/", "")
+    string = string.replace("http://192.168.1.100/gds/view/WW12/", "")
+    string = BeautifulSoup(string, 'html.parser')
+    string = string.prettify()
+    string = string.replace("https", "")
+    string = string.replace("http", "")
+    string = string.replace("/>", ">")
+    string = string.replace("  ", "")
+    string = string.replace("</img>", "")
+    string = string.replace("/>", ">")
+    string = string.replace("&gt;", ">")
+    string = string.replace("&lt;", "<")
+    return string
+
+def serialize_string(string):
+    string = BeautifulSoup(string, 'html.parser')
+    string = string.prettify()
+    string = string.replace(" ", "")
+    return string
+
 def search_box_clean_serialize_string(string):
     string = string.replace("&gt;", ">")
     string = string.replace("&lt;", "<")
@@ -425,3 +456,92 @@ def upload():
     files_directory = os.path.join(files_directory, 'project_files')  # Create a 'files' subdirectory
     unzip_to_folder(files_directory, file)
     return jsonify({"message": 'استایل های پروژه بارگذاری شدند.'})
+
+
+
+def get_online_html():
+    url = "http://192.168.1.100/"
+
+    try:
+        response = requests.get(url)
+
+        # Check if the request was successful (status code 200)
+        if response.status_code == 200:
+            html_content_online = response.text
+            if "i_modular_modulation" in html_content_online:
+                soup = BeautifulSoup(html_content_online, 'html.parser')
+                return soup
+            else:
+                return "خطایی پیش آمده و دیتایی نمایش ندارد1."
+
+        else:
+            return f"خطایی در گرفتن اطلاعات پیش آمده2.{response.status_code}"
+
+
+    except requests.exceptions.RequestException as e:
+        trace = traceback.format_exc()
+        error_message = f"خطایی در گرفتن اطلاعات پیش آمده3.: {trace}"
+        return error_message
+
+
+
+def compare_html_strings(soup1, soup2):
+
+    return soup1 == soup2
+
+
+import re
+
+import re
+
+
+def get_element_data_key_by_pattern(data, pattern, item):
+    valuefinal = ''
+    match_combined = re.search(pattern, item)
+
+    if match_combined:
+        item_key_1 = match_combined.group(1)
+        if item_key_1:
+            valuefinal = data.get(item_key_1, '')
+
+        item_key_2 = match_combined.group(2)
+        if item_key_2:
+            valuefinal = data.get(item_key_1, {}).get(item_key_2, '')
+
+        # Convert pattern_str and valuefinal to strings before using them
+        pattern_str = str(re.escape(match_combined.group(0)))
+        valuefinal = str(valuefinal)
+
+        # Replace the matched pattern with valuefinal
+        item = re.sub(pattern_str, valuefinal, item)
+
+    return item
+
+
+
+def send_request_with_error_handling(class_name,url):
+    try:
+        data = {'class': class_name}
+        response = requests.post(url, data=data, verify=False)  # Disable SSL certificate verification
+        response.raise_for_status()  # Raise an exception for HTTP errors
+
+        # Process the response data
+        print(f"Successfully posted class: {class_name}")
+        return response.text
+
+    except requests.exceptions.HTTPError as http_err:
+        print(f"HTTP error occurred for class {class_name}: {http_err}")
+    except requests.exceptions.RequestException as req_err:
+        print(f"Request exception occurred for class {class_name}: {req_err}")
+
+
+def extract_json_data_from_url(class_name, url = 'http://192.168.1.100/gds/fa/modular_data'):
+    try:
+        json = send_request_with_error_handling(class_name,url)
+        return f'{json}'
+        if json is not None and json:
+            return f'{json}'
+        return 'error for updating unit_test_data folder'
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str

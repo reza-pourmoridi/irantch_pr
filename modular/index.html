@@ -7,7 +7,7 @@
 
                 <input placeholder="project name" type="text" class="mt-1" style="width: 100%;" id="project_name" name="project_name">
                 <div class="row ">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <h6>lang</h6>
                         <select id="project_lang" name="project_lang">
                             <option selected value="fa">persian</option>
@@ -15,18 +15,25 @@
                             <option value="ar">arabic</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <h6>test</h6>
                         <select id="project_test" name="project_test">
                             <option  value="1">on</option>
                             <option selected value="0">off</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <h6>upload</h6>
                         <select id="project_upload" name="project_upload">
                             <option  value="1">on</option>
                             <option selected value="0">off</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <h6>modulation</h6>
+                        <select id="project_modulation" name="project_modulation">
+                            <option selected value="1">on</option>
+                            <option  value="0">off</option>
                         </select>
                     </div>
                 </div>
@@ -62,6 +69,7 @@
         formData.append('project_lang', document.getElementById('project_lang').value);
         formData.append('project_test', document.getElementById('project_test').value);
         formData.append('project_upload', document.getElementById('project_upload').value);
+        formData.append('project_modulation', document.getElementById('project_modulation').value);
 
         $.ajax({
             url: address,
