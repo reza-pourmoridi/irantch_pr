@@ -174,7 +174,14 @@ repeatable_links = {
     }
 view_folder_path = 'z:/gds/view/'
 controller_folder_path = 'z:/gds/controller/customers/'
-
+repeatable_social_links = {
+    '__telegram_class__': '{if $telegramHref}{$telegramHref}{/if}',
+    '__whatsapp_class__': '{if $whatsappHref}{$whatsappHref}{/if}',
+    '__instagram_class__': '{if $instagramHref}{$instagramHref}{/if}',
+    '__linkdin_class__': '{if $linkeDinHref}{$linkeDinHref}{/if}',
+    '__aparat_class__': '{if $aparatHref}{$aparatHref}{/if}',
+    '__youtube_class__': '{if $youTubeHref}{$youTubeHref}{/if}',
+}
 
 def initiation_progress():
     if 'file' not in request.files:
@@ -213,29 +220,29 @@ def initiation_progress():
             'class': 'i_modular_blog',
             'file': 'blog',
             'name': 'وبلاگ',
-            'modular': blog_module,
-            'test_function': unit_test.unit_test_blog
+            'array': blog_data_array,
+            'modular': False,
         },
         'newsletter': {
             'class': 'i_modular_newsletter',
             'name': 'خبرنامه',
             'file': 'newsletter',
-            'modular': newsletter_module,
-            'test_function': unit_test.unit_test_newsletter
+            'array': newsletter_data_array,
+            'modular': False,
         },
         'advertisement': {
             'class': 'i_modular_adds',
             'name': 'تبلیغات',
             'file': 'advertisement',
-            'modular': advertisment_module,
-            'test_function': unit_test.test_unit_test
+            'array': advertisment_data_array,
+            'modular': False,
         },
         'news': {
             'class': 'i_modular_news',
             'name': 'اخبار',
             'file': 'news',
-            'modular': news_module,
-            'test_function': unit_test.unit_test_news
+            'array': news_data_array,
+            'modular': False,
         },
         'menu': {
             'class': 'i_modular_menu',
@@ -255,8 +262,8 @@ def initiation_progress():
             'class': 'i_modular_about_us',
             'name': 'درباره ما',
             'file': 'about-us',
-            'modular': about_us,
-            'test_function': unit_test.unit_test_footer
+            'array': about_us_data_array,
+            'modular': False,
         },
         'banner_gallery': {
                 'class': 'i_modular_banner_gallery',
@@ -287,24 +294,24 @@ def initiation_progress():
             'class': 'i_modular_tours',
             'name': 'تور',
             'file': 'tours',
-            'modular': tours_module,
-            'test_function': unit_test.test_unit_test
+            'array': tours_data_array,
+            'modular': False,
 
          },
         'hotels_webservice': {
             'class': 'i_modular_hotels_webservice',
             'name': 'هتل وب سرویس',
             'file': 'hotels-webservice',
-            'modular': hotels_webservice_module,
-            'test_function': unit_test.test_unit_test
+            'array': hotels_webservice_data_array,
+            'modular': False,
 
         },
         'hotels__external_cities': {
             'class': 'i_modular_hotels_external_cities',
             'name': 'هتل , شهرهای خارجی',
             'file': 'hotels-external_cities',
-            'modular': hotels_External_cities_module,
-            'test_function': unit_test.test_unit_test
+            'array': hotels_external_cities_data_array,
+            'modular': False,
 
         },
         'club_weather_section': {
@@ -312,7 +319,6 @@ def initiation_progress():
             'name': 'باشگاه, نرخ ارز, تبدیل تاریخ و هواشناسی',
             'file': 'club_weather',
             'modular': club_weather_module,
-            'test_function': unit_test.test_unit_test
 
         },
         'fast_flight_search_section': {
@@ -326,14 +332,13 @@ def initiation_progress():
     }
 
     moduls_array = {
-        'tours': {
-            'class': 'i_modular_tours',
-            'name': 'تور',
-            'file': 'tours',
-            'modular': tours_module,
-            'test_function': unit_test.unit_test_tour
-
-         },
+        'banner_gallery': {
+                'class': 'i_modular_banner_gallery',
+            'name': 'گالری بنر و سرچ باکس',
+            'file': 'search-box',
+            'modular': banner_gallery_module,
+            'test_function': unit_test.unit_test_banner_gallery
+        },
     }
 
     final_massage = '--'
@@ -449,7 +454,11 @@ def modulation(soup, moduls_array, project_path, lang):
                         else:
                             file_name = module_info['file'] + '-third'
 
-                        module_messages.append("<br><br> تست ماژول گذاری بخش evaluation_c " + module_info['name'] + str(index) + " = " + module_info['modular'](section, project_path, lang, file_name))
+                        if module_info['modular']:
+                            module_messages.append("<br><br> تست ماژول گذاری بخش evaluation_c " + module_info['name'] + str(index) + " = " + module_info['modular'](section, project_path, lang, file_name))
+                        elif module_info['array']:
+                            module_messages.append("<br><br> تست ماژول گذاری بخش evaluation_c " + module_info['name'] + str(index) + " = " + general_module(section, project_path, lang, file_name, module_info['array']))
+
                     elif module_info['tag']:
                         if index == tags_length:
                             file_name = module_info['file']
@@ -463,7 +472,7 @@ def modulation(soup, moduls_array, project_path, lang):
         return str(e) + '\nTraceback:\n' + traceback_str
 
 
-def initiation_test(class_name, module_name, module_test_function, soup, soup_online , lang , online_index):
+def initiation_test(class_name, module_name, module_test_function, soup, soup_online , lang , online_index, modul_data_array):
     try:
         section = soup.find(class_=class_name)
         sections_online = soup_online.find_all(class_=class_name) if section else None
@@ -472,7 +481,7 @@ def initiation_test(class_name, module_name, module_test_function, soup, soup_on
         if online_index <= sections_online_length - 1:
             section_online = sections_online[online_index]
             if section_online:
-                return module_test_function(section, section_online , lang)
+                return module_test_function(section, section_online , lang, modul_data_array)
 
         return f'ماژول {module_name} بازگذاری نشد'
     except Exception as e:
@@ -496,7 +505,11 @@ def unit_test_process(html_content, moduls_array, lang):
             i = 0
             for section in sections:
                 if section:
-                    module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online ,lang , i))
+                    if module_info['modular']:
+                        module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online ,lang , i , {}))
+                    elif module_info['array']:
+                        module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], unit_test.initiate_general_test , soup, soup_online ,lang , i , module_info['array']))
+
                     i = i + 1
         summary_test_message = '\n'.join(module_test_messages)
         return summary_test_message
@@ -817,14 +830,6 @@ def footer_module(footer_section, project_path, lang='fa', file_name=''):
         for social_element in social_elements:
             if social_element:
                 social_element.insert_before(befor_social_media_soup)
-                repeatable_social_links = {
-                    '__telegram_class__': '{if $telegramHref}{$telegramHref}{/if}',
-                    '__whatsapp_class__': '{if $whatsappHref}{$whatsappHref}{/if}',
-                    '__instagram_class__': '{if $instagramHref}{$instagramHref}{/if}',
-                    '__linkdin_class__': '{if $linkeDinHref}{$linkeDinHref}{/if}',
-                    '__aparat_class__': '{if $aparatHref}{$aparatHref}{/if}',
-                    '__youtube_class__': '{if $youTubeHref}{$youTubeHref}{/if}',
-                }
                 for key, val in repeatable_social_links.items():
                     helper.replace_attribute(social_element, key, 'href', val)
 
@@ -1038,17 +1043,22 @@ def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa',  f
         traceback_str = traceback.format_exc()
         return str(e) + '\nTraceback:\n' + traceback_str
 
-
+#dont dare touch this function...you'll regret that
 def fast_flight_search_module(fast_flight_search_section, project_path, lang = 'fa',  file_name = ''):
     try:
         fast_flight_search_section = helper.check_if_section_built(project_path ,file_name ,fast_flight_search_section)
 
-
+        before_html = '''
+                        {assign var="params" value=['limit'=>'7','is_group'=>true]}
+                        {assign var="cities" value=$obj_main_page->dataFastSearchInternalFlight($params)}
+                        {assign var="foreign_cities" value=['IKA','DXBALL','ISTALL','KUL', 'MOWALL' , 'NJF' , 'TBS']}
+                        {assign var="__local_max_var__" value=__local_max__}
+                      '''
 
 
         fast_flight_search_region_array = ['internal', 'external']
         fast_flight_search_type_array = ['multi_city', 'single_city']
-
+        ii = 0
         for region in fast_flight_search_region_array:
             for type in fast_flight_search_type_array:
                 befor_cities_html_array_multy = {
@@ -1104,12 +1114,7 @@ def fast_flight_search_module(fast_flight_search_section, project_path, lang = '
                     local_max_var =  local_max_var + '_' + region
 
                 sections = fast_flight_search_section.find(class_=section_class)
-                before_html = '''
-                                {assign var="params" value=['limit'=>'7','is_group'=>true]}
-                                {assign var="cities" value=$obj_main_page->dataFastSearchInternalFlight($params)}
-                                {assign var="foreign_cities" value=['IKA','DXBALL','ISTALL','KUL', 'MOWALL' , 'NJF' , 'TBS']}
-                                {assign var="__local_max_var__" value=__local_max__}
-                              '''
+
                 if sections:
                     if type == 'multi_city':
                         origin__cities = sections.find(class_='__origin__cities__')
@@ -1162,7 +1167,7 @@ def fast_flight_search_module(fast_flight_search_section, project_path, lang = '
                                     helper.remove_class_from_elements(destination__cities, simple_items_class + num,'active')
                                     helper.add_class_to_elements(destination__cities, simple_items_class + num,' {if $i==1} show active {/if} ')
 
-
+                                    ii = ii + 1
                                     helper.add_before_after(destination__cities, simple_items_class + num, befor_cities_html_array_multy[region], after_cities_html)
                                     final_items_pattern = re.compile(r'__final_destination_(\d+)')
                                     final_items_numbers = helper.item_numbers(destination__cities, final_items_pattern)
@@ -1191,51 +1196,39 @@ def fast_flight_search_module(fast_flight_search_section, project_path, lang = '
                                     simple_element.decompose()
 
                     elif type == 'single_city':
-                        if region == 'internal':
-                            before_html = '''
-                                                {assign var="params" value=['limit'=>'7','is_group'=>true]}
-                                                {assign var="cities" value=$obj_main_page->dataFastSearchInternalFlight($params)}
-                                              '''
-                        elif region == 'external':
-                            before_html = '''
-                                                {assign var="params" value=['use_customer_db'=>true,'origin_city'=>'IKA','destination_city'=>['IKA','DXB','IST','CDG','YYZ','NJF','MHD']]}
-                                                {assign var="cities" value=$obj_main_page->dataFastSearchInternationalFlight($params)}
-                                              '''
+                        destination__cities = sections.find(class_='__destination__cities__')
+                        simple_items_numbers = helper.item_numbers(destination__cities, simple_items_pattern)
+                        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
+                        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
+                        simple_items_numbers_max = int(simple_items_numbers_max)
+                        simple_items_numbers_max = simple_items_numbers_max + 2
+                        simple_items_numbers_max = f'{simple_items_numbers_max}'
+                        before_html = before_html.replace("__local_max__", simple_items_numbers_max)
 
-                        simple_items_numbers = helper.item_numbers(sections, simple_items_pattern)
+
                         for num in simple_items_numbers:
                             simple_element = sections.find(class_=simple_items_class + num)
                             if num == simple_items_numbers[0]:
-                                if region == 'internal':
-                                    helper.replace_attribute(sections, '__origin__', 'aria-labelledby','''{$city['main']['Departure_CityEn']}-tab''')
-                                    helper.add_before_after(sections, simple_items_class + num,befor_cities_html_array_single[region], after_cities_html_single)
+                                helper.add_before_after(destination__cities, simple_items_class + num,befor_cities_html_array_multy[region], after_cities_html)
+                                final_items_pattern = re.compile(r'__final_destination_(\d+)')
+                                final_items_numbers = helper.item_numbers(destination__cities, final_items_pattern)
+                                for num in final_items_numbers:
+                                    final_simple_element = destination__cities.find(class_='__final_destination_' + num)
+                                    if num == final_items_numbers[0]:
+                                        if region == 'internal':
+                                            helper.replace_attribute(destination__cities, '__final_destination_' + num,'onclick','''calenderFlightSearch('{$city['main']['Departure_Code']}','{$sub_city['Departure_Code']}')''')
+                                            helper.replace_attribute(destination__cities, '__origin__', 'string','''{$city['main']['Departure_CityFa']}''')
+                                            helper.replace_attribute(destination__cities, '__destination__', 'string','''{$sub_city['Departure_CityFa']}''')
+                                        else:
+                                            helper.replace_attribute(destination__cities, '__final_destination_' + num,'onclick','''calenderFlightSearch('{$cities['main']['DepartureCode']}','{$sub_city['DepartureCode']}')''')
+                                            helper.replace_attribute(destination__cities, '__origin__', 'string','''{$cities['main']['DepartureCityFa']}''')
+                                            helper.replace_attribute(destination__cities, '__destination__', 'string','''{$sub_city['DepartureCityFa']}''')
+
+                                        helper.add_before_after(destination__cities, '__final_destination_' + num,befor_flights_html[region], after_flights_html)
+                                    else:
+                                        final_simple_element.decompose()
                             else:
                                 simple_element.decompose()
-
-                        # final_items_pattern = re.compile(r'__final_destination_(\d+)')
-                        # final_items_numbers = helper.item_numbers(sections, final_items_pattern)
-                        # if final_items_pattern:
-                        #     for num in final_items_numbers:
-                        #         final_simple_element = destination__cities.find(class_='__final_destination_' + num)
-                        #         if num == final_items_numbers[0]:
-                        #
-                        #             helper.replace_attribute(destination__cities, '__button__','data-target', '''#calenderBox''')
-                        #             helper.replace_attribute(destination__cities, '__button__','data-toggle', '''modal''')
-                        #             if region == 'internal':
-                        #                 helper.replace_attribute(destination__cities, '__button__','onclick','''calenderFlightSearch('{$city['main']['Departure_Code']}','{$sub_city['Departure_Code']}')''')
-                        #                 helper.replace_attribute(destination__cities, '__origin__', 'string','''{$city['main']['Departure_CityFa']}''')
-                        #                 helper.replace_attribute(destination__cities, '__destination__', 'string','''{$sub_city['Departure_CityFa']}''')
-                        #             else:
-                        #                 helper.replace_attribute(destination__cities, '__button__','onclick','''calenderFlightSearch('{$cities['main']['DepartureCode']}','{$sub_city['DepartureCode']}')''')
-                        #                 helper.replace_attribute(destination__cities, '__origin__', 'string','''{$cities['main']['DepartureCityFa']}''')
-                        #                 helper.replace_attribute(destination__cities, '__destination__', 'string','''{$sub_city['DepartureCityFa']}''')
-                        #
-                        #             helper.add_class_to_elements(destination__cities, '__button__',' flightSearchBox ')
-                        #             helper.add_before_after(destination__cities, '__final_destination_' + num,befor_flights_html[region], after_flights_html)
-                        #         else:
-                        #             final_simple_element.decompose()
-
-
 
 
 
@@ -1302,14 +1295,7 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
             social_element.insert_before(befor_social_media_soup)
             social_element = menu_section.find(
                 class_=lambda classes: classes and '__social_class__' in classes)
-            repeatable_social_links = {
-                '__telegram_class__': '{if $telegramHref}{$telegramHref}{/if}',
-                '__whatsapp_class__': '{if $whatsappHref}{$whatsappHref}{/if}',
-                '__instagram_class__': '{if $instagramHref}{$instagramHref}{/if}',
-                '__linkdin_class__': '{if $linkeDinHref}{$linkeDinHref}{/if}',
-                '__aparat_class__': '{if $aparatHref}{$aparatHref}{/if}',
-                '__youtube_class__': '{if $youTubeHref}{$youTubeHref}{/if}',
-            }
+
             for key, val in repeatable_social_links.items():
                 helper.replace_attribute(social_element, key, 'href', val)
 
@@ -1324,506 +1310,6 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
         menu_final_content = menu_final_content.replace("&lt;", "<")
 
         return helper.create_file(menu_final_content, include_files_directory, file_name, 'tpl')
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
-
-
-def advertisment_module(advertisement_section, project_path , lang = 'fa',  file_name = ''):
-    try:
-        modul_data_array = {
-            'general_region_array': [''],
-            'general_type_array': [''],
-            'before_html': '''''',
-            'before_html_local': '''{load_presentation_object filename="functions" assign="objFunctions"}
-                                    {assign var="advertises" value=$objFunctions->getConfigContentByTitle('home_page_advertise')}
-                            ''',
-            'after_html': '''{/if}''',
-            'before_foreach_local':'''{foreach $__general_var__ as $item} {if $__local_min_var__ <= $__local_max_var__}''',
-            'after_foreach_local':'''
-                                    {$__local_min_var__ = $__local_min_var__ + 1}
-                                    {/if}
-                                {/foreach}
-                                ''',
-
-            'replace_classes_local': {
-            '__image_class__': {'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/{$item['image']}''', 'alt': '''{$item['title']}'''},
-            '__title_class__': {'string': '''{$item['title']}'''},
-        },
-            'replace_comlex_classes_local': {
-            '__image_class__': {
-                'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/{$__general_var__[{0}]['image']}''',
-                'alt': '''{$__general_var__[{0}]['alt']}'''},
-            '__title_class__': {'string': '''{$__general_var__[{0}]['title']}'''},
-        },
-
-            'generals_simple_replacements': {
-            "__link__": '''{$item['link']}''',
-                 },
-            'generals_complex_replacements': {
-            "__link__": '''{$__general_var__[{0}]['link']}''',
-        },
-
-            'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
-            'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
-            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
-            'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
-
-            'unique_key': 'advertisement',
-            'no_chiled': 'yes',
-            'replace_classes_general': {
-            },
-        }
-        modulation = general_module(advertisement_section, project_path, lang, file_name, modul_data_array)
-        return modulation
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
-def news_module(news_section, project_path , lang = 'fa',  file_name = ''):
-    try:
-        modul_data_array = {
-            'general_region_array': [''],
-            'general_type_array': [''],
-            'before_html': '''''',
-            'before_html_local': '''{assign var="__general_var__" value=$obj_main_page->getNewsArticles()}
-                            {assign var="othe_itmes" value=$__general_var__['data']}
-                            {assign var="i" value="2"}
-                            {assign var='counter' value=0}
-                            {if $othe_itmes > 0 }
-                            {if $__general_var__[0]}
-                                {assign var='check_general' value=true}
-                            {/if}
-                            ''',
-            'after_html': '''{/if}''',
-            'before_foreach_local':'''{foreach $__general_var__ as $item} {if $__local_min_var__ <= $__local_max_var__}''',
-            'after_foreach_local':'''
-                                    {$__local_min_var__ = $__local_min_var__ + 1}
-                                    {/if}
-                                {/foreach}
-                                ''',
-
-            'replace_classes_local': {
-            '__image_class__': {'src': '''{$item["image"]}''', 'alt': '''{$item["alt"]}'''},
-            '__title_class__': {'string': '''{$item["title"]}'''},
-            '__heading_class__': {'string': '''{$item["heading"]}'''},
-            '__date_class__': {'string': '''{$item["created_at"]}'''},
-            '__description_class__': {'string': '''{$item["description"]}'''},
-        },
-            'replace_comlex_classes_local': {
-            '__image_class__': {
-                'src': '''{$__general_var__[{0}]['image']}''',
-                'alt': '''{$__general_var__[{0}]['alt']}'''},
-            '__title_class__': {'string': '''{$__general_var__[{0}]['title']}'''},
-            '__heading_class__': {'string': '''{$__general_var__[{0}]["created_at"]}'''},
-            '__date_class__': {'string': '''{$__general_var__[{0}]['heading']}'''},
-            '__description_class__': {'string': '''{$__general_var__[{0}]['description']}'''},
-        },
-
-            'generals_simple_replacements': {
-            "__link__": '''{$item['link']}''',
-                 },
-            'generals_complex_replacements': {
-            "__link__": '''{$__general_var__[{0}]['link']}''',
-        },
-
-            'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
-            'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
-            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
-            'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
-
-            'unique_key': 'news',
-            'no_chiled': 'yes',
-            'replace_classes_general': {
-                '__all_link_href_class__': {'href': '''{$smarty.const.ROOT_ADDRESS}/news'''},
-            },
-        }
-        modulation = general_module(news_section, project_path, lang, file_name, modul_data_array)
-        return modulation
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
-def newsletter_module(newsletter_section, project_path , lang = 'fa',  file_name = ''):
-    try:
-
-        modul_data_array = {
-            'general_region_array': [''],
-            'general_type_array': [''],
-            'before_html': '''{$check_general = true}''',
-            'before_html_local': '''''',
-            'after_html': '''{/if}''',
-            'before_foreach_local':'''''',
-            'after_foreach_local':'''''',
-
-            'replace_classes_local': {},
-            'replace_comlex_classes_local': {},
-
-            'generals_simple_replacements': { },
-            'generals_complex_replacements': {},
-
-            'before_star_simple': '''''',
-            'before_dark_star_simple': '',
-            'before_star_complex': '''''',
-            'before_dark_star_complex': '''''',
-
-
-            'unique_key': 'newsletter',
-            'no_chiled': 'yes',
-            'replace_classes_general': {
-                '__name_class__': {'name': '''NameSms''' , 'id': '''NameSms''' , 'class': '''full-name-js'''},
-                '__email_class__': {'name': '''EmailSms''', 'name': '''EmailSms''' , 'class': '''email-js'''},
-                '__phone_class__': {'name': '''CellSms''' , 'id': '''CellSms''' , 'class': '''mobile-js'''},
-                '__submit_class__': {'onclick': 'submitNewsLetter()'},
-            },
-        }
-
-        modulation = general_module(newsletter_section, project_path, lang, file_name, modul_data_array)
-        return modulation
-
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
-def about_us(about_us_section, project_path, lang = 'fa',  file_name = ''):
-    try:
-
-        modul_data_array = {
-            'general_region_array': [''],
-            'general_type_array': [''],
-            'before_html': '''{$check_general = true}''',
-            'before_html_local': '''''',
-            'after_html': '''{/if}''',
-            'before_foreach_local':'''''',
-            'after_foreach_local':'''''',
-
-            'replace_classes_local': {},
-            'replace_comlex_classes_local': {},
-
-            'generals_simple_replacements': { },
-            'generals_complex_replacements': {},
-
-            'before_star_simple': '''''',
-            'before_dark_star_simple': '',
-            'before_star_complex': '''''',
-            'before_dark_star_complex': '''''',
-
-
-            'unique_key': 'about_us',
-            'no_chiled': 'yes',
-            'replace_classes_general': {
-                '__aboutUs_class__': {'string': '''{$htmlContent = $about['body']|strip_tags}{$htmlContent|truncate:300}'''},
-                '__aboutUs_class_href__': {'href': '''{$smarty.const.ROOT_ADDRESS}/aboutUs'''},
-                '__mobile_class__': {'string': '''{$smarty.const.CLIENT_MOBILE}''' , 'href': '''tel:{$smarty.const.CLIENT_MOBILE}'''},
-                '__phone_class__': {'string': '''{$smarty.const.CLIENT_PHONE}''', 'href': '''tel:{$smarty.const.CLIENT_PHONE}'''},
-                '__email_class__': {'string': '''{$smarty.const.CLIENT_EMAIL}''', 'href': '''mailto:{$smarty.const.CLIENT_EMAIL}'''},
-            },
-        }
-        modulation = general_module(about_us_section, project_path, lang, file_name, modul_data_array)
-        return modulation
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
-def blog_module(blog_section, project_path , lang = 'fa',  file_name = ''):
-    try:
-
-        modul_data_array = {
-            'general_region_array': [''],
-            'general_type_array': [''],
-            'before_html': '''''',
-            'before_html_local': '''
-                        {*with category*}
-                        {*{assign var="search_array" value=['section'=>'mag','category'=>1,'limit'=>'__local_max_limit__']}*}
-                        {*{assign var='__general_var__' value=$obj_main_page->getCategoryArticles($search_array)}*}
-                        {*{assign var='counter' value=0}*}
-                        {*{assign var="article_count" value=$__general_var__|count}*}
-
-                        {assign var="data_search_blog" value=['service'=>'Public','section'=>'article', 'limit' =>'__local_max_limit__']}
-                        {assign var='__general_var__' value=$obj_main_page->articlesPosition($data_search_blog)}
-                        {assign var='counter' value=0}
-                        {assign var="article_count" value=$__general_var__|count}
-                        {if $__general_var__[0]}
-                            {assign var='check_general' value=true}
-                        {/if}
-                    ''',
-            'after_html': '''{/if}''',
-            'before_foreach_local':'''
-                                {foreach $__general_var__ as $key => $item}
-                                    {if $__local_min_var__ <= $__local_max_var__}
-                                ''',
-            'after_foreach_local':'''
-                                    {$__local_min_var__ = $__local_min_var__ + 1}
-                                    {/if}
-                                {/foreach}
-                                ''',
-
-            'replace_classes_local': {
-            '__image_class__': {'src': '''{$item["image"]}''', 'alt': '''{$item["alt"]}'''},
-            '__title_class__': {'string': '''{$item["title"]}'''},
-            '__degree_class__': {'string': '''{$item["rates"]["average"]}'''},
-            '__category_class__': {'string': '''{$item['categories_array'][0]['title']}'''},
-            '__heading_class__': {'string': '''{$item["heading"]}'''},
-            '__date_class__': {'string': '''{$item["created_at"]}'''},
-        },
-            'replace_comlex_classes_local': {
-            '__image_class__': {
-                'src': '''{$__general_var__[{0}]['image']}''',
-                'alt': '''{$__general_var__[{0}]['alt']}'''},
-            '__title_class__': {'string': '''{$__general_var__[{0}]['title']}'''},
-            '__degree_class__': {'string': '''{$__general_var__[{0}]["rates"]["average"]}'''},
-            '__category_class__': {'string': '''{$__general_var__[{0}]['categories_array'][0]['title']}'''},
-            '__heading_class__': {'string': '''{$__general_var__[{0}]['heading']}'''},
-            '__date_class__': {'string': '''{$__general_var__[{0}]['created_at']}'''},
-        },
-
-            'generals_simple_replacements': {
-            "__airline__": '''{$item['link']}''',
-            "__link__": '''{$item['link']}''',
-                 },
-            'generals_complex_replacements': {
-            "__link__": '''{$__general_var__[{0}]['link']}''',
-        },
-
-            'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
-            'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
-            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
-            'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
-
-            'unique_key': 'blog',
-            'no_chiled': 'yes',
-            'replace_classes_general': {},
-        }
-        modulation = general_module(blog_section, project_path, lang, file_name, modul_data_array)
-        return modulation
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
-def tours_module(tours_section, project_path, lang = 'fa',  file_name = ''):
-    try:
-        tours_section = helper.check_if_section_built(project_path ,file_name ,tours_section)
-
-        modul_data_array = {
-            'general_region_array': ['internal', 'external', ''],
-            'general_type_array': ['', 'special'],
-            'before_html': '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}''',
-            'before_html_local': '''{assign var="__params_var__" value=['type'=>'__type__','limit'=> '__local_max_limit__','dateNow' => $dateNow, 'country' =>'__country__','city' => null]}
-                                {assign var='__general_var__' value=$obj_main_page->getToursReservation($__params_var__)}
-                                {if $__general_var__}
-                                    {assign var='check_general' value=true}
-                                {/if}
-                                {assign var="__local_min_var__" value=__local_min__}
-                                {assign var="__local_max_var__" value=__local_max__}
-                            ''',
-            'after_html': '''{/if}''',
-            'before_foreach_local':'''
-                                {foreach $__general_var__ as $item}
-                                    {if $__local_min_var__ <= $__local_max_var__}
-                                ''',
-            'after_foreach_local':'''
-                                    {$__local_min_var__ = $__local_min_var__ + 1}
-                                    {/if}
-                                {/foreach}
-                                ''',
-            'replace_classes_local': {
-            '___price_class__': {'string': '''{$item['min_price']['discountedMinPriceR']|number_format}'''},
-            '__title_class__': {'string': '''{$item['tour_name']}'''},
-            '__airline_class__': {'string': '''{$item['airline_name']}'''},
-            '__night_class__': {'string': '''{$item['night']}'''},
-            '__day_class__': {'string': '''{$item['night'] + 1}'''},
-            '__city_class__': {'string': '''{$item['destination_city_name']}'''},
-            '__rate_count_class__': {'string': '''{$item['rate_count']}'''},
-            '__description_class__': {'string': '''{$item['description']}'''},
-            '__degree_class__': {'string': '''{$item['StarCode']}'''},
-            '__image_class__': {
-                'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$item['tour_pic']}''',
-                'alt': '''{$item['tour_name']}'''},
-            '__date_class__': {'string': '''{assign var="year" value=substr($item['start_date'], 0, 4)}
-                                        {assign var="month" value=substr($item['start_date'], 4, 2)}
-                                        {assign var="day" value=substr($item['start_date'], 6)}
-                                        {$year}/{$month}/{$day}
-                                        '''},
-        },
-            'replace_comlex_classes_local': {
-            '___price_class__': {
-                'string': '''{$__general_var__[{0}]['min_price']['discountedMinPriceR']|number_format}'''},
-            '__title_class__': {'string': '''{$__general_var__[{0}]['tour_name']}'''},
-            '__airline_class__': {'string': '''{$__general_var__[{0}]['airline_name']}'''},
-            '__night_class__': {'string': '''{$__general_var__[{0}]['night']}'''},
-            '__city_class__': {'string': '''{$__general_var__[{0}]['destination_city_name']}'''},
-            '__rate_count_class__': {'string': '''{$__general_var__[{0}]['rate_count']}'''},
-            '__description_class__': {'string': '''{$__general_var__[{0}]['description']}'''},
-            '__day_class__': {'string': '''{$__general_var__[{0}]['night'] + 1}'''},
-            '__degree_class__': {'string': '''{$__general_var__[{0}]['StarCode']}'''},
-            '__image_class__': {
-                'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$__general_var__[{0}]['tour_pic']}''',
-                'alt': '''{$__general_var__[{0}]['tour_name']}'''},
-            '__date_class__': {'string': '''{assign var="year" value=substr($__general_var__[{0}]['start_date'], 0, 4)}
-                                        {assign var="month" value=substr($__general_var__[{0}]['start_date'], 4, 2)}
-                                        {assign var="day" value=substr($__general_var__[{0}]['start_date'], 6)}
-                                        {$year}/{$month}/{$day}
-                                        '''},
-        },
-            'generals_simple_replacements': {
-            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$item['id']}/{$item['tour_slug']}''',
-        },
-            'generals_complex_replacements': {
-            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$__general_var__[{0}]['id']}/{$__general_var__[{0}]['tour_slug']}''',
-        },
-
-            'before_star_simple': '''{for $i = 0; $i < count($item['rate_average']); $i++}''',
-            'before_dark_star_simple': '''{for $i = count($item['rate_average']); $i < 6; $i++}''',
-            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['rate_average']); $i++}''',
-            'before_dark_star_complex': '''{for $i = count($__general_var__['rate_average']); $i < 6; $i++}''',
-
-            'unique_key': 'tour',
-            'no_chiled': '',
-
-            'replace_classes_general': {},
-
-        }
-        modulation = general_module(tours_section, project_path, lang, file_name, modul_data_array)
-        return modulation
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
-def hotels_webservice_module(hotels_section, project_path, lang = 'fa',  file_name = ''):
-    try:
-        modul_data_array = {
-            'general_region_array': ['internal', 'external'],
-            'general_type_array': [''],
-            'before_html': '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}''',
-            'before_html_local': '''
-                                {assign var="__params_var__" value=['Count'=> '__local_max_limit__', 'type' =>'__country__']}
-                                {assign var='__general_var__' value=$obj_main_page->getHotelWebservice($__params_var__)}
-                                {if $__general_var__}
-                                    {assign var='check_general' value=true}
-                                {/if}
-                                {assign var="__local_min_var__" value=__local_min__}
-                                {assign var="__local_max_var__" value=__local_max__}
-                            ''',
-            'after_html': '''{/if}''',
-            'before_foreach_local':'''
-                                {foreach $__general_var__ as $item}
-                                    {if $__local_min_var__ <= $__local_max_var__}
-                                ''',
-            'after_foreach_local':'''
-                                    {$__local_min_var__ = $__local_min_var__ + 1}
-                                    {/if}
-                                {/foreach}
-                                ''',
-            'replace_classes_local': {
-            '__title_class__': {'string': '''{$item['Name']}'''},
-            '__city_class__': {'string': '''{$item['City']}'''},
-            '__degree_class__': {'string': '''{$item['StarCode']}'''},
-            # '___price_class__': {'string': '''{$item['StarCode']}'''},
-            '__description_class__': {'string': '''{$item['comment']|truncate:300}'''},
-            '__image_class__': {
-                'src': '''{$item['Picture']}''',
-                'alt': '''{$item['City']}'''},
-        },
-            'replace_comlex_classes_local': {
-            '__title_class__': {'string': '''{$__general_var__[{0}]['Name']}'''},
-            '__city_class__': {'string': '''{$__general_var__[{0}]['City']}'''},
-            '__degree_class__': {'string': '''{$__general_var__[{0}]['StarCode']}'''},
-            # '___price_class__': {'string': '''{$__general_var__[{0}]['StarCode']}'''},
-            '__description_class__': {'string': '''{$__general_var__[{0}]['comment']|truncate:300}'''},
-            '__image_class__': {
-                'src': '''{$__general_var__[{0}]['Picture']}''',
-                'alt': '''{$__general_var__[{0}]['City']}'''},
-        },
-            'generals_simple_replacements': {
-            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailHotel/api/{$item['HotelIndex']}''',
-        },
-            'generals_complex_replacements': {
-            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailHotel/api/{$__general_var__[{0}]['HotelIndex']}''',
-        },
-
-            'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
-            'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
-            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
-            'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
-            'unique_key': 'hotel',
-            'no_chiled': '',
-
-            'replace_classes_general': {},
-
-        }
-
-        modulation = general_module(hotels_section, project_path, lang, file_name, modul_data_array)
-        return modulation
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
-def hotels_External_cities_module(hotels_section, project_path, lang = 'fa',  file_name = ''):
-    try:
-        modul_data_array = {
-            'general_region_array': ['external'],
-            'general_type_array': ['city'],
-            'before_html': '''''',
-            'before_html_local': '''                                        
-                                {assign var='__general_var__' value=$obj_main_page->getExternalHotelCity()}
-                                {if $__general_var__}
-                                    {assign var='check_general' value=true}
-                                {/if}
-                                {assign var="__local_min_var__" value=__local_min__}
-                                {assign var="__local_max_var__" value=__local_max__}
-                            ''',
-            'after_html': '''{/if}''',
-            'before_foreach_local':'''
-                                {foreach $__general_var__ as $item}
-                                    {if $__local_min_var__ <= $__local_max_var__}
-                                ''',
-            'after_foreach_local':'''
-                                    {$__local_min_var__ = $__local_min_var__ + 1}
-                                    {/if}
-                                {/foreach}
-                                ''',
-            'replace_classes_local': {
-            '__title_class__': {'string': '''{$item['DepartureCityFa']}'''},
-            '__city_class__': {'string': '''{$item['City']}'''},
-            '__image_class__': {
-                'src': '''assets/images/hotel/{$item['DepartureCode']}.jpg''',
-                'alt': '''{$item['DepartureCityFa']}'''},
-        },
-            'replace_comlex_classes_local': {
-            '__title_class__': {'string': '''{$__general_var__[{0}]['Name']}'''},
-            '__city_class__': {'string': '''{$__general_var__[{0}]['City']}'''},
-            '__image_class__': {
-                'src': '''assets/images/hotel/{$__general_var__[{0}]['DepartureCode']}.jpg''',
-                'alt': '''{$__general_var__[{0}]['DepartureCityFa']}'''},
-        },
-            'generals_simple_replacements': {
-            "__link__": '''{$smarty.const.ROOT_ADDRESS}/resultExternalHotel/{$item['CountryEn']}/{$item['DepartureCityEn']}/{$objDate->daysAfterToday('7')}/{$objDate->daysAfterToday('8')}/1/R:2-0-0''',
-        },
-            'generals_complex_replacements': {
-            "__link__": '''{$smarty.const.ROOT_ADDRESS}/resultExternalHotel/{$__general_var__[{0}]['CountryEn']}/{$__general_var__[{0}]['DepartureCityEn']}/{$objDate->daysAfterToday('7')}/{$objDate->daysAfterToday('8')}/1/R:2-0-0''',
-        },
-
-            'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
-            'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
-            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
-            'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
-            'unique_key': 'hotel_function',
-            'no_chiled': '',
-
-            'replace_classes_general': {},
-
-        }
-        modulation = general_module(hotels_section, project_path, lang, file_name, modul_data_array)
-        return modulation
     except Exception as e:
         traceback_str = traceback.format_exc()
         return str(e) + '\nTraceback:\n' + traceback_str
@@ -1875,6 +1361,434 @@ def club_weather_module(club_weather_section, project_path, lang = 'fa',  file_n
     except Exception as e:
         traceback_str = traceback.format_exc()
         return str(e) + '\nTraceback:\n' + traceback_str
+
+
+advertisment_data_array = {
+    'general_region_array': [''],
+    'general_type_array': [''],
+    'before_html': '''''',
+    'before_html_local': '''{load_presentation_object filename="functions" assign="objFunctions"}
+                            {assign var="advertises" value=$objFunctions->getConfigContentByTitle('home_page_advertise')}
+                    ''',
+    'after_html': '''{/if}''',
+    'before_foreach_local':'''{foreach $__general_var__ as $item} {if $__local_min_var__ <= $__local_max_var__}''',
+    'after_foreach_local':'''
+                            {$__local_min_var__ = $__local_min_var__ + 1}
+                            {/if}
+                        {/foreach}
+                        ''',
+
+    'replace_classes_local': {
+    '__image_class__': {'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/{$item['image']}''', 'alt': '''{$item['title']}'''},
+    '__title_class__': {'string': '''{$item['title']}'''},
+},
+    'replace_comlex_classes_local': {
+    '__image_class__': {
+        'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/{$__general_var__[{0}]['image']}''',
+        'alt': '''{$__general_var__[{0}]['alt']}'''},
+    '__title_class__': {'string': '''{$__general_var__[{0}]['title']}'''},
+},
+
+    'generals_simple_replacements': {
+    "__link__": '''{$item['link']}''',
+         },
+    'generals_complex_replacements': {
+    "__link__": '''{$__general_var__[{0}]['link']}''',
+},
+
+    'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
+    'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
+    'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
+    'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
+
+    'unique_key': 'advertisement',
+    'no_chiled': 'yes',
+    'replace_classes_general': {
+    },
+}
+
+news_data_array = {
+    'general_region_array': [''],
+    'general_type_array': [''],
+    'before_html': '''''',
+    'before_html_local': '''{assign var="__general_var__" value=$obj_main_page->getNewsArticles()}
+                    {assign var="othe_itmes" value=$__general_var__['data']}
+                    {assign var="i" value="2"}
+                    {assign var='counter' value=0}
+                    {if $othe_itmes > 0 }
+                    {if $__general_var__[0]}
+                        {assign var='check_general' value=true}
+                    {/if}
+                    ''',
+    'after_html': '''{/if}''',
+    'before_foreach_local': '''{foreach $__general_var__ as $item} {if $__local_min_var__ <= $__local_max_var__}''',
+    'after_foreach_local': '''
+                            {$__local_min_var__ = $__local_min_var__ + 1}
+                            {/if}
+                        {/foreach}
+                        ''',
+
+    'replace_classes_local': {
+        '__image_class__': {'src': '''{$item["image"]}''', 'alt': '''{$item["alt"]}'''},
+        '__title_class__': {'string': '''{$item["title"]}'''},
+        '__heading_class__': {'string': '''{$item["heading"]}'''},
+        '__date_class__': {'string': '''{$item["created_at"]}'''},
+        '__description_class__': {'string': '''{$item["description"]}'''},
+    },
+    'replace_comlex_classes_local': {
+        '__image_class__': {
+            'src': '''{$__general_var__[{0}]['image']}''',
+            'alt': '''{$__general_var__[{0}]['alt']}'''},
+        '__title_class__': {'string': '''{$__general_var__[{0}]['title']}'''},
+        '__heading_class__': {'string': '''{$__general_var__[{0}]["created_at"]}'''},
+        '__date_class__': {'string': '''{$__general_var__[{0}]['heading']}'''},
+        '__description_class__': {'string': '''{$__general_var__[{0}]['description']}'''},
+    },
+
+    'generals_simple_replacements': {
+        "__link__": '''{$item['link']}''',
+    },
+    'generals_complex_replacements': {
+        "__link__": '''{$__general_var__[{0}]['link']}''',
+    },
+
+    'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
+    'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
+    'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
+    'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
+
+    'unique_key': 'news',
+    'no_chiled': 'yes',
+    'replace_classes_general': {
+        '__all_link_href_class__': {'href': '''{$smarty.const.ROOT_ADDRESS}/news'''},
+    },
+}
+
+about_us_data_array = {
+    'general_region_array': [''],
+    'general_type_array': [''],
+    'before_html': '''{$check_general = true}''',
+    'before_html_local': '''''',
+    'after_html': '''{/if}''',
+    'before_foreach_local': '''''',
+    'after_foreach_local': '''''',
+
+    'replace_classes_local': {},
+    'replace_comlex_classes_local': {},
+
+    'generals_simple_replacements': {},
+    'generals_complex_replacements': {},
+
+    'before_star_simple': '''''',
+    'before_dark_star_simple': '',
+    'before_star_complex': '''''',
+    'before_dark_star_complex': '''''',
+
+    'unique_key': 'about_us',
+    'no_chiled': 'yes',
+    'replace_classes_general': {
+        '__aboutUs_class__': {'string': '''{$htmlContent = $about['body']|strip_tags}{$htmlContent|truncate:300}'''},
+        '__aboutUs_class_href__': {'href': '''{$smarty.const.ROOT_ADDRESS}/aboutUs'''},
+        '__mobile_class__': {'string': '''{$smarty.const.CLIENT_MOBILE}''',
+                             'href': '''tel:{$smarty.const.CLIENT_MOBILE}'''},
+        '__phone_class__': {'string': '''{$smarty.const.CLIENT_PHONE}''',
+                            'href': '''tel:{$smarty.const.CLIENT_PHONE}'''},
+        '__email_class__': {'string': '''{$smarty.const.CLIENT_EMAIL}''',
+                            'href': '''mailto:{$smarty.const.CLIENT_EMAIL}'''},
+    },
+}
+
+newsletter_data_array = {
+    'general_region_array': [''],
+    'general_type_array': [''],
+    'before_html': '''{$check_general = true}''',
+    'before_html_local': '''''',
+    'after_html': '''{/if}''',
+    'before_foreach_local': '''''',
+    'after_foreach_local': '''''',
+
+    'replace_classes_local': {},
+    'replace_comlex_classes_local': {},
+
+    'generals_simple_replacements': {},
+    'generals_complex_replacements': {},
+
+    'before_star_simple': '''''',
+    'before_dark_star_simple': '',
+    'before_star_complex': '''''',
+    'before_dark_star_complex': '''''',
+
+    'unique_key': 'newsletter',
+    'no_chiled': 'yes',
+    'replace_classes_general': {
+        '__name_class__': {'name': '''NameSms''', 'id': '''NameSms''', 'class': '''full-name-js'''},
+        '__email_class__': {'name': '''EmailSms''', 'name': '''EmailSms''', 'class': '''email-js'''},
+        '__phone_class__': {'name': '''CellSms''', 'id': '''CellSms''', 'class': '''mobile-js'''},
+        '__submit_class__': {'onclick': 'submitNewsLetter()'},
+    },
+}
+
+blog_data_array = {
+    'general_region_array': [''],
+    'general_type_array': [''],
+    'before_html': '''''',
+    'before_html_local': '''
+                {*with category*}
+                {*{assign var="search_array" value=['section'=>'mag','category'=>1,'limit'=>'__local_max_limit__']}*}
+                {*{assign var='__general_var__' value=$obj_main_page->getCategoryArticles($search_array)}*}
+                {*{assign var='counter' value=0}*}
+                {*{assign var="article_count" value=$__general_var__|count}*}
+
+                {assign var="data_search_blog" value=['service'=>'Public','section'=>'article', 'limit' =>'__local_max_limit__']}
+                {assign var='__general_var__' value=$obj_main_page->articlesPosition($data_search_blog)}
+                {assign var='counter' value=0}
+                {assign var="article_count" value=$__general_var__|count}
+                {if $__general_var__[0]}
+                    {assign var='check_general' value=true}
+                {/if}
+            ''',
+    'after_html': '''{/if}''',
+    'before_foreach_local': '''
+                        {foreach $__general_var__ as $key => $item}
+                            {if $__local_min_var__ <= $__local_max_var__}
+                        ''',
+    'after_foreach_local': '''
+                            {$__local_min_var__ = $__local_min_var__ + 1}
+                            {/if}
+                        {/foreach}
+                        ''',
+
+    'replace_classes_local': {
+        '__image_class__': {'src': '''{$item["image"]}''', 'alt': '''{$item["alt"]}'''},
+        '__title_class__': {'string': '''{$item["title"]}'''},
+        '__degree_class__': {'string': '''{$item["rates"]["average"]}'''},
+        '__category_class__': {'string': '''{$item['categories_array'][0]['title']}'''},
+        '__heading_class__': {'string': '''{$item["heading"]}'''},
+        '__date_class__': {'string': '''{$item["created_at"]}'''},
+    },
+    'replace_comlex_classes_local': {
+        '__image_class__': {
+            'src': '''{$__general_var__[{0}]['image']}''',
+            'alt': '''{$__general_var__[{0}]['alt']}'''},
+        '__title_class__': {'string': '''{$__general_var__[{0}]['title']}'''},
+        '__degree_class__': {'string': '''{$__general_var__[{0}]["rates"]["average"]}'''},
+        '__category_class__': {'string': '''{$__general_var__[{0}]['categories_array'][0]['title']}'''},
+        '__heading_class__': {'string': '''{$__general_var__[{0}]['heading']}'''},
+        '__date_class__': {'string': '''{$__general_var__[{0}]['created_at']}'''},
+    },
+
+    'generals_simple_replacements': {
+        "__airline__": '''{$item['link']}''',
+        "__link__": '''{$item['link']}''',
+    },
+    'generals_complex_replacements': {
+        "__link__": '''{$__general_var__[{0}]['link']}''',
+    },
+
+    'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
+    'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
+    'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
+    'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
+
+    'unique_key': 'blog',
+    'no_chiled': 'yes',
+    'replace_classes_general': {},
+}
+
+tours_data_array = {
+    'general_region_array': ['internal', 'external', ''],
+    'general_type_array': ['', 'special'],
+    'before_html': '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}''',
+    'before_html_local': '''{assign var="__params_var__" value=['type'=>'__type__','limit'=> '__local_max_limit__','dateNow' => $dateNow, 'country' =>'__country__','city' => null]}
+                        {assign var='__general_var__' value=$obj_main_page->getToursReservation($__params_var__)}
+                        {if $__general_var__}
+                            {assign var='check_general' value=true}
+                        {/if}
+                        {assign var="__local_min_var__" value=__local_min__}
+                        {assign var="__local_max_var__" value=__local_max__}
+                    ''',
+    'after_html': '''{/if}''',
+    'before_foreach_local': '''
+                        {foreach $__general_var__ as $item}
+                            {if $__local_min_var__ <= $__local_max_var__}
+                        ''',
+    'after_foreach_local': '''
+                            {$__local_min_var__ = $__local_min_var__ + 1}
+                            {/if}
+                        {/foreach}
+                        ''',
+    'replace_classes_local': {
+        '___price_class__': {'string': '''{$item['min_price']['discountedMinPriceR']|number_format}'''},
+        '__title_class__': {'string': '''{$item['tour_name']}'''},
+        '__airline_class__': {'string': '''{$item['airline_name']}'''},
+        '__night_class__': {'string': '''{$item['night']}'''},
+        '__day_class__': {'string': '''{$item['night'] + 1}'''},
+        '__city_class__': {'string': '''{$item['destination_city_name']}'''},
+        '__rate_count_class__': {'string': '''{$item['rate_count']}'''},
+        '__description_class__': {'string': '''{$item['description']}'''},
+        '__degree_class__': {'string': '''{$item['StarCode']}'''},
+        '__image_class__': {
+            'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$item['tour_pic']}''',
+            'alt': '''{$item['tour_name']}'''},
+        '__date_class__': {'string': '''{assign var="year" value=substr($item['start_date'], 0, 4)}
+                                {assign var="month" value=substr($item['start_date'], 4, 2)}
+                                {assign var="day" value=substr($item['start_date'], 6)}
+                                {$year}/{$month}/{$day}
+                                '''},
+    },
+    'replace_comlex_classes_local': {
+        '___price_class__': {
+            'string': '''{$__general_var__[{0}]['min_price']['discountedMinPriceR']|number_format}'''},
+        '__title_class__': {'string': '''{$__general_var__[{0}]['tour_name']}'''},
+        '__airline_class__': {'string': '''{$__general_var__[{0}]['airline_name']}'''},
+        '__night_class__': {'string': '''{$__general_var__[{0}]['night']}'''},
+        '__city_class__': {'string': '''{$__general_var__[{0}]['destination_city_name']}'''},
+        '__rate_count_class__': {'string': '''{$__general_var__[{0}]['rate_count']}'''},
+        '__description_class__': {'string': '''{$__general_var__[{0}]['description']}'''},
+        '__day_class__': {'string': '''{$__general_var__[{0}]['night'] + 1}'''},
+        '__degree_class__': {'string': '''{$__general_var__[{0}]['StarCode']}'''},
+        '__image_class__': {
+            'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$__general_var__[{0}]['tour_pic']}''',
+            'alt': '''{$__general_var__[{0}]['tour_name']}'''},
+        '__date_class__': {'string': '''{assign var="year" value=substr($__general_var__[{0}]['start_date'], 0, 4)}
+                                {assign var="month" value=substr($__general_var__[{0}]['start_date'], 4, 2)}
+                                {assign var="day" value=substr($__general_var__[{0}]['start_date'], 6)}
+                                {$year}/{$month}/{$day}
+                                '''},
+    },
+    'generals_simple_replacements': {
+        "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$item['id']}/{$item['tour_slug']}''',
+    },
+    'generals_complex_replacements': {
+        "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$__general_var__[{0}]['id']}/{$__general_var__[{0}]['tour_slug']}''',
+    },
+
+    'before_star_simple': '''{for $i = 0; $i < count($item['rate_average']); $i++}''',
+    'before_dark_star_simple': '''{for $i = count($item['rate_average']); $i < 6; $i++}''',
+    'before_star_complex': '''{for $i = 0; $i < count($__general_var__['rate_average']); $i++}''',
+    'before_dark_star_complex': '''{for $i = count($__general_var__['rate_average']); $i < 6; $i++}''',
+
+    'unique_key': 'tour',
+    'no_chiled': '',
+
+    'replace_classes_general': {},
+
+}
+
+hotels_webservice_data_array = {
+    'general_region_array': ['internal', 'external'],
+    'general_type_array': [''],
+    'before_html': '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}''',
+    'before_html_local': '''
+                        {assign var="__params_var__" value=['Count'=> '__local_max_limit__', 'type' =>'__country__']}
+                        {assign var='__general_var__' value=$obj_main_page->getHotelWebservice($__params_var__)}
+                        {if $__general_var__}
+                            {assign var='check_general' value=true}
+                        {/if}
+                        {assign var="__local_min_var__" value=__local_min__}
+                        {assign var="__local_max_var__" value=__local_max__}
+                    ''',
+    'after_html': '''{/if}''',
+    'before_foreach_local': '''
+                        {foreach $__general_var__ as $item}
+                            {if $__local_min_var__ <= $__local_max_var__}
+                        ''',
+    'after_foreach_local': '''
+                            {$__local_min_var__ = $__local_min_var__ + 1}
+                            {/if}
+                        {/foreach}
+                        ''',
+    'replace_classes_local': {
+        '__title_class__': {'string': '''{$item['Name']}'''},
+        '__city_class__': {'string': '''{$item['City']}'''},
+        '__degree_class__': {'string': '''{$item['StarCode']}'''},
+        # '___price_class__': {'string': '''{$item['StarCode']}'''},
+        '__description_class__': {'string': '''{$item['comment']|truncate:300}'''},
+        '__image_class__': {
+            'src': '''{$item['Picture']}''',
+            'alt': '''{$item['City']}'''},
+    },
+    'replace_comlex_classes_local': {
+        '__title_class__': {'string': '''{$__general_var__[{0}]['Name']}'''},
+        '__city_class__': {'string': '''{$__general_var__[{0}]['City']}'''},
+        '__degree_class__': {'string': '''{$__general_var__[{0}]['StarCode']}'''},
+        # '___price_class__': {'string': '''{$__general_var__[{0}]['StarCode']}'''},
+        '__description_class__': {'string': '''{$__general_var__[{0}]['comment']|truncate:300}'''},
+        '__image_class__': {
+            'src': '''{$__general_var__[{0}]['Picture']}''',
+            'alt': '''{$__general_var__[{0}]['City']}'''},
+    },
+    'generals_simple_replacements': {
+        "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailHotel/api/{$item['HotelIndex']}''',
+    },
+    'generals_complex_replacements': {
+        "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailHotel/api/{$__general_var__[{0}]['HotelIndex']}''',
+    },
+
+    'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
+    'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
+    'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
+    'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
+    'unique_key': 'hotel',
+    'no_chiled': '',
+
+    'replace_classes_general': {},
+
+}
+
+hotels_external_cities_data_array = {
+    'general_region_array': ['external'],
+    'general_type_array': ['city'],
+    'before_html': '''''',
+    'before_html_local': '''                                        
+                        {assign var='__general_var__' value=$obj_main_page->getExternalHotelCity()}
+                        {if $__general_var__}
+                            {assign var='check_general' value=true}
+                        {/if}
+                        {assign var="__local_min_var__" value=__local_min__}
+                        {assign var="__local_max_var__" value=__local_max__}
+                    ''',
+    'after_html': '''{/if}''',
+    'before_foreach_local': '''
+                        {foreach $__general_var__ as $item}
+                            {if $__local_min_var__ <= $__local_max_var__}
+                        ''',
+    'after_foreach_local': '''
+                            {$__local_min_var__ = $__local_min_var__ + 1}
+                            {/if}
+                        {/foreach}
+                        ''',
+    'replace_classes_local': {
+        '__title_class__': {'string': '''{$item['DepartureCityFa']}'''},
+        '__city_class__': {'string': '''{$item['City']}'''},
+        '__image_class__': {
+            'src': '''assets/images/hotel/{$item['DepartureCode']}.jpg''',
+            'alt': '''{$item['DepartureCityFa']}'''},
+    },
+    'replace_comlex_classes_local': {
+        '__title_class__': {'string': '''{$__general_var__[{0}]['Name']}'''},
+        '__city_class__': {'string': '''{$__general_var__[{0}]['City']}'''},
+        '__image_class__': {
+            'src': '''assets/images/hotel/{$__general_var__[{0}]['DepartureCode']}.jpg''',
+            'alt': '''{$__general_var__[{0}]['DepartureCityFa']}'''},
+    },
+    'generals_simple_replacements': {
+        "__link__": '''{$smarty.const.ROOT_ADDRESS}/resultExternalHotel/{$item['CountryEn']}/{$item['DepartureCityEn']}/{$objDate->daysAfterToday('7')}/{$objDate->daysAfterToday('8')}/1/R:2-0-0''',
+    },
+    'generals_complex_replacements': {
+        "__link__": '''{$smarty.const.ROOT_ADDRESS}/resultExternalHotel/{$__general_var__[{0}]['CountryEn']}/{$__general_var__[{0}]['DepartureCityEn']}/{$objDate->daysAfterToday('7')}/{$objDate->daysAfterToday('8')}/1/R:2-0-0''',
+    },
+
+    'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
+    'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
+    'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
+    'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
+    'unique_key': 'hotel_function',
+    'no_chiled': '',
+
+    'replace_classes_general': {},
+
+}
 
 
 def general_module(generals_section, project_path, lang = 'fa',  file_name = '', modul_data_array = {} ):
@@ -2063,14 +1977,7 @@ def general_module(generals_section, project_path, lang = 'fa',  file_name = '',
                             social_element.insert_before(befor_social_media_soup)
                             social_element = local_section.find(
                                 class_=lambda classes: classes and '__social_class__' in classes)
-                            repeatable_social_links = {
-                                '__telegram_class__': '{if $telegramHref}{$telegramHref}{/if}',
-                                '__whatsapp_class__': '{if $whatsappHref}{$whatsappHref}{/if}',
-                                '__instagram_class__': '{if $instagramHref}{$instagramHref}{/if}',
-                                '__linkdin_class__': '{if $linkeDinHref}{$linkeDinHref}{/if}',
-                                '__aparat_class__': '{if $aparatHref}{$aparatHref}{/if}',
-                                '__youtube_class__': '{if $youTubeHref}{$youTubeHref}{/if}',
-                            }
+
                             for key, val in repeatable_social_links.items():
                                 helper.replace_attribute(social_element, key, 'href', val)
 

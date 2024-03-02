@@ -184,9 +184,9 @@ hooks:
         __fast_flight_search__internal__single_city__: پرنت جستجوی سریع تب دار داخلی
         __fast_flight_search__external__single_city__: پرنت جستجوی سریع تب دار خارجی
 
-        __button__
-        __origin__cities__
-        __destination__cities__
-        __origin__
-        __destination__
-        __final_destination_0
+        __button__        :شهر های مبدا, مخصوص چند مسیره
+        __origin__cities__  :دکمه های مبدا, مخصوص چند مسیره
+        __destination__cities__  :  پرنت شهر های مقصد
+        __origin__         :  کلاس شهر مبدا, داخل مقاصد
+        __destination__ :  کلاس شهر مقصد, داخل مقاصد
+        __final_destination_0 : شمارنده مقاصد

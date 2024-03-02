@@ -19,6 +19,7 @@ def item_numbers(section, pattern):
         if match:
             number = match.group(1)
             numbers.append(number)
+
     return numbers
 
 def replace_placeholders_recursive(tag, replacement_data):
@@ -298,14 +299,13 @@ def unit_test_clean_string(string):
     string = pattern.sub('', string)
     pattern = re.compile(r'192\.168\.1\.100/gds/view/[^/]+/project_files')
     string = pattern.sub('', string)
-    string = string.replace("{$smarty.const.ROOT_ADDRESS}", "://192.168.1.100/gds/fa")
     string = string.replace("https://192.168.1.100/gds/view/WW12/", "")
     string = string.replace("http://192.168.1.100/gds/view/WW12/", "")
     string = string.replace("http://192.168.1.100/gds/view/WW12/", "")
     string = BeautifulSoup(string, 'html.parser')
     string = string.prettify()
-    string = string.replace("https", "")
-    string = string.replace("http", "")
+    string = string.replace("http://", "")
+    string = string.replace("project_files", "")
     string = string.replace("/>", ">")
     string = string.replace("  ", "")
     string = string.replace("</img>", "")
@@ -542,6 +542,24 @@ def extract_json_data_from_url(class_name, url = 'http://192.168.1.100/gds/fa/mo
         if json is not None and json:
             return f'{json}'
         return 'error for updating unit_test_data folder'
+    except Exception as e:
+        traceback_str = traceback.format_exc()
+        return str(e) + '\nTraceback:\n' + traceback_str
+
+
+
+def get_general_data(unique_key):
+    try:
+        general_data = []
+        json_html = extract_json_data_from_url(unique_key)
+        json_html = BeautifulSoup(json_html, 'html.parser')
+        json_element = json_html.find(class_='data_modular')
+        if json_element:
+            json_string = json_element.get_text()
+            general_data = json.loads(json_string)
+        else:
+            return 'data dosent loaded'
+        return general_data
     except Exception as e:
         traceback_str = traceback.format_exc()
         return str(e) + '\nTraceback:\n' + traceback_str

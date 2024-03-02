@@ -9,8 +9,7 @@ import requests
 import json
 import codecs
 from modular import helper_functions as helper
-import difflib
-from html_text import extract_text
+from modular import modular as rpl
 
 complex_items_pattern = re.compile(r'__i_modular_c_item_class_(\d+)')
 simple_items_pattern = re.compile(r'__i_modular_nc_item_class_(\d+)')
@@ -18,13 +17,15 @@ complex_items_class = "__i_modular_c_item_class_"
 simple_items_class = "__i_modular_nc_item_class_"
 script_directory = os.path.dirname(__file__)  # Get the directory of the script
 unit_test_json_files_directory = os.path.join(script_directory, '../update_data/unit_test_data')
+menu_data = helper.get_general_data('menu_data')
+repeatable_social_links = helper.get_general_data('social_data')
+user_data = helper.get_general_data('user_data')
 
 
-def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_online, lang='fa'):
+def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_online, lang='fa', modul_data_array = {}):
     try:
         complex_items_numbers = []
         simple_items_numbers = []
-
         complex_items_numbers = helper.item_numbers(banner_gallery_section, complex_items_pattern)
         simple_items_numbers = helper.item_numbers(banner_gallery_section, simple_items_pattern)
         complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
@@ -77,181 +78,47 @@ def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_onli
 
         banner_gallery_section = f'{banner_gallery_section}'
         banner_gallery_section_online = f'{banner_gallery_section_online}'
+        
+        banner_gallery_section = BeautifulSoup(banner_gallery_section, "html.parser")
+        banner_gallery_section_online = BeautifulSoup(banner_gallery_section_online, "html.parser")
+        search_box = banner_gallery_section.find(class_='i_modular_searchBox')
+        search_box_online = banner_gallery_section_online.find(class_='i_modular_searchBox')
 
-        if helper.compare_html_strings(banner_gallery_section_online, banner_gallery_section):
-            return '<div style="background: green;padding: 15px;">' + "تست سکشن بنر موفقیت آمیز بود." + "</div>"
+        search_box.replace_with('')
+        search_box_online.replace_with('')
 
-        return '<div style="background: red;padding: 15px;">سکشن بنر خطا دارد..<section class="debug" style="display:none;"><div class="unit-test-section" >' + banner_gallery_section + '</div><div class="online section"> ' + banner_gallery_section_online + '</div></section></div>'
+        banner_gallery_section = helper.unit_test_clean_string(banner_gallery_section)
+        banner_gallery_section_online = helper.unit_test_clean_string(banner_gallery_section_online)
+
+        banner_gallery_section_serialized = helper.serialize_string(banner_gallery_section)
+        banner_gallery_section_online_serialized = helper.serialize_string(banner_gallery_section_online)
+
+        if helper.compare_html_strings(banner_gallery_section_online_serialized, banner_gallery_section_serialized):
+            return '<div style="background: green;padding: 15px;">' + "تست سکشن  موفقیت آمیز بود." + "</div>"
+
+        return '<div style="background: red;padding: 15px;">سکشن  خطا دارد..<section class="debug" style="display:none;"><div class="unit-test-section" >' + banner_gallery_section + '</div><div class="online section"> ' + banner_gallery_section_online + '</div></section></div>'
     except requests.exceptions.RequestException as e:
         trace = traceback.format_exc()
         error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
         return error_message
 
 
-def unit_test_news_old(news_section, news_section_online , lang = 'fa'):
+def unit_test_menu(menu_section, menu_section_online , lang = 'fa', modul_data_array = {}):
     try:
-        json_file_path = os.path.join(unit_test_json_files_directory, 'news_data.json')
-
-        complex_items_numbers = []
-        simple_items_numbers = []
-
-        complex_items_numbers = helper.item_numbers(news_section, complex_items_pattern)
-        simple_items_numbers = helper.item_numbers(news_section, simple_items_pattern)
-        complex_items_numbers_max = max(complex_items_numbers) if complex_items_numbers else '0'
-        simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
-        simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
-        max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
-
-        # Initialize an empty list to store the data
-        news_data = []
-        json_string = codecs.open(json_file_path, 'r', encoding='utf-8').read()
-        news_data = json.loads(json_string)
-
-        for num in simple_items_numbers:
-            simple_element = news_section.find(class_=simple_items_class + num)
-            numInt = int(num)  # Convert the string to an integer
-            if 0 <= numInt < len(news_data):
-                news_complex_replacement_data = {
-                    "__link__": news_data[numInt]['link'],
-                }
-                news_replacement_data = {
-                    simple_items_class + num: simple_items_class + simple_items_numbers[0],
-                    "__link__": news_data[int(numInt)]['link'],
-                }
-                helper.replace_attribute(simple_element, '__image_class__', 'src', news_data[int(numInt)]['image'])
-                helper.replace_attribute(simple_element, '__image_class__', 'alt', news_data[int(numInt)]['title'])
-                helper.replace_attribute(simple_element, '__title_class__', 'string', news_data[int(numInt)]['title'])
-                helper.replace_attribute(simple_element, '__heading_class__', 'string', news_data[int(numInt)]['heading'])
-                helper.replace_attribute(simple_element, '__description_class__', 'string', news_data[int(numInt)]['description'])
-                simple_element = news_section.find(class_=simple_items_class + num)
-                simple_element = helper.replace_placeholders(simple_element, news_replacement_data)
-            else:
-                simple_element.decompose()
-
-        for num in complex_items_numbers:
-            complex_element = news_section.find(class_=complex_items_class + num)
-            numInt = int(num)  # Convert the string to an integer
-            if 0 <= numInt < len(news_data):
-                news_complex_replacement_data = {
-                    "__link__": news_data[numInt]['link'],
-                }
-                helper.replace_attribute(complex_element, '__image_class__', 'src', news_data[int(numInt)]['image'])
-                helper.replace_attribute(complex_element, '__image_class__', 'alt', news_data[int(numInt)]['alt'])
-                helper.replace_attribute(complex_element, '__title_class__', 'string', news_data[int(numInt)]['title'])
-                helper.replace_attribute(complex_element, '__heading_class__', 'string', news_data[int(numInt)]['heading'])
-                helper.replace_attribute(complex_element, '__description_class__', 'string', news_data[int(numInt)]['description'])
-                complex_element = news_section.find(class_=complex_items_class + num)
-                complex_element_final = helper.replace_placeholders(complex_element, news_complex_replacement_data)
-            else:
-                complex_element.decompose()
 
 
-
-        news_section_online = news_section_online.prettify()
-        news_section = news_section.prettify()
-
-        news_section = news_section.replace("__all_link_href__", "://192.168.1.100/gds/fa/news")
-
-
-        news_section = f'{news_section}'
-
-        for num in simple_items_numbers:
-            news_section = news_section.replace(simple_items_class + num,simple_items_class + simple_items_numbers[0])
+        links = rpl.repeatable_links
+        repeatable_links = {}
+        for key, value in links.items():
+            updated_key = key.replace('{$smarty.const.ROOT_ADDRESS}', menu_data['main'])
+            updated_key = updated_key.replace('https://{$smarty.const.CLIENT_MAIN_DOMAIN}', menu_data['home'])
+            repeatable_links[updated_key] = value
 
 
-
-        news_section_online = news_section_online.replace("https", "")
-        news_section_online = news_section_online.replace("http", "")
-        news_section = news_section.replace("https", "")
-        news_section = news_section.replace("http", "")
-
-        news_section_online = news_section_online.replace("</img>", "")
-        news_section = news_section.replace("/>", ">")
-
-
-        if helper.compare_html_strings(news_section_online, news_section):
-            return '<div style="background: green;padding: 15px;">' + "تست سکشن اخبار موفقیت آمیز بود." + "</div>"
-
-        return '<div style="background: red;padding: 15px;">طرح و سکشن بلاگ ماژول گذاری شده هماهنگ نیستند.<section class="debug" style="display:none;"><div class="unit-test-section" >' + news_section + '</div><div class="online section"> ' + news_section_online +'</div></section></div>'
-
-    except requests.exceptions.RequestException as e:
-        trace = traceback.format_exc()
-        error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
-        return error_message
-
-
-def unit_test_newsletter(newsletter_section, newsletter_section_online, lang='fa'):
-    try:
-        helper.replace_attribute(newsletter_section, '__name_class__', 'name', 'NameSms')
-        helper.replace_attribute(newsletter_section, '__email_class__', 'name', 'EmailSms')
-        helper.replace_attribute(newsletter_section, '__phone_class__', 'name', 'CellSms')
-
-        helper.replace_attribute(newsletter_section, '__name_class__', 'id', 'NameSms')
-        helper.replace_attribute(newsletter_section, '__email_class__', 'id', 'EmailSms')
-        helper.replace_attribute(newsletter_section, '__phone_class__', 'id', 'CellSms')
-
-        helper.replace_attribute(newsletter_section, '__name_class__', 'class', 'full-name-js')
-        helper.replace_attribute(newsletter_section, '__email_class__', 'class', 'email-js')
-        helper.replace_attribute(newsletter_section, '__phone_class__', 'class', 'mobile-js')
-
-        helper.replace_attribute(newsletter_section, '__submit_class__', 'onclick', 'submitNewsLetter()')
-
-        newsletter_final_content = f'{newsletter_section}'
-        newsletter_final_content = newsletter_final_content.replace("&gt;", ">")
-        newsletter_final_content = newsletter_final_content.replace("&lt;", "<")
-
-        newsletter_section_online = newsletter_section_online.prettify()
-        newsletter_section = newsletter_section.prettify()
-        newsletter_section = f'{newsletter_section}'
-        newsletter_section_online = newsletter_section_online.replace("</img>", "")
-        newsletter_section = newsletter_section.replace("/>", ">")
-
-        # Usage
-        if helper.compare_html_strings(newsletter_section_online, newsletter_section):
-            return '<div style="background: green;padding: 15px;">' + "تست سکشن خبرنامه موفقیت آمیز بود." + "</div>"
-
-        return '<div style="background: red;padding: 15px;">سکشن خبرنامه خطا دارد..<section class="debug" style="display:none;"><div class="unit-test-section" >' + newsletter_section + '</div><div class="online section"> ' + newsletter_section_online + '</div></section></div>'
-    except requests.exceptions.RequestException as e:
-        trace = traceback.format_exc()
-        error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
-        return error_message
-
-
-def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
-    try:
-        json_file_path = os.path.join(unit_test_json_files_directory, 'menu_data.json')
-
-
-        # Initialize an empty list to store the data
-        menu_data = []
-        json_string = codecs.open(json_file_path, 'r', encoding='utf-8').read()
-        menu_data = json.loads(json_string)
-
-        repeatable_links = {
-                'پرواز': 'http://192.168.1.100/gds/'+ lang +'/page/flight',
-                'پرواز': 'http://192.168.1.100/gds/'+ lang +'/page/flight',
-                'هتل': 'http://192.168.1.100/gds/'+ lang +'/page/hotel',
-                'بیمه': 'http://192.168.1.100/gds/'+ lang +'/page/insurance',
-                'انتقاد و پیشنهادات': 'http://192.168.1.100/gds/'+ lang +'/feedback',
-                'نظر سنجی': 'http://192.168.1.100/gds/'+ lang +'/vote',
-                'باشگاه مسافران': 'http://192.168.1.100/gds/'+ lang +'/loginUser',
-                'پیگیری خرید': 'http://192.168.1.100/gds/'+ lang +'/UserTracking',
-                'وبلاگ': 'http://192.168.1.100/gds/'+ lang +'/mag',
-                'ویدئو ها': 'http://192.168.1.100/gds/'+ lang +'/video',
-                'نمایندگی ها': 'http://192.168.1.100/gds/'+ lang +'/agencyList',
-                'همکاری با ما': 'http://192.168.1.100/gds/'+ lang +'/همکاری با ما',
-                'نرخ ارز': 'http://192.168.1.100/gds/'+ lang +'/currency',
-                'سفر نامه': 'http://192.168.1.100/gds/'+ lang +'/recommendation',
-                'سفارت': 'http://192.168.1.100/gds/'+ lang +'/embassies',
-                'پرسش و پاسخ': 'http://192.168.1.100/gds/'+ lang +'/faq',
-                'دقیقه 90': 'http://192.168.1.100/gds/'+ lang +'/lastMinute',
-                'اخبار سایت': 'http://192.168.1.100/gds/'+ lang +'/news',
-                'معرفی ايران': 'http://192.168.1.100/gds/'+ lang +'/aboutIran',
-                'قوانین و مقررات': 'http://192.168.1.100/gds/'+ lang +'/rules',
-                'درباره ما': 'http://192.168.1.100/gds/'+ lang +'/aboutUs',
-                'تماس با ما': 'http://192.168.1.100/gds/'+ lang +'/contactUs',
-                'پرداخت آنلاین': 'http://192.168.1.100/gds/'+ lang +'/pay',
-        }
+        social_element = menu_section.find(class_=lambda classes: classes and '__social_class__' in classes)
+        if social_element:
+            for key, val in repeatable_social_links.items():
+                helper.replace_attribute(social_element, key, 'href', val)
 
         helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', "<span class='logined-name'>ورود / ثبت نام</span>")
         helper.replace_attribute_by_text(menu_section, 'الدخول / يسجل' , 'string', "<span class='logined-name'>الدخول / يسجل</span>")
@@ -268,11 +135,9 @@ def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
                     new_tag = BeautifulSoup(f'{simple_element}\n{after_login}')
                     simple_element.replace_with(new_tag)
 
-        # return f'{menu_section}'
-
-        for key, val in repeatable_links.items():
-            helper.replace_attribute_by_text(menu_section, key, 'href', val)
-
+        for key, val_set in repeatable_links.items():
+            for text in val_set:
+                helper.replace_attribute_by_text(menu_section, text, 'href', key)
 
         menu_section_online = menu_section_online.prettify()
         menu_section = menu_section.prettify()
@@ -287,7 +152,7 @@ def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
         if helper.compare_html_strings(menu_section_online, menu_section):
             return '<div style="background: green;padding: 15px;">' + "تست سکشن منوی هدر موفقیت آمیز بود." + "</div>"
 
-        return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="unit-test-section" >' + menu_section + '</div><div class="online section"> ' + menu_section_online +'</div></section></div>'
+        return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="online section" >' + menu_section_online + '</div><div class="unit-test-section"> ' + menu_section +'</div></section></div>'
 
     except requests.exceptions.RequestException as e:
         trace = traceback.format_exc()
@@ -295,45 +160,35 @@ def unit_test_menu(menu_section, menu_section_online , lang = 'fa'):
         return error_message
 
 
-def unit_test_footer(footer_section, footer_section_online , lang = 'fa'):
+def unit_test_footer(footer_section, footer_section_online , lang = 'fa', modul_data_array = {}):
     try:
 
-        script_directory = os.path.dirname(__file__)  # Get the directory of the script
-        unit_test_files_directory = os.path.join(script_directory, 'unit_test_fles')
-
-
-
         social_element = footer_section.find(class_=lambda classes: classes and '__social_class__' in classes)
-        repeatable_social_links = {
-            '__telegram_class__': 'ssssss',
-            '__whatsapp_class__': 'https://web.whatsapp.com/send?phone=09195972979',
-            '__instagram_class__': 'https://instagram.com/mizbanfly',
-        }
         if social_element:
             for key, val in repeatable_social_links.items():
                 helper.replace_attribute(social_element, key, 'href', val)
+        
+        links = rpl.repeatable_links
+        repeatable_links = {}
+        for key, value in links.items():
+            updated_key = key.replace('{$smarty.const.ROOT_ADDRESS}', menu_data['main'])
+            updated_key = updated_key.replace('https://{$smarty.const.CLIENT_MAIN_DOMAIN}', menu_data['home'])
+            repeatable_links[updated_key] = value
 
-        repeatable_links = {
-                'پرواز': 'http://192.168.1.100/gds/'+ lang + '/page/flight',
-                'پیگیری خرید': 'http://192.168.1.100/gds/'+ lang + '/UserTracking',
-                'وبلاگ': 'http://192.168.1.100/gds/'+ lang + '/mag',
-                'اخبار سایت': 'http://192.168.1.100/gds/'+ lang + '/news',
-                'معرفی ايران': 'http://192.168.1.100/gds/'+ lang + '/aboutIran',
-                'قوانین و مقررات': 'http://192.168.1.100/gds/'+ lang + '/rules',
-                'درباره ما': 'http://192.168.1.100/gds/'+ lang + '/aboutUs',
-                'تماس با ما': 'http://192.168.1.100/gds/'+ lang + '/contactUs',
-                'پرداخت آنلاین': 'http://192.168.1.100/gds/'+ lang + '/pay',
+        for key, val_set in repeatable_links.items():
+            for text in val_set:
+                helper.replace_attribute_by_text(footer_section, text, 'href', key)
 
-        }
-
-        for key, val in repeatable_links.items():
-            helper.replace_attribute_by_text(footer_section, key, 'href', val)
-
-        helper.replace_attribute(footer_section, '__aboutUs_class__', 'string',"تست میکنیم 1 2 3")
-        helper.replace_attribute(footer_section, '__address_class__', 'string',            " آدرس :  تهران، خیابان کارگر شمالی، کوچه چهارم، پلاک ۸ ،ساختمان پلاتین، طبقه سوم، واحدجنوبی")
-        helper.replace_attribute(footer_section, '__mobile_class__', 'string', '''09353834714''')
-        helper.replace_attribute(footer_section, '__mobile_class__', 'href', '''tel:09353834714''')
-        footer_section = helper.replace_placeholders(footer_section,{'__aboutUsLink__': 'https://192.168.1.100/gds/fa/aboutUs'})
+        helper.replace_attribute(footer_section, '__aboutUs_class__', 'string',user_data['about'])
+        helper.replace_attribute(footer_section, '__aboutUs_class_href__', 'href', menu_data['main'] + '''/aboutUs''')
+        helper.replace_attribute(footer_section, '__address_class__', 'string',user_data['address'])
+        helper.replace_attribute(footer_section, '__mobile_class__', 'string', user_data['mobile'])
+        helper.replace_attribute(footer_section, '__mobile_class__', 'href', 'tel:' + user_data['mobile'])
+        helper.replace_attribute(footer_section, '__phone_class__', 'string', user_data['phone'])
+        helper.replace_attribute(footer_section, '__phone_class__', 'href', 'tel:' + user_data['phone'])
+        helper.replace_attribute(footer_section, '__email_class__', 'string', user_data['email'])
+        helper.replace_attribute(footer_section, '__email_class__', 'href','mailto:' + user_data['email'])
+        footer_section = helper.replace_placeholders(footer_section,{'__aboutUsLink__':  menu_data['main'] + '/aboutUs'})
 
         footer_section = BeautifulSoup(footer_section, "html.parser")
 
@@ -343,15 +198,16 @@ def unit_test_footer(footer_section, footer_section_online , lang = 'fa'):
         footer_section_online = f'{footer_section_online}'
         footer_section = f'{footer_section}'
 
-        footer_section_online = helper.clean_serialize_string(footer_section_online)
-        footer_section = helper.clean_serialize_string(footer_section)
+        footer_section_online = helper.unit_test_clean_string(footer_section_online)
+        footer_section = helper.unit_test_clean_string(footer_section)
 
+        footer_section_online_serialized = helper.serialize_string(footer_section_online)
+        footer_section_serialized = helper.serialize_string(footer_section)
 
+        if helper.compare_html_strings(footer_section_online, footer_section_serialized):
+            return '<div style="background: green;padding: 15px;">' + "تست سکشن  موفقیت آمیز بود." + "</div>"
 
-        if helper.compare_html_strings(footer_section_online, footer_section):
-            return '<div style="background: green;padding: 15px;">' + "تست سکشن فوتر موفقیت آمیز بود." + "</div>"
-
-        return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="unit-test-section" >' + footer_section + '</div><div class="online section"> ' + footer_section_online +'</div></section></div>'
+        return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="online section" >' + footer_section_online + '</div><div class="unit-test-section"> ' + footer_section +'</div></section></div>'
 
     except requests.exceptions.RequestException as e:
         trace = traceback.format_exc()
@@ -359,241 +215,21 @@ def unit_test_footer(footer_section, footer_section_online , lang = 'fa'):
         return error_message
 
 
-def test_unit_test(a, b, c):
+def test_unit_test(a, b, c, modul_data_array = {}):
     return 'test'
 
 
-def unit_test_tour(tour_section, tour_section_online , lang = 'fa'):
+
+
+
+def initiate_general_test(general_section, general_section_online , lang = 'fa' , modul_data_array = {}):
     try:
-        modul_data_array = {
-            'general_region_array': ['internal', 'external', ''],
-            'general_type_array': ['', 'special'],
-            'before_html': '''{assign var=dateNow value=dateTimeSetting::jdate("Ymd", "", "", "", "en")}''',
-            'before_html_local': '''{assign var="__params_var__" value=['type'=>'__type__','limit'=> '__local_max_limit__','dateNow' => $dateNow, 'country' =>'__country__','city' => null]}
-                                {assign var='__general_var__' value=$obj_main_page->getToursReservation($__params_var__)}
-                                {if $__general_var__}
-                                    {assign var='check_general' value=true}
-                                {/if}
-                                {assign var="__local_min_var__" value=__local_min__}
-                                {assign var="__local_max_var__" value=__local_max__}
-                            ''',
-            'after_html': '''{/if}''',
-            'before_foreach_local':'''
-                                {foreach $__general_var__ as $item}
-                                    {if $__local_min_var__ <= $__local_max_var__}
-                                ''',
-            'after_foreach_local':'''
-                                    {$__local_min_var__ = $__local_min_var__ + 1}
-                                    {/if}
-                                {/foreach}
-                                ''',
-            'replace_classes_local': {
-            '___price_class__': {'string': '''{$item['min_price']['discountedMinPriceR']|number_format}'''},
-            '__title_class__': {'string': '''{$item['tour_name']}'''},
-            '__airline_class__': {'string': '''{$item['airline_name']}'''},
-            '__night_class__': {'string': '''{$item['night']}'''},
-            '__day_class__': {'string': '''{$item['night'] + 1}'''},
-            '__city_class__': {'string': '''{$item['destination_city_name']}'''},
-            '__rate_count_class__': {'string': '''{$item['rate_count']}'''},
-            '__description_class__': {'string': '''{$item['description']}'''},
-            '__degree_class__': {'string': '''{$item['StarCode']}'''},
-            '__image_class__': {
-                'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$item['tour_pic']}''',
-                'alt': '''{$item['tour_name']}'''},
-            '__date_class__': {'string': '''{assign var="year" value=substr($item['start_date'], 0, 4)}
-                                        {assign var="month" value=substr($item['start_date'], 4, 2)}
-                                        {assign var="day" value=substr($item['start_date'], 6)}
-                                        {$year}/{$month}/{$day}
-                                        '''},
-        },
-            'replace_comlex_classes_local': {
-            '___price_class__': {
-                'string': '''{$__general_var__[{0}]['min_price']['discountedMinPriceR']|number_format}'''},
-            '__title_class__': {'string': '''{$__general_var__[{0}]['tour_name']}'''},
-            '__airline_class__': {'string': '''{$__general_var__[{0}]['airline_name']}'''},
-            '__night_class__': {'string': '''{$__general_var__[{0}]['night']}'''},
-            '__city_class__': {'string': '''{$__general_var__[{0}]['destination_city_name']}'''},
-            '__rate_count_class__': {'string': '''{$__general_var__[{0}]['rate_count']}'''},
-            '__description_class__': {'string': '''{$__general_var__[{0}]['description']}'''},
-            '__day_class__': {'string': '''{$__general_var__[{0}]['night'] + 1}'''},
-            '__degree_class__': {'string': '''{$__general_var__[{0}]['StarCode']}'''},
-            '__image_class__': {
-                'src': '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$__general_var__[{0}]['tour_pic']}''',
-                'alt': '''{$__general_var__[{0}]['tour_name']}'''},
-            '__date_class__': {'string': '''{assign var="year" value=substr($__general_var__[{0}]['start_date'], 0, 4)}
-                                        {assign var="month" value=substr($__general_var__[{0}]['start_date'], 4, 2)}
-                                        {assign var="day" value=substr($__general_var__[{0}]['start_date'], 6)}
-                                        {$year}/{$month}/{$day}
-                                        '''},
-        },
-            'generals_simple_replacements': {
-            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$item['id']}/{$item['tour_slug']}''',
-        },
-            'generals_complex_replacements': {
-            "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$__general_var__[{0}]['id']}/{$__general_var__[{0}]['tour_slug']}''',
-        },
-
-            'before_star_simple': '''{for $i = 0; $i < count($item['rate_average']); $i++}''',
-            'before_dark_star_simple': '''{for $i = count($item['rate_average']); $i < 6; $i++}''',
-            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['rate_average']); $i++}''',
-            'before_dark_star_complex': '''{for $i = count($__general_var__['rate_average']); $i < 6; $i++}''',
-
-            'unique_key': 'tour',
-            'no_chiled': '',
-
-            'replace_classes_general': {},
-
-        }
-
-        unit_test = general_test(tour_section, tour_section_online, lang, modul_data_array)
+        unit_test = general_test(general_section, general_section_online, lang, modul_data_array)
         return unit_test
     except Exception as e:
         traceback_str = traceback.format_exc()
         return str(e) + '\nTraceback:\n' + traceback_str
 
-
-
-
-
-def unit_test_blog(blog_section, blog_section_online , lang = 'fa'):
-    try:
-        modul_data_array = {
-            'general_region_array': [''],
-            'general_type_array': [''],
-            'before_html': '''''',
-            'before_html_local': '''
-                        {*with category*}
-                        {*{assign var="search_array" value=['section'=>'mag','category'=>1,'limit'=>'__local_max_limit__']}*}
-                        {*{assign var='__general_var__' value=$obj_main_page->getCategoryArticles($search_array)}*}
-                        {*{assign var='counter' value=0}*}
-                        {*{assign var="article_count" value=$__general_var__|count}*}
-
-                        {assign var="data_search_blog" value=['service'=>'Public','section'=>'article', 'limit' =>'__local_max_limit__']}
-                        {assign var='__general_var__' value=$obj_main_page->articlesPosition($data_search_blog)}
-                        {assign var='counter' value=0}
-                        {assign var="article_count" value=$__general_var__|count}
-                        {if $__general_var__[0]}
-                            {assign var='check_general' value=true}
-                        {/if}
-                    ''',
-            'after_html': '''{/if}''',
-            'before_foreach_local':'''
-                                {foreach $__general_var__ as $key => $item}
-                                    {if $__local_min_var__ <= $__local_max_var__}
-                                ''',
-            'after_foreach_local':'''
-                                    {$__local_min_var__ = $__local_min_var__ + 1}
-                                    {/if}
-                                {/foreach}
-                                ''',
-
-            'replace_classes_local': {
-            '__image_class__': {'src': '''{$item["image"]}''', 'alt': '''{$item["alt"]}'''},
-            '__title_class__': {'string': '''{$item["title"]}'''},
-            '__degree_class__': {'string': '''{$item["rates"]["average"]}'''},
-            '__category_class__': {'string': '''{$item['categories_array'][0]['title']}'''},
-            '__heading_class__': {'string': '''{$item["heading"]}'''},
-            '__date_class__': {'string': '''{$item["created_at"]}'''},
-        },
-            'replace_comlex_classes_local': {
-            '__image_class__': {
-                'src': '''{$__general_var__[{0}]['image']}''',
-                'alt': '''{$__general_var__[{0}]['alt']}'''},
-            '__title_class__': {'string': '''{$__general_var__[{0}]['title']}'''},
-            '__degree_class__': {'string': '''{$__general_var__[{0}]["rates"]["average"]}'''},
-            '__category_class__': {'string': '''{$__general_var__[{0}]['categories_array'][0]['title']}'''},
-            '__heading_class__': {'string': '''{$__general_var__[{0}]['heading']}'''},
-            '__date_class__': {'string': '''{$__general_var__[{0}]['created_at']}'''},
-        },
-
-            'generals_simple_replacements': {
-            "__airline__": '''{$item['link']}''',
-            "__link__": '''{$item['link']}''',
-                 },
-            'generals_complex_replacements': {
-            "__link__": '''{$__general_var__[{0}]['link']}''',
-        },
-
-            'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
-            'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
-            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
-            'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
-
-            'unique_key': 'blog',
-            'no_chiled': 'yes',
-            'replace_classes_general': {},
-        }
-
-        unit_test = general_test(blog_section, blog_section_online, lang, modul_data_array)
-        return unit_test
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
-
-
-def unit_test_news(news_section, news_section_online , lang = 'fa'):
-    try:
-        modul_data_array = {
-            'general_region_array': [''],
-            'general_type_array': [''],
-            'before_html': '''''',
-            'before_html_local': '''{assign var="__general_var__" value=$obj_main_page->getNewsArticles()}
-                            {assign var="othe_itmes" value=$__general_var__['data']}
-                            {assign var="i" value="2"}
-                            {assign var='counter' value=0}
-                            {if $othe_itmes > 0 }
-                            {if $__general_var__[0]}
-                                {assign var='check_general' value=true}
-                            {/if}
-                            ''',
-            'after_html': '''{/if}''',
-            'before_foreach_local':'''{foreach $__general_var__ as $item} {if $__local_min_var__ <= $__local_max_var__}''',
-            'after_foreach_local':'''
-                                    {$__local_min_var__ = $__local_min_var__ + 1}
-                                    {/if}
-                                {/foreach}
-                                ''',
-
-            'replace_classes_local': {
-            '__image_class__': {'src': '''{$item["image"]}''', 'alt': '''{$item["alt"]}'''},
-            '__title_class__': {'string': '''{$item["title"]}'''},
-            '__heading_class__': {'string': '''{$item["heading"]}'''},
-            '__date_class__': {'string': '''{$item["created_at"]}'''},
-            '__description_class__': {'string': '''{$item["description"]}'''},
-        },
-            'replace_comlex_classes_local': {
-            '__image_class__': {
-                'src': '''{$__general_var__[{0}]['image']}''',
-                'alt': '''{$__general_var__[{0}]['alt']}'''},
-            '__title_class__': {'string': '''{$__general_var__[{0}]['title']}'''},
-            '__heading_class__': {'string': '''{$__general_var__[{0}]["created_at"]}'''},
-            '__date_class__': {'string': '''{$__general_var__[{0}]['heading']}'''},
-            '__description_class__': {'string': '''{$__general_var__[{0}]['description']}'''},
-        },
-
-            'generals_simple_replacements': {
-            "__link__": '''{$item['link']}''',
-                 },
-            'generals_complex_replacements': {
-            "__link__": '''{$__general_var__[{0}]['link']}''',
-        },
-
-            'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
-            'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
-            'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
-            'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
-
-            'unique_key': 'news',
-            'no_chiled': 'yes',
-            'replace_classes_general': {
-                '__all_link_href_class__': {'href': '''{$smarty.const.ROOT_ADDRESS}/news'''},
-            },
-        }
-        unit_test = general_test(news_section, news_section_online, lang, modul_data_array)
-        return unit_test
-    except Exception as e:
-        traceback_str = traceback.format_exc()
-        return str(e) + '\nTraceback:\n' + traceback_str
 
 
 def general_test(generals_section, general_section_online, lang = 'fa', modul_data_array = {} ):
@@ -657,18 +293,10 @@ def general_test(generals_section, general_section_online, lang = 'fa', modul_da
 
                 if no_chiled == 'yes':
                     sections = [1]
-                    json_html = helper.extract_json_data_from_url(unique_key)
                 else:
                     sections = generals_section.find_all(class_=section_class)
-                    json_html = helper.extract_json_data_from_url(section_class)
 
-                json_html = BeautifulSoup(json_html, 'html.parser')
-                json_element = json_html.find(class_='data_modular')
-                if json_element:
-                    json_string = json_element.get_text()
-                    general_data = json.loads(json_string)
-                else:
-                    general_data = []
+                general_data = helper.get_general_data(unique_key)
 
                 if  sections:
                     for local_section in sections:
@@ -819,9 +447,9 @@ def general_test(generals_section, general_section_online, lang = 'fa', modul_da
         generals_final_content_serialized = helper.serialize_string(generals_final_content)
 
         if helper.compare_html_strings(general_section_online_serialized, generals_final_content_serialized):
-            return '<div style="background: green;padding: 15px;">' + "تست سکشن اخبار موفقیت آمیز بود." + "</div>"
+            return '<div style="background: green;padding: 15px;">' + "تست سکشن  موفقیت آمیز بود." + "</div>"
 
-        return '<div style="background: red;padding: 15px;">طرح و سکشن بلاگ ماژول گذاری شده هماهنگ نیستند.<section class="debug" style="display:none;"><div class="online-section" >' + general_section_online + '</div><div class="unit-test-section"> ' + generals_final_content +'</div></section></div>'
+        return '<div style="background: red;padding: 15px;">طرح و سکشن  ماژول گذاری شده هماهنگ نیستند.<section class="debug" style="display:none;"><div class="online-section" >' + general_section_online + '</div><div class="unit-test-section"> ' + generals_final_content +'</div></section></div>'
 
     except Exception as e:
         traceback_str = traceback.format_exc()
