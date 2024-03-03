@@ -183,6 +183,20 @@ repeatable_social_links = {
     '__youtube_class__': '{if $youTubeHref}{$youTubeHref}{/if}',
 }
 
+befor_all_css = ['css/header.css', 'css/bootstrap.min.css', 'css/header.css']
+between_mainPage_assets_css = []
+not_inside_mainPage_css = []
+after__all_pags_mainpage_css = ['select2.css', 'select2.min.css']
+after__all_css = ['css/tabs.css', 'css/all.min.css', 'css/register.css', 'css/style.css']
+
+befor_all_js = ['js/bootstrap.min.js', 'bootstrap.bundle.min.js', 'js/bootstrap.js', 'bootstrap.bundle.min.js',
+             'js/select2.min.js', 'js/select2.js', 'js/header.js']
+between_mainPage_assets_js = []
+inside_mainPage_js = []
+remove_assets_js = ['js/jquery-3.4.1.min.js']
+after__all_js = ['js/header.js', 'js/mega-menu.js', 'js/script.js']
+
+
 def initiation_progress():
     if 'file' not in request.files:
         return jsonify({"message": "No file part"})
@@ -286,7 +300,7 @@ def initiation_progress():
             'name': 'اسکریپت فوتر',
             'file': 'footer_script',
             'modular': footer_script_module,
-            'test_function': unit_test.test_unit_test,
+            'test_function': unit_test.unit_test_script_footer,
             'tag': 'script'
 
         },
@@ -332,13 +346,7 @@ def initiation_progress():
     }
 
     moduls_array = {
-        'banner_gallery': {
-                'class': 'i_modular_banner_gallery',
-            'name': 'گالری بنر و سرچ باکس',
-            'file': 'search-box',
-            'modular': banner_gallery_module,
-            'test_function': unit_test.unit_test_banner_gallery
-        },
+
     }
 
     final_massage = '--'
@@ -501,16 +509,24 @@ def unit_test_process(html_content, moduls_array, lang):
         module_test_messages = []
 
         for module_name, module_info in moduls_array.items():
-            sections = soup.find_all(class_=module_info['class'])
-            i = 0
-            for section in sections:
-                if section:
-                    if module_info['modular']:
-                        module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online ,lang , i , {}))
-                    elif module_info['array']:
-                        module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], unit_test.initiate_general_test , soup, soup_online ,lang , i , module_info['array']))
+            if module_info['class']:
+                sections = soup.find_all(class_=module_info['class'])
+                i = 0
+                for section in sections:
+                    if section:
+                        if module_info['modular']:
+                            module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online ,lang , i , {}))
+                        elif module_info['array']:
+                            module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], unit_test.initiate_general_test , soup, soup_online ,lang , i , module_info['array']))
 
-                    i = i + 1
+                        i = i + 1
+            elif module_info['tag']:
+                section = soup
+                section_online = soup_online
+                module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + module_info['test_function'](section, section_online, lang, {}))
+
+        module_test_messages.append("<br><br> تست  سایر = " + unit_test.unit_test_other(soup, soup_online,lang, {}))
+
         summary_test_message = '\n'.join(module_test_messages)
         return summary_test_message
     except Exception as e:
@@ -741,11 +757,11 @@ def header_module(header_section, project_path, lang='fa', file_name=''):
                         '''
         header_section = header_contents
 
-        befor_all = ['css/header.css', 'css/bootstrap.min.css', 'css/header.css']
-        between_mainPage_assets = []
-        not_inside_mainPage = []
-        after__all_pags_mainpage = ['select2.css', 'select2.min.css']
-        after__all = ['css/tabs.css', 'css/all.min.css', 'css/register.css', 'css/style.css']
+        befor_all = befor_all_css
+        between_mainPage_assets = between_mainPage_assets_css
+        not_inside_mainPage = not_inside_mainPage_css
+        after__all_pags_mainpage = after__all_pags_mainpage_css
+        after__all = after__all_css
 
         befor_all = helper.comapre_append_list(befor_all, style_links)
         style_links = helper.delete_assames(style_links, befor_all)
@@ -863,12 +879,11 @@ def footer_script_module(footer_script_section, project_path, lang='fa', file_na
     try:
         script_links = [link.get('src') for link in footer_script_section.find_all('script')]
 
-        befor_all = ['js/bootstrap.min.js', 'bootstrap.bundle.min.js', 'js/bootstrap.js', 'bootstrap.bundle.min.js',
-                     'js/select2.min.js', 'js/select2.js', 'js/header.js']
-        between_mainPage_assets = []
-        inside_mainPage = []
-        remove_assets = ['js/jquery-3.4.1.min.js']
-        after__all = ['js/header.js', 'js/mega-menu.js', 'js/script.js']
+        befor_all = befor_all_js
+        between_mainPage_assets = between_mainPage_assets_js
+        inside_mainPage = inside_mainPage_js
+        remove_assets = remove_assets_js
+        after__all = after__all_js
 
         footer_script_content = '''
                             <div class='__befor_all__'></div>

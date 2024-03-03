@@ -9,6 +9,7 @@ import codecs
 import zipfile
 from collections import OrderedDict
 import traceback
+requests.packages.urllib3.disable_warnings()
 
 
 def item_numbers(section, pattern):
@@ -292,6 +293,26 @@ def clean_serialize_string(string):
     return string
 
 
+def clean_links(string):
+    if string:
+        pattern = re.compile(r'192\.168\.1\.100/gds/view/[^/]+/')
+        string = pattern.sub('', string)
+        string = string.replace("http://", "")
+        string = string.replace("https://", "")
+    else:
+        string = ''
+    return string
+
+def clean_links_js(string):
+    if string:
+        pattern = re.compile(r'192\.168\.1\.100/gds/view/[^/]+/')
+        string = pattern.sub('', string)
+        string = string.replace("http://", "")
+        string = string.replace("https://", "")
+    else:
+        string = ''
+    return string
+
 def unit_test_clean_string(string):
     string = BeautifulSoup(string, 'html.parser')
     string = string.prettify()
@@ -563,3 +584,18 @@ def get_general_data(unique_key):
     except Exception as e:
         traceback_str = traceback.format_exc()
         return str(e) + '\nTraceback:\n' + traceback_str
+
+
+
+def check_url_real(urls):
+    broke_linksk = []
+    for url in urls:
+        if url.startswith('http://') or url.startswith('https://'):
+            response = requests.head(url,verify=False)
+            if response.status_code == 200:
+                print(f"{url} exists and is reachable.")
+            else:
+                broke_linksk.append(url)
+    if broke_linksk == []:
+        return False
+    return 'this links are corrupted ' + f'{broke_linksk}'

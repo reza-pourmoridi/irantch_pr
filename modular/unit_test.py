@@ -9,7 +9,7 @@ import requests
 import json
 import codecs
 from modular import helper_functions as helper
-from modular import modular as rpl
+from modular import modular
 
 complex_items_pattern = re.compile(r'__i_modular_c_item_class_(\d+)')
 simple_items_pattern = re.compile(r'__i_modular_nc_item_class_(\d+)')
@@ -20,6 +20,7 @@ unit_test_json_files_directory = os.path.join(script_directory, '../update_data/
 menu_data = helper.get_general_data('menu_data')
 repeatable_social_links = helper.get_general_data('social_data')
 user_data = helper.get_general_data('user_data')
+banner_data = helper.get_general_data('banner_data')
 
 
 def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_online, lang='fa', modul_data_array = {}):
@@ -34,13 +35,8 @@ def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_onli
         max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
 
         # Initialize an empty list to store the data
-        banner_data = []
-        json_file_path = os.path.join(unit_test_json_files_directory, 'banners_data.json')
-        json_string = codecs.open(json_file_path, 'r', encoding='utf-8').read()
-
-        banner_data = json.loads(json_string)
-
         for num in simple_items_numbers:
+            simple_element = banner_gallery_section.find(class_=simple_items_class + num)
             num = int(num)  # Convert 'num' to an integer
             if 0 <= num < len(banner_data) and banner_data[num]:
                 num = str(num)
@@ -48,16 +44,17 @@ def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_onli
                     "__title__": banner_data[int(num)]['title'],
                     "__link__": banner_data[int(num)]['link']
                 }
-                simple_element = banner_gallery_section.find(class_=simple_items_class + num)
                 if num == simple_items_numbers[0]:
                     simple_element = banner_gallery_section.find(class_=simple_items_class + num)
                     simple_element = helper.replace_placeholders(simple_element, banner_gallery_replacement_data)
                     simple_element = banner_gallery_section.find(class_=simple_items_class + num)
                     helper.replace_attribute(simple_element, '__image_class__', 'src', banner_data[int(num)]['pic'])
                     helper.replace_attribute(simple_element, '__image_class__', 'alt', banner_data[int(num)]['title'])
-
+                else:
+                    simple_element.decompose()
             else:
                 simple_element.decompose()
+
         for num in complex_items_numbers:
             before_if = '''{if banners[{0}] }'''
             before_if = before_if.replace("{0}", num)
@@ -68,27 +65,26 @@ def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_onli
                 "__title__": banner_data[int(num)]['title'],
             }
             complex_element = banner_gallery_section.find(class_=complex_items_class + num)
-            complex_element_final = helper.replace_placeholders(complex_element,
-                                                                banner_gallery_complex_replacement_data)
+            complex_element_final = helper.replace_placeholders(complex_element,banner_gallery_complex_replacement_data)
             complex_element = banner_gallery_section.find(class_=complex_items_class + num)
-            helper.replace_attribute(complex_element, '__image_class__', 'src',
-                                     banner_data[int(num)]['pic'].format(num))
-            helper.replace_attribute(complex_element, '__title_class__', 'alt',
-                                     banner_data[int(num)]['title'].format(num))
+            helper.replace_attribute(complex_element, '__image_class__', 'src',banner_data[int(num)]['pic'].format(num))
+            helper.replace_attribute(complex_element, '__title_class__', 'alt',banner_data[int(num)]['title'].format(num))
 
         banner_gallery_section = f'{banner_gallery_section}'
         banner_gallery_section_online = f'{banner_gallery_section_online}'
-        
+
+
+        # clearing search box
         banner_gallery_section = BeautifulSoup(banner_gallery_section, "html.parser")
         banner_gallery_section_online = BeautifulSoup(banner_gallery_section_online, "html.parser")
         search_box = banner_gallery_section.find(class_='i_modular_searchBox')
         search_box_online = banner_gallery_section_online.find(class_='i_modular_searchBox')
-
         search_box.replace_with('')
         search_box_online.replace_with('')
+        # clearing search box end
 
-        banner_gallery_section = helper.unit_test_clean_string(banner_gallery_section)
-        banner_gallery_section_online = helper.unit_test_clean_string(banner_gallery_section_online)
+        banner_gallery_section = helper.unit_test_clean_string(f'{banner_gallery_section}')
+        banner_gallery_section_online = helper.unit_test_clean_string(f'{banner_gallery_section_online}')
 
         banner_gallery_section_serialized = helper.serialize_string(banner_gallery_section)
         banner_gallery_section_online_serialized = helper.serialize_string(banner_gallery_section_online)
@@ -96,7 +92,7 @@ def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_onli
         if helper.compare_html_strings(banner_gallery_section_online_serialized, banner_gallery_section_serialized):
             return '<div style="background: green;padding: 15px;">' + "تست سکشن  موفقیت آمیز بود." + "</div>"
 
-        return '<div style="background: red;padding: 15px;">سکشن  خطا دارد..<section class="debug" style="display:none;"><div class="unit-test-section" >' + banner_gallery_section + '</div><div class="online section"> ' + banner_gallery_section_online + '</div></section></div>'
+        return '<div style="background: red;padding: 15px;">سکشن  خطا دارد..<section class="debug" style="display:none;"><div class="online section" >' + banner_gallery_section_online + '</div><div class="unit-test-section"> ' + banner_gallery_section + '</div></section></div>'
     except requests.exceptions.RequestException as e:
         trace = traceback.format_exc()
         error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
@@ -107,7 +103,7 @@ def unit_test_menu(menu_section, menu_section_online , lang = 'fa', modul_data_a
     try:
 
 
-        links = rpl.repeatable_links
+        links = modular.repeatable_links
         repeatable_links = {}
         for key, value in links.items():
             updated_key = key.replace('{$smarty.const.ROOT_ADDRESS}', menu_data['main'])
@@ -168,7 +164,7 @@ def unit_test_footer(footer_section, footer_section_online , lang = 'fa', modul_
             for key, val in repeatable_social_links.items():
                 helper.replace_attribute(social_element, key, 'href', val)
         
-        links = rpl.repeatable_links
+        links = modular.repeatable_links
         repeatable_links = {}
         for key, value in links.items():
             updated_key = key.replace('{$smarty.const.ROOT_ADDRESS}', menu_data['main'])
@@ -204,7 +200,7 @@ def unit_test_footer(footer_section, footer_section_online , lang = 'fa', modul_
         footer_section_online_serialized = helper.serialize_string(footer_section_online)
         footer_section_serialized = helper.serialize_string(footer_section)
 
-        if helper.compare_html_strings(footer_section_online, footer_section_serialized):
+        if helper.compare_html_strings(footer_section_online_serialized, footer_section_serialized):
             return '<div style="background: green;padding: 15px;">' + "تست سکشن  موفقیت آمیز بود." + "</div>"
 
         return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="online section" >' + footer_section_online + '</div><div class="unit-test-section"> ' + footer_section +'</div></section></div>'
@@ -217,6 +213,163 @@ def unit_test_footer(footer_section, footer_section_online , lang = 'fa', modul_
 
 def test_unit_test(a, b, c, modul_data_array = {}):
     return 'test'
+
+
+def unit_test_header(soup, soup_online , lang = 'fa', modul_data_array = {}):
+    try:
+        header_section = soup.find('head')
+        header_section_online = soup_online.find('head')
+
+        css_links = [helper.clean_links(link.get('href')) for link in header_section.find_all('link')]
+        css_links_online_initial = [link.get('href') for link in header_section_online.find_all('link')]
+        css_links_online = [helper.clean_links(link.get('href')) for link in header_section_online.find_all('link')]
+
+        #deleting additional links
+        css_links = [path for path in css_links if 'css' in path]
+        css_links_online = [path for path in css_links_online if 'project_files/css' in path]
+        css_links_online_initial = [path for path in css_links_online_initial if 'project_files/css' in path]
+        final_css_links_online = [path.replace("project_files/", "") for path in css_links_online]
+
+        befor_all = modular.befor_all_css
+        between_mainPage_assets = modular.between_mainPage_assets_css
+        not_inside_mainPage = modular.not_inside_mainPage_css
+        after__all_pags_mainpage = modular.after__all_pags_mainpage_css
+        after__all = modular.after__all_css
+
+        final_css_links = [path for path in befor_all if path in css_links]
+        final_css_links = final_css_links + [path for path in between_mainPage_assets if path in css_links]
+        final_css_links = final_css_links + [path for path in not_inside_mainPage if path in css_links]
+        final_css_links = final_css_links + [path for path in after__all_pags_mainpage if path in css_links]
+        final_css_links = final_css_links + [path for path in after__all if path in css_links]
+        final_css_links = final_css_links + [path for path in css_links if path not in final_css_links]
+
+
+        if helper.check_url_real(css_links_online_initial):
+            return f'{helper.check_url_real(css_links_online_initial)}'
+
+        if final_css_links_online != final_css_links:
+            return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="online css" >' + f'{final_css_links_online}' + '</div><div class="unit test css"> ' + f'{final_css_links}' + '</div></section></div>'
+
+        return '<div style="background: green;padding: 15px;">' + "تست سکشن  موفقیت آمیز بود." + "</div>"
+
+    except requests.exceptions.RequestException as e:
+        trace = traceback.format_exc()
+        error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
+        return error_message
+
+
+
+def unit_test_script_footer(soup, soup_online , lang = 'fa', modul_data_array = {}):
+    try:
+        error = False
+        error_massage = ''
+        script_footer_section = soup
+        script_footer_section_online = soup_online
+
+        js_links = [helper.clean_links(link.get('src')) for link in script_footer_section.find_all('script') if link is not None]
+        js_links_online_initial = [link.get('src') for link in script_footer_section_online.find_all('script') if link is not None]
+        js_links_online = [helper.clean_links_js(link.get('src')) for link in script_footer_section_online.find_all('script') if link is not None]
+
+
+        #deleting additional links
+        js_links = [path for path in js_links if path is not None and 'js' in path]
+        js_links_online = [path for path in js_links_online if path is not None and 'project_files/js' in path]
+        js_links_online_initial = [path for path in js_links_online_initial if path is not None and 'project_files/js' in path]
+        final_js_links_online = [path.replace("project_files/", "") for path in js_links_online if path is not None]
+
+
+        befor_all = modular.befor_all_js
+        between_mainPage_assets = modular.between_mainPage_assets_js
+        inside_mainPage = modular.inside_mainPage_js
+        remove_assets = modular.remove_assets_js
+        after__all = modular.after__all_js
+
+        final_js_links = []
+        final_js_links = final_js_links +  [path for path in remove_assets if path in js_links]
+        final_js_links = final_js_links + [path for path in befor_all if path in js_links]
+        final_js_links = final_js_links + [path for path in between_mainPage_assets if path in js_links]
+        final_js_links = final_js_links + [path for path in inside_mainPage if path in js_links]
+        final_js_links = final_js_links + [path for path in after__all if path in js_links]
+        final_js_links = final_js_links + [path for path in js_links if path not in final_js_links]
+
+
+        if helper.check_url_real(js_links_online_initial):
+            error = True
+            error_massage = error_massage + f'{helper.check_url_real(js_links_online_initial)}'
+
+        if final_js_links_online != final_js_links:
+            error = True
+            error_massage = error_massage +  '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="online js" >' + f'{final_js_links_online}' + '</div><div class="unit test js"> ' + f'{final_js_links}' + '</div></section></div>'
+
+
+        if error:
+            return error_massage
+        else:
+            return '<div style="background: green;padding: 15px;">' + "تست سکشن  موفقیت آمیز بود." + "</div>"
+    except requests.exceptions.RequestException as e:
+        trace = traceback.format_exc()
+        error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
+        return error_message
+
+
+def unit_test_other(soup, soup_online , lang = 'fa', modul_data_array = {}):
+    try:
+        error = False
+        error_massage = ''
+
+        corrupted_imgs = []
+        for img in soup_online.find_all('img'):
+            if not img.get('alt'):
+                imgg = '<xmp>' + f'{img}' + '</xmp>'
+                corrupted_imgs.append(imgg)
+
+        if corrupted_imgs:
+            error = True
+            error_massage = error_massage + 'this images do not have any alt ' + f'{corrupted_imgs}'
+
+
+        corrupted_links = []
+        for link in soup_online.find_all('a'):
+            if not link.get('href'):
+                linkk = '<xmp>' + f'{link}' + '</xmp>'
+                corrupted_links.append(linkk)
+
+        if corrupted_links:
+            error = True
+            error_massage = error_massage + 'this links are empty ' + f'{corrupted_links}'
+
+        corrupted_links = []
+        links = []
+        for link in soup_online.find_all('a'):
+            if not link.get('href'):
+                linkk = '<xmp>' + f'{link}' + '</xmp>'
+                corrupted_links.append(linkk)
+            else:
+                links.append(link.get('href'))
+
+
+        if helper.check_url_real(links):
+            error = True
+            error_massage = error_massage + helper.check_url_real(links)
+
+
+        if corrupted_links:
+            error = True
+            error_massage = error_massage + 'this links are empty ' + f'{corrupted_links}'
+            
+            
+            
+
+        if error:
+            return error_massage
+        else:
+            return '<div style="background: green;padding: 15px;">' + "سایر تست ها  موفقیت آمیز بود." + "</div>"
+    except requests.exceptions.RequestException as e:
+        trace = traceback.format_exc()
+        error_message = f"خطایی در ماژول گذار پیش آمد در: {trace}"
+        return error_message
+
+
 
 
 
