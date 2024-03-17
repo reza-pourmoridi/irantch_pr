@@ -13,7 +13,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 def create_folder(folder_name):
     try:
         script_directory = os.path.dirname(__file__)  # Get the directory of the script
-        files_directory = os.path.join(script_directory, folder_name)  # Create a 'files' subdirectory
+        files_directory = os.path.join(script_directory, folder_name)  # Create a 'final_files' subdirectory
         # Check if the folder already exists
         if not os.path.exists(files_directory):
             os.makedirs(files_directory)  # Create the folder and any necessary parent folders

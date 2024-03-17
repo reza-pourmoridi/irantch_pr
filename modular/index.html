@@ -1,18 +1,49 @@
 <div class="container mt-4">
     <form enctype="multipart/form-data">
-        <div class="custom-file">
-            <input type="file" class="custom-file-input" id="fileInput" name="file">
-            <label class="custom-file-label" for="fileInput">Choose file</label>
+        <div class="container">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="fileInput" name="file">
+                <label class="custom-file-label" for="fileInput">Choose file</label>
 
-            <input placeholder="project name" type="text" class="mt-1" style="width: 100%;" id="project_name" name="project_name">
-            <select id="project_lang" name="project_lang">
-                <option selected value="fa">persian</option>
-                <option value="en">english</option>
-                <option value="ar">arabic</option>
-            </select>
+                <input placeholder="project name" type="text" class="mt-1" style="width: 100%;" id="project_name" name="project_name">
+                <div class="row ">
+                    <div class="col-md-3">
+                        <h6>lang</h6>
+                        <select id="project_lang" name="project_lang">
+                            <option selected value="fa">persian</option>
+                            <option value="en">english</option>
+                            <option value="ar">arabic</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <h6>test</h6>
+                        <select id="project_test" name="project_test">
+                            <option  value="1">on</option>
+                            <option selected value="0">off</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <h6>upload</h6>
+                        <select id="project_upload" name="project_upload">
+                            <option  value="1">on</option>
+                            <option selected value="0">off</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <h6>modulation</h6>
+                        <select id="project_modulation" name="project_modulation">
+                            <option selected value="1">on</option>
+                            <option  value="0">off</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="mt-5">
+                <button type="button" class="btn btn-primary mt-2" onclick="sendFile('/initiation_progress', 'fileInput')">Upload File</button>
+                <p id="message" class="mt-3">please insert home.html</p>
+            </div>
         </div>
-        <button type="button" class="btn btn-primary mt-2" onclick="sendFile('/initiation_progress', 'fileInput')">Upload File</button>
-            <p id="message" class="mt-3">please insert home.html</p>
 
         <br><br>
         <br><br>
@@ -36,6 +67,9 @@
         formData.append('file', document.getElementById(input_id).files[0]);
         formData.append('project_name', document.getElementById('project_name').value);
         formData.append('project_lang', document.getElementById('project_lang').value);
+        formData.append('project_test', document.getElementById('project_test').value);
+        formData.append('project_upload', document.getElementById('project_upload').value);
+        formData.append('project_modulation', document.getElementById('project_modulation').value);
 
         $.ajax({
             url: address,
