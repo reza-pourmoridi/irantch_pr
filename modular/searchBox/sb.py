@@ -52,6 +52,7 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
             testTabs = modulationSearchBoxTabs(project_path + '/include_files/search-box', parent_li)
             testBoxes = modulationSearchBoxBoxes(project_path + '/include_files/search-box')
 
+
         # getting the ids of boxes and add them to href array. and put them in searchbox dierctory
         id_lists = hrefs_list
         boxs = boxes_section.find_all(class_='__box__')
@@ -78,15 +79,16 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
                 item_massage = box_id + " : " + final_massage
                 items_massages.append(item_massage + '<br><br> evaluation_c')
 
-        # creating relational services array
-        services_array = {}
-        for item in id_lists:
-            modified_item = item.replace('_internal', '').replace('_external', '')
-            if item in services_array:
-                return f'{services_array}'
-                services_array[item].append(modified_item)
-            else:
-                services_array[item] = modified_item
+
+
+        # # creating relational services array
+        # services_array = {}
+        # for item in id_lists:
+        #     modified_item = item.replace('_internal', '').replace('_external', '')
+        #     if item in services_array:
+        #         services_array[item].append(modified_item)
+        #     else:
+        #         services_array[item] = modified_item
 
 
         return [f'{items_massages}', tab_icons]
@@ -425,6 +427,7 @@ def Visa(section=False, item_path=False, box_id=False, type=False):
         options_array = [
         '''
                             {foreach $continents as $continent}
+                            <option value="">##ChoseOption##...</option>
                                 <option value="{$continent['id']}">{$continent['titleFa']}</option>
                             {/foreach}
         ''',

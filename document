@@ -68,13 +68,6 @@ hooks:
         __image_class__     : کلاس عکس
         __title_class__     : کلاس تایتل
 
-    tour: i_modular_tours
-    __tour__
-    __tour__internal__
-    __tour__special__
-    __tour__external__
-    __tour__internal__special__
-    __tour__external__special__
 
     tour: i_modular_tours
     __tour__
@@ -83,6 +76,13 @@ hooks:
     __tour__external__
     __tour__internal__special__
     __tour__external__special__
+
+    __tour__category__
+    __tour__internal__category__
+    __tour__special__category__
+    __tour__external__category__
+    __tour__internal__special__category__
+    __tour__external__special__category__
 
     هرجایی اولین ایتم رو میزاری, برای پرنتش یکی از کلاس های بالا رو میزاری.
     و اینکه کلاس تکراری مجازه

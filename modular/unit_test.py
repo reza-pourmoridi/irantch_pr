@@ -79,8 +79,9 @@ def unit_test_banner_gallery(banner_gallery_section, banner_gallery_section_onli
         banner_gallery_section_online = BeautifulSoup(banner_gallery_section_online, "html.parser")
         search_box = banner_gallery_section.find(class_='i_modular_searchBox')
         search_box_online = banner_gallery_section_online.find(class_='i_modular_searchBox')
-        search_box.replace_with('')
-        search_box_online.replace_with('')
+        if search_box and search_box_online:
+            search_box.replace_with('')
+            search_box_online.replace_with('')
         # clearing search box end
 
         banner_gallery_section = helper.unit_test_clean_string(f'{banner_gallery_section}')
@@ -116,12 +117,16 @@ def unit_test_menu(menu_section, menu_section_online , lang = 'fa', modul_data_a
             for key, val in repeatable_social_links.items():
                 helper.replace_attribute(social_element, key, 'href', val)
 
+        helper.replace_attribute_by_text(menu_section, 'ورود  |  ثبت نام' , 'string', "<span class='logined-name'>ورود / ثبت نام</span>")
         helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', "<span class='logined-name'>ورود / ثبت نام</span>")
-        helper.replace_attribute_by_text(menu_section, 'الدخول / يسجل' , 'string', "<span class='logined-name'>الدخول / يسجل</span>")
-        helper.replace_attribute(menu_section, '__login_register_class__', 'class','__login_register_class__ main-navigation__button2 show-box-login-js button_header logIn d-flex d-lg-none')
-        helper.replace_attribute(menu_section, '__login_register_class__2', 'class','__login_register_class__2 main-navigation__button2 show-box-login-js')
+        helper.replace_attribute_by_text(menu_section, 'ورود / ثبت نام' , 'string', "<span class='logined-name'>ورود / ثبت نام</span>")
+        helper.replace_attribute_by_text(menu_section, 'الدخول / يسجل' , 'string', "<span class='logined-name'>ورود / ثبت نام</span>")
 
+        helper.replace_attribute(menu_section, '__login_register_class__2', 'href', menu_data['main'] + '''/authenticate''')
+        helper.replace_attribute(menu_section, '__login_register_class__', 'href', menu_data['main'] + '''/authenticate''')
 
+        helper.add_class_to_elements(menu_section, '__login_register_class__2','main-navigation__button1')
+        helper.add_class_to_elements(menu_section, '__login_register_class__',' main-navigation__button1')
         after_login =  "<div class='main-navigation__sub-menu2 arrow-up show-content-box-login-js' style='display: none'>\r\n    <div class=\"sup-menu-flex\">\r\n        <div class=\"sup-menu-flex-r\">\r\n            <a target=\"_parent\" class=\"log-reg-sub\" href=\"https://192.168.1.100/gds/fa/loginUser\">\r\n                <div>\r\n                    <svg version=\"1.1\" id=\"Capa_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox=\"0 0 512 512\" style=\"enable-background:new 0 0 512 512;\" xml:space=\"preserve\">\r\n                    <path d=\"M131.5,472H60.693c-8.538,0-13.689-4.765-15.999-7.606c-3.988-4.906-5.533-11.29-4.236-17.519\r\n                        c20.769-99.761,108.809-172.616,210.445-174.98c1.693,0.063,3.39,0.105,5.097,0.105c1.722,0,3.434-0.043,5.142-0.107\r\n                        c24.853,0.567,49.129,5.24,72.236,13.917c10.34,3.885,21.871-1.352,25.754-11.693c3.883-10.34-1.352-21.871-11.693-25.754\r\n                        c-3.311-1.244-6.645-2.408-9.995-3.512C370.545,220.021,392,180.469,392,136C392,61.01,330.991,0,256,0\r\n                        c-74.991,0-136,61.01-136,136c0,44.509,21.492,84.092,54.643,108.918c-30.371,9.998-58.871,25.546-83.813,46.062\r\n                        c-45.732,37.617-77.529,90.086-89.532,147.743c-3.762,18.066,0.744,36.622,12.363,50.908C25.221,503.847,42.364,512,60.693,512\r\n                        H131.5c11.046,0,20-8.954,20-20C151.5,480.954,142.546,472,131.5,472z M160,136c0-52.935,43.065-96,96-96s96,43.065,96,96\r\n                        c0,51.367-40.554,93.438-91.326,95.885c-1.557-0.028-3.114-0.052-4.674-0.052c-1.564,0-3.127,0.023-4.689,0.051\r\n                        C200.546,229.43,160,187.362,160,136z\"></path>\r\n                        <path d=\"M496.689,344.607c-8.561-19.15-27.845-31.558-49.176-31.607h-62.372c-0.045,0-0.087,0-0.133,0\r\n                        c-22.5,0-42.13,13.26-50.029,33.807c-1.051,2.734-2.336,6.178-3.677,10.193H200.356c-5.407,0-10.583,2.189-14.35,6.068\r\n                        l-34.356,35.388c-7.567,7.794-7.529,20.203,0.085,27.95l35,35.612c3.76,3.826,8.9,5.981,14.264,5.981h65c11.046,0,20-8.954,20-20\r\n                        c0-11.046-8.954-20-20-20h-56.614l-15.428-15.698L208.814,397h137.491c9.214,0,17.235-6.295,19.426-15.244\r\n                        c1.618-6.607,3.648-12.959,6.584-20.596c1.936-5.036,6.798-8.16,12.741-8.16c0.013,0,0.026,0,0.039,0h62.371\r\n                        c5.656,0.013,10.524,3.053,12.705,7.932c5.369,12.012,11.78,30.608,11.828,50.986c0.048,20.529-6.356,39.551-11.739,51.894\r\n                        c-2.17,4.978-7.079,8.188-12.56,8.188c-0.011,0-0.022,0-0.033,0h-63.125c-5.533-0.013-10.716-3.573-12.896-8.858\r\n                        c-2.339-5.671-4.366-12.146-6.197-19.797c-2.571-10.742-13.367-17.366-24.105-14.796c-10.743,2.571-17.367,13.364-14.796,24.106\r\n                        c2.321,9.699,4.978,18.118,8.121,25.738c8.399,20.364,27.939,33.555,49.827,33.606h63.125c0.043,0,0.083,0,0.126,0\r\n                        c21.351-0.001,40.647-12.63,49.18-32.201c6.912-15.851,15.137-40.511,15.072-67.975\r\n                        C511.935,384.434,503.638,360.153,496.689,344.607z\"></path>\r\n                        <circle cx=\"431\" cy=\"412\" r=\"20\"></circle>\r\n                </svg>\r\n\r\n                </div>\r\n                <span>ورود</span>\r\n            </a>\r\n        </div>\r\n        <div class=\"sup-menu-flex-l\">\r\n            <a target=\"_parent\" class=\"log-reg-sub\" href=\"https://192.168.1.100/gds/fa/registerUser\">\r\n                <div>\r\n                    <svg version=\"1.1\" id=\"Capa_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox=\"0 0 512 512\" style=\"enable-background:new 0 0 512 512;\" xml:space=\"preserve\">\r\n                    <circle cx=\"370\" cy=\"346\" r=\"20\"></circle>\r\n                        <path d=\"M460,362c11.046,0,20-8.954,20-20v-74c0-44.112-35.888-80-80-80h-24.037v-70.534C375.963,52.695,322.131,0,255.963,0\r\n                        s-120,52.695-120,117.466V188H112c-44.112,0-80,35.888-80,80v164c0,44.112,35.888,80,80,80h288c44.112,0,80-35.888,80-80\r\n                        c0-11.046-8.954-20-20-20c-11.046,0-20,8.954-20,20c0,22.056-17.944,40-40,40H112c-22.056,0-40-17.944-40-40V268\r\n                        c0-22.056,17.944-40,40-40h288c22.056,0,40,17.944,40,40v74C440,353.046,448.954,362,460,362z M335.963,188h-160v-70.534\r\n                        c0-42.715,35.888-77.466,80-77.466s80,34.751,80,77.466V188z\"></path>\r\n                        <circle cx=\"219\" cy=\"346\" r=\"20\"></circle>\r\n                        <circle cx=\"144\" cy=\"346\" r=\"20\"></circle>\r\n                        <circle cx=\"294\" cy=\"346\" r=\"20\"></circle>\r\n                </svg>\r\n                </div>\r\n                <span>ثبت نام</span>\r\n            </a>\r\n\r\n        </div>\r\n    </div>\r\n    "
 
         simple_element = menu_section.find(class_=lambda classes: classes and '__login_register_class__' in classes)
@@ -137,15 +142,19 @@ def unit_test_menu(menu_section, menu_section_online , lang = 'fa', modul_data_a
 
         menu_section_online = menu_section_online.prettify()
         menu_section = menu_section.prettify()
+        menu_section = menu_section.replace("__main_link_href__", menu_data['home'])
 
         menu_section = f'{menu_section}'
         menu_section = menu_section.replace("__main_link__", "http://192.168.1.100")
 
-        menu_section_online = helper.clean_serialize_string(menu_section_online)
-        menu_section = helper.clean_serialize_string(menu_section)
 
+        menu_section_online = helper.unit_test_clean_string(menu_section_online)
+        menu_section = helper.unit_test_clean_string(menu_section)
 
-        if helper.compare_html_strings(menu_section_online, menu_section):
+        menu_section_online_serialized = helper.serialize_string(menu_section_online)
+        menu_section_serialized = helper.serialize_string(menu_section)
+
+        if helper.compare_html_strings(menu_section_online_serialized, menu_section_serialized):
             return '<div style="background: green;padding: 15px;">' + "تست سکشن منوی هدر موفقیت آمیز بود." + "</div>"
 
         return '<div style="background: red;padding: 15px;"><section class="debug" style="display:none;"><div class="online section" >' + menu_section_online + '</div><div class="unit-test-section"> ' + menu_section +'</div></section></div>'
@@ -236,13 +245,14 @@ def unit_test_header(soup, soup_online , lang = 'fa', modul_data_array = {}):
         after__all_pags_mainpage = modular.after__all_pags_mainpage_css
         after__all = modular.after__all_css
 
-        final_css_links = [path for path in befor_all if path in css_links]
-        final_css_links = final_css_links + [path for path in between_mainPage_assets if path in css_links]
-        final_css_links = final_css_links + [path for path in not_inside_mainPage if path in css_links]
-        final_css_links = final_css_links + [path for path in after__all_pags_mainpage if path in css_links]
-        final_css_links = final_css_links + [path for path in after__all if path in css_links]
-        final_css_links = final_css_links + [path for path in css_links if path not in final_css_links]
-
+        final_css_links = []
+        final_css_links = final_css_links +  [path for path in befor_all if path in css_links]
+        final_css_links = final_css_links +  [path for path in css_links if path not in befor_all and path not in between_mainPage_assets
+                                              and path not in not_inside_mainPage and path not in after__all_pags_mainpage  and path not in after__all]
+        final_css_links = final_css_links +  [path for path in between_mainPage_assets if path in css_links]
+        final_css_links = final_css_links +  [path for path in not_inside_mainPage if path in css_links]
+        final_css_links = final_css_links +  [path for path in after__all_pags_mainpage if path in css_links]
+        final_css_links = final_css_links +  [path for path in after__all if path in css_links]
 
         if helper.check_url_real(css_links_online_initial):
             return f'{helper.check_url_real(css_links_online_initial)}'
@@ -285,12 +295,12 @@ def unit_test_script_footer(soup, soup_online , lang = 'fa', modul_data_array = 
         after__all = modular.after__all_js
 
         final_js_links = []
-        final_js_links = final_js_links +  [path for path in remove_assets if path in js_links]
+        final_js_links = final_js_links + [path for path in remove_assets if path in js_links]
         final_js_links = final_js_links + [path for path in befor_all if path in js_links]
+        final_js_links = final_js_links + [path for path in js_links if  path not in final_js_links and path not in between_mainPage_assets and path not in inside_mainPage and path not in after__all]
         final_js_links = final_js_links + [path for path in between_mainPage_assets if path in js_links]
         final_js_links = final_js_links + [path for path in inside_mainPage if path in js_links]
         final_js_links = final_js_links + [path for path in after__all if path in js_links]
-        final_js_links = final_js_links + [path for path in js_links if path not in final_js_links]
 
 
         if helper.check_url_real(js_links_online_initial):
@@ -329,16 +339,6 @@ def unit_test_other(soup, soup_online , lang = 'fa', modul_data_array = {}):
 
 
         corrupted_links = []
-        for link in soup_online.find_all('a'):
-            if not link.get('href'):
-                linkk = '<xmp>' + f'{link}' + '</xmp>'
-                corrupted_links.append(linkk)
-
-        if corrupted_links:
-            error = True
-            error_massage = error_massage + 'this links are empty ' + f'{corrupted_links}'
-
-        corrupted_links = []
         links = []
         for link in soup_online.find_all('a'):
             if not link.get('href'):
@@ -348,17 +348,14 @@ def unit_test_other(soup, soup_online , lang = 'fa', modul_data_array = {}):
                 links.append(link.get('href'))
 
 
+        if corrupted_links:
+            error = True
+            error_massage = error_massage + 'this links are empty ' + f'{corrupted_links}'
+
         if helper.check_url_real(links):
             error = True
             error_massage = error_massage + helper.check_url_real(links)
 
-
-        if corrupted_links:
-            error = True
-            error_massage = error_massage + 'this links are empty ' + f'{corrupted_links}'
-            
-            
-            
 
         if error:
             return error_massage
@@ -404,9 +401,6 @@ def general_test(generals_section, general_section_online, lang = 'fa', modul_da
 
         generals_simple_replacements = modul_data_array['generals_simple_replacements']
         generals_complex_replacements = modul_data_array['generals_complex_replacements']
-
-        before_star_simple = modul_data_array['before_star_simple']
-        before_dark_star_simple = modul_data_array['before_dark_star_simple']
         before_star_complex = modul_data_array['before_star_complex']
         before_dark_star_complex = ''
 
@@ -446,10 +440,13 @@ def general_test(generals_section, general_section_online, lang = 'fa', modul_da
 
                 if no_chiled == 'yes':
                     sections = [1]
+                    general_data = helper.get_general_data(unique_key)
                 else:
                     sections = generals_section.find_all(class_=section_class)
+                    general_data = helper.get_general_data(section_class)
 
-                general_data = helper.get_general_data(unique_key)
+                if not isinstance(general_data, (dict, list)):
+                    return '<div style="background: red;padding: 15px;">data is empty</div>'
 
                 if  sections:
                     for local_section in sections:
@@ -479,7 +476,7 @@ def general_test(generals_section, general_section_online, lang = 'fa', modul_da
                             if 0 <= numInt < len(general_data):
                                 final_generals_simple_replacements = {}
                                 for item_pointer ,item_val in generals_simple_replacements.items():
-                                    pattern = r"\{\$item\[['\"](.+?)['\"]\](?:\[['\"](.+?)['\"]\])?\}"
+                                    pattern = r"(.*)\{\$item\[['\"](.+?)['\"]\](?:\[['\"](.+?)['\"]\])?(?:\[['\"](.+?)['\"]\])?\}"
                                     output_string = helper.get_element_data_key_by_pattern(general_data[int(numInt)],pattern, item_val)
                                     final_generals_simple_replacements[item_pointer] = output_string
 
@@ -487,30 +484,37 @@ def general_test(generals_section, general_section_online, lang = 'fa', modul_da
                                 simple_element = local_section.find(class_=simple_items_class + num)
                                 for class_name, val in replace_classes_local.items():
                                     for atr, value in val.items():
-                                        pattern = r"\{\$item\[['\"](.+?)['\"]\](?:\[['\"](.+?)['\"]\])?\}"
+                                        pattern = r"(.*)\{\$item\[['\"](.+?)['\"]\](?:\[['\"](.+?)['\"]\])?(?:\[['\"](.+?)['\"]\])?\}"
                                         value = helper.get_element_data_key_by_pattern(general_data[int(numInt)], pattern, value)
                                         helper.replace_attribute(simple_element, class_name, atr, value)
 
                                 for i in range(1, 6):
                                     light_star_elements = simple_element.find(class_='__star_class_light__' + str(i))
                                     dark_star_elements = simple_element.find(class_='__star_class_dark__' + str(i))
-                                    if i == 1 and light_star_elements:
-                                        new_light_star = before_star_simple + str(light_star_elements) + '''{/for}'''
+
+                                    # before_star_simple = modul_data_array['before_star_simple']
+                                    # before_dark_star_simple = modul_data_array['before_dark_star_simple']
+                                    # pattern = r"(.*)\{\$item\[['\"]rate_average['\"]\](?:\[['\"](.+?)['\"]\])?(?:\[['\"](.+?)['\"]\])?(?:\[['\"](.+?)['\"]\])?\}"
+                                    # match_combined = re.search(pattern, before_star_simple)
+                                    # return f'{match_combined(1)}'
+
+                                    if i <= 1 and light_star_elements:
+                                        new_light_star =  str(light_star_elements)
                                         new_light_star = BeautifulSoup(new_light_star, 'html.parser')
                                         light_star_elements.replace_with(new_light_star)
                                     else:
                                         if light_star_elements:
                                             light_star_elements.decompose()
 
-                                    if i == 1 and dark_star_elements:
-                                        new_dark_star = before_dark_star_simple + str(dark_star_elements) + '''{/for}'''
+                                    if i <= 1 and dark_star_elements:
+                                        new_dark_star =  str(dark_star_elements)
                                         new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
                                         dark_star_elements.replace_with(new_dark_star)
                                     else:
                                         if dark_star_elements:
                                             dark_star_elements.decompose()
 
-                            else:
+                            elif simple_element:
                                 simple_element.decompose()
 
 
@@ -520,7 +524,7 @@ def general_test(generals_section, general_section_online, lang = 'fa', modul_da
                                 complex_element = local_section.find(class_=complex_items_class + num)
                                 final_gcr = {}
                                 for gcr_key, gcr_val in generals_complex_replacements.items():
-                                    pattern = r"\{\$__general_var__\[\{0}\]\[['\"](.+?)['\"]\](?:\[['\"](.+?)['\"]\])?\}"
+                                    pattern = r"(.*)\{\$__general_var__\[\{0}\]\[['\"](.+?)['\"]\](?:\[['\"](.+?)['\"]\])?(?:\[['\"](.+?)['\"]\])?\}"
                                     valuefinal = helper.get_element_data_key_by_pattern(general_data[int(numInt)],pattern, gcr_val)
                                     final_gcr = {
                                         f'{gcr_key}': f'{valuefinal}'
@@ -531,7 +535,7 @@ def general_test(generals_section, general_section_online, lang = 'fa', modul_da
                                 complex_element = local_section.find(class_=complex_items_class + num)
                                 for class_name, val in replace_comlex_classes_local.items():
                                     for atr, value in val.items():
-                                        pattern = r"\{\$__general_var__\[\{0}\]\[['\"](.+?)['\"]\](?:\[['\"](.+?)['\"]\])?\}"
+                                        pattern = r"(.*)\{\$__general_var__\[\{0}\]\[['\"](.+?)['\"]\](?:\[['\"](.+?)['\"]\])?(?:\[['\"](.+?)['\"]\])?\}"
                                         valuefinal = helper.get_element_data_key_by_pattern(general_data[int(numInt)], pattern, value )
                                         helper.replace_attribute(complex_element, class_name, atr, valuefinal)
 
@@ -558,12 +562,7 @@ def general_test(generals_section, general_section_online, lang = 'fa', modul_da
                                             if dark_star_elements:
                                                 dark_star_elements.decompose()
 
-                        befor_social_media = '''{assign var="socialLinks"  value=$about['social_links']|json_decode:true}
-                                                {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref','aparat' => 'aparatHref','youtube' => 'youtubeHref','facebook' => 'facebookHref','linkeDin' => 'linkeDinHref']}
-
-                                                {foreach $socialLinks as $key => $val}
-                                                        {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}
-                                                {/foreach}'''
+                        befor_social_media = ''''''
                         befor_social_media_soup = BeautifulSoup(befor_social_media, "html.parser")
                         social_element = local_section.find(class_='__social_class__')
                         if social_element:
@@ -592,6 +591,8 @@ def general_test(generals_section, general_section_online, lang = 'fa', modul_da
 
         general_section_online = general_section_online.prettify()
         generals_final_content = f'{before_html}\n{generals_section}\n{after_html}'
+
+        generals_final_content = generals_final_content.replace("__all_link_href__", menu_data['main'] + "/page/" + special_page)
 
         general_section_online = helper.unit_test_clean_string(general_section_online)
         generals_final_content = helper.unit_test_clean_string(generals_final_content)

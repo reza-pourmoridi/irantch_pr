@@ -186,11 +186,13 @@ repeatable_social_links = {
 befor_all_css = ['css/header.css', 'css/bootstrap.min.css', 'css/header.css']
 between_mainPage_assets_css = []
 not_inside_mainPage_css = []
-after__all_pags_mainpage_css = ['select2.css', 'select2.min.css']
+after__all_pags_mainpage_css = ['css/select2.css', 'css/select2.min.css']
 after__all_css = ['css/tabs.css', 'css/all.min.css', 'css/register.css', 'css/style.css']
 
-befor_all_js = ['js/bootstrap.min.js', 'bootstrap.bundle.min.js', 'js/bootstrap.js', 'bootstrap.bundle.min.js',
-             'js/select2.min.js', 'js/select2.js', 'js/header.js']
+
+
+
+befor_all_js = ['js/bootstrap.min.js', 'bootstrap.bundle.min.js', 'js/bootstrap.js', 'bootstrap.bundle.min.js','js/select2.min.js', 'js/select2.js', 'js/header.js']
 between_mainPage_assets_js = []
 inside_mainPage_js = []
 remove_assets_js = ['js/jquery-3.4.1.min.js']
@@ -291,9 +293,8 @@ def initiation_progress():
             'name': 'هدر',
             'file': 'header',
             'modular': header_module,
-            'test_function': unit_test.test_unit_test,
+            'test_function': unit_test.unit_test_header,
             'tag': 'head'
-
         },
         'footer_script': {
             'class': False,
@@ -333,7 +334,7 @@ def initiation_progress():
             'name': 'باشگاه, نرخ ارز, تبدیل تاریخ و هواشناسی',
             'file': 'club_weather',
             'modular': club_weather_module,
-
+            'test_function': unit_test.test_unit_test
         },
         'fast_flight_search_section': {
             'class': 'i_modular_fast_search_flight',
@@ -345,9 +346,15 @@ def initiation_progress():
         }
     }
 
-    moduls_array = {
-
-    }
+    # moduls_array = {
+    #     'menu': {
+    #         'class': 'i_modular_menu',
+    #         'name': 'منو',
+    #         'file': 'menu',
+    #         'modular': menu_module,
+    #         'test_function': unit_test.unit_test_menu
+    #     },
+    # }
 
     final_massage = '--'
     if modulation_checked == '1':
@@ -518,7 +525,6 @@ def unit_test_process(html_content, moduls_array, lang):
                             module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], module_info['test_function'] , soup, soup_online ,lang , i , {}))
                         elif module_info['array']:
                             module_test_messages.append("<br><br> تست بخش  " + module_info['name'] + " = " + initiation_test(module_info['class'], module_info['name'], unit_test.initiate_general_test , soup, soup_online ,lang , i , module_info['array']))
-
                         i = i + 1
             elif module_info['tag']:
                 section = soup
@@ -551,6 +557,7 @@ def create_controller(main_array_string, project_path, contrller_name='test'):
         public function __construct() {
 
             parent::__construct();
+            $this->icons_json =  json_decode($this->icons_json, true);
         }
 
         public $icons_json = '__main_array_string__';
@@ -605,7 +612,7 @@ def create_controller(main_array_string, project_path, contrller_name='test'):
         }
 
         public function getItemsBykeyFromJsonServicesArray($json_array, $key) {
-            $array = json_decode($json_array, true);
+            $array = $json_array;
             $new_array = [];
             foreach ($array as $service => $val) {
                 $new_array[$service] = $val[$key];
@@ -634,13 +641,6 @@ def create_controller(main_array_string, project_path, contrller_name='test'):
     except Exception as e:
         traceback_str = traceback.format_exc()
         return str(e) + '\nTraceback:\n' + traceback_str
-
-
-
-
-
-
-
 
 
 def header_module(header_section, project_path, lang='fa', file_name=''):
@@ -813,7 +813,7 @@ def header_module(header_section, project_path, lang='fa', file_name=''):
         header_final_content = header_final_content.replace("&lt;", "<")
         header_final_content = header_final_content.replace("&amp;", "&")
 
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'final_files' subdirectory
         return helper.create_file(header_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         traceback_str = traceback.format_exc()
@@ -824,9 +824,6 @@ def footer_module(footer_section, project_path, lang='fa', file_name=''):
     try:
         before_html = '''{load_presentation_object filename="aboutUs" assign="objAbout"}
                             {assign var="about"  value=$objAbout->getData()}
-                            {assign var="socialLinks"  value=$about['social_links']|json_decode:true}
-
-
                             {if $smarty.session.layout neq 'pwa'}
                                 {if $smarty.const.GDS_SWITCH neq $smarty.const.ConstPrintHotel && $smarty.const.GDS_SWITCH neq $smarty.const.ConstPrintTicket && $smarty.const.GDS_SWITCH neq $smarty.const.ConstPrintHotelReservation && $smarty.const.GDS_SWITCH neq $smarty.const.ConstPrintHotelReservationAhuan}
                                    '''
@@ -854,7 +851,6 @@ def footer_module(footer_section, project_path, lang='fa', file_name=''):
                 helper.replace_attribute_by_text(footer_section, item, 'href', key)
 
         helper.replace_attribute(footer_section, '__aboutUs_class__', 'string','''{$htmlContent = $about['body']|strip_tags}{$htmlContent|truncate:300}''')
-        helper.replace_attribute(footer_section, '__aboutUs_class_href__', 'href','''{$smarty.const.ROOT_ADDRESS}/mag''')
         helper.replace_attribute(footer_section, '__address_class__', 'string','''  {$smarty.const.CLIENT_ADDRESS} ''')
         helper.replace_attribute(footer_section, '__mobile_class__', 'string', '''{$smarty.const.CLIENT_MOBILE}''')
         helper.replace_attribute(footer_section, '__mobile_class__', 'href', '''tel:{$smarty.const.CLIENT_MOBILE}''')
@@ -865,8 +861,9 @@ def footer_module(footer_section, project_path, lang='fa', file_name=''):
         footer_section = helper.replace_placeholders(footer_section,
                                                      {'__aboutUsLink__': '{$smarty.const.ROOT_ADDRESS}/aboutUs'})
         footer_final_content = f'{before_html}\n{footer_section}\n{after_html}'
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'final_files' subdirectory
         footer_final_content = footer_final_content.replace("&gt;", ">")
+        footer_final_content = footer_final_content.replace("__aboutUs_class_href__", "{$smarty.const.ROOT_ADDRESS}/contactUs")
         footer_final_content = footer_final_content.replace("&lt;", "<")
 
         return helper.create_file(footer_final_content, include_files_directory, file_name, 'tpl')
@@ -951,7 +948,7 @@ def footer_script_module(footer_script_section, project_path, lang='fa', file_na
         footer_script_final_content = footer_script_final_content.replace("&gt;", ">")
         footer_script_final_content = footer_script_final_content.replace("&lt;", "<")
         footer_script_final_content = footer_script_final_content.replace("</html>", " ")
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'final_files' subdirectory
         return helper.create_file(footer_script_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         traceback_str = traceback.format_exc()
@@ -960,6 +957,7 @@ def footer_script_module(footer_script_section, project_path, lang='fa', file_na
 
 def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa',  file_name = ''):
     try:
+        final_file_massage = ''
         banner_tab = banner_gallery_section.find(class_='__banner_tabs__')
         if banner_tab:
             before_html = ''''''
@@ -1037,23 +1035,29 @@ def banner_gallery_module(banner_gallery_section, project_path , lang = 'fa',  f
             search_box_massage = search_box_modulation[0]
             if isinstance(search_box_modulation, str):
                 search_box_massage = search_box_modulation
+                final_file_massage = 'searh box : ' + search_box_modulation + ' <br><br>'
             tab_icons = search_box_modulation[1]
             services_json = json.dumps(tab_icons , ensure_ascii=False)
             creat_controller = create_controller(f'{services_json}', project_path, request.form['project_name'])
+            final_file_massage = final_file_massage + ' <br><br> controller : ' + creat_controller + ' <br><br>'
+
             search_box = banner_gallery_section.find(class_='i_modular_searchBox')
             helper.replace_attribute(search_box, '__search_box_tabs__', 'string','''{include file="./search-box/tabs-search-box.tpl"}''')
             helper.replace_attribute(search_box, '__search_boxes__', 'string','''{include file="./search-box/boxs-search.tpl"}''')
-
+        else:
+            creat_controller = create_controller('{}', project_path, request.form['project_name'])
+            if isinstance(creat_controller, str):
+                final_file_massage = final_file_massage + ' <br><br> controller : ' + creat_controller + ' <br><br>'
 
 
 
         banner_gallery_final_content = f'{before_html}\n{banner_gallery_section}\n{after_html}'
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'final_files' subdirectory
         banner_gallery_final_content = banner_gallery_final_content.replace("&gt;", ">")
         banner_gallery_final_content = banner_gallery_final_content.replace("&lt;", "<")
 
-        final_file_massage = helper.create_file(banner_gallery_final_content, include_files_directory, 'search-box', 'tpl')
-        return 'searh box : ' + search_box_massage + ' <br><br> banner : ' + final_file_massage + ' <br><br> controller : ' + creat_controller
+        final_file_massage = final_file_massage + ' banner : ' + helper.create_file(banner_gallery_final_content, include_files_directory, 'search-box', 'tpl')
+        return final_file_massage
     except Exception as e:
         traceback_str = traceback.format_exc()
         return str(e) + '\nTraceback:\n' + traceback_str
@@ -1255,7 +1259,7 @@ def fast_flight_search_module(fast_flight_search_section, project_path, lang = '
 
         fast_flight_search_final_content = fast_flight_search_final_content.replace("&gt;", ">")
         fast_flight_search_final_content = fast_flight_search_final_content.replace("&lt;", "<")
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'final_files' subdirectory
         return helper.create_file(fast_flight_search_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         traceback_str = traceback.format_exc()
@@ -1318,7 +1322,7 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
         menu_final_content = f'{menu_section}'
         menu_final_content = f'{before_html}\n{menu_section}'
 
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'final_files' subdirectory
         # helper.write_text_in_path(project_path, "{inclued 'include_files/menu.tpl'}")
         menu_final_content = menu_final_content.replace("__main_link_href__", "https://{$smarty.const.CLIENT_MAIN_DOMAIN}")
         menu_final_content = menu_final_content.replace("&gt;", ">")
@@ -1352,6 +1356,8 @@ def club_weather_module(club_weather_section, project_path, lang = 'fa',  file_n
 
         helper.add_class_to_elements(club_weather_section, '__JalaliToMiladi_input__','convertShamsiMiladiCalendar')
         helper.add_class_to_elements(club_weather_section, '__MiladiToJalali_input__','convertMiladiShamsiCalendar')
+        helper.remove_class_from_elements(club_weather_section, '__JalaliToMiladi_input__','hasDatepicker')
+        helper.remove_class_from_elements(club_weather_section, '__MiladiToJalali_input__','hasDatepicker')
 
         helper.replace_attribute(club_weather_section, '__JalaliToMiladi_input__', 'name', '''txtShamsiCalendar''')
         helper.replace_attribute(club_weather_section, '__JalaliToMiladi_input__', 'id', '''txtShamsiCalendar''')
@@ -1360,10 +1366,6 @@ def club_weather_module(club_weather_section, project_path, lang = 'fa',  file_n
         helper.replace_attribute(club_weather_section, '__MiladiToJalali_input__', 'id', '''txtMiladiCalendar''')
 
 
-
-        helper.replace_attribute(club_weather_section, '__email_class__', 'string', '''{$smarty.const.CLIENT_EMAIL}''')
-        helper.replace_attribute(club_weather_section, '__email_class__', 'href', '''mailto:{$smarty.const.CLIENT_EMAIL}''')
-
         for key, val in repeatable_links.items():
             for item in val:
                 helper.replace_attribute_by_text(club_weather_section, item, 'href', key)
@@ -1371,7 +1373,7 @@ def club_weather_module(club_weather_section, project_path, lang = 'fa',  file_n
         club_weather_final_content = f'{club_weather_section}'
         club_weather_final_content = club_weather_final_content.replace("&gt;", ">")
         club_weather_final_content = club_weather_final_content.replace("&lt;", "<")
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'final_files' subdirectory
         return helper.create_file(club_weather_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         traceback_str = traceback.format_exc()
@@ -1815,11 +1817,7 @@ def general_module(generals_section, project_path, lang = 'fa',  file_name = '',
 
         general_region_array = modul_data_array['general_region_array']
         general_type_array = modul_data_array['general_type_array']
-        before_html_local = modul_data_array['before_html_local']
 
-
-        before_foreach_local = modul_data_array['before_foreach_local']
-        after_foreach_local = modul_data_array['after_foreach_local']
 
         replace_classes_local = modul_data_array['replace_classes_local']
         replace_comlex_classes_local = modul_data_array['replace_comlex_classes_local']
@@ -1848,6 +1846,9 @@ def general_module(generals_section, project_path, lang = 'fa',  file_name = '',
         for region in general_region_array:
             for type in general_type_array:
 
+                before_foreach_local = modul_data_array['before_foreach_local']
+                after_foreach_local = modul_data_array['after_foreach_local']
+
                 section_class = section_class_init
                 section_var = section_var_init
                 section_params = section_params_init
@@ -1871,10 +1872,14 @@ def general_module(generals_section, project_path, lang = 'fa',  file_name = '',
                 else:
                     sections = generals_section.find_all(class_=section_class)
 
+                    
+
                 if sections:
                     for local_section in sections:
                         if no_chiled == 'yes':
                             local_section = generals_section
+
+                        before_html_local = modul_data_array['before_html_local']
                         before_html_local = before_html_local.replace("__type__", type)
                         before_html_local = before_html_local.replace("__country__", region)
                         before_html_local = before_html_local.replace("__general_var__", section_var)
@@ -1893,6 +1898,8 @@ def general_module(generals_section, project_path, lang = 'fa',  file_name = '',
                         simple_items_numbers_max = max(simple_items_numbers) if simple_items_numbers else '0'
                         simple_items_numbers_min = min(simple_items_numbers) if simple_items_numbers else '0'
                         max_item_number = max(complex_items_numbers_max, simple_items_numbers_max)
+                        max_item_number = int(max_item_number) + 1
+                        max_item_number = str(max_item_number)
                         before_html = before_html.replace("__local_min__", simple_items_numbers_min)
                         before_html = before_html.replace("__local_max__", simple_items_numbers_max)
                         before_html = before_html.replace("__local_max_limit__", max_item_number)
@@ -1980,12 +1987,15 @@ def general_module(generals_section, project_path, lang = 'fa',  file_name = '',
                                         if dark_star_elements:
                                             dark_star_elements.decompose()
 
-                        befor_social_media = '''{assign var="socialLinks"  value=$about['social_links']|json_decode:true}
-                                                {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref','aparat' => 'aparatHref','youtube' => 'youtubeHref','facebook' => 'facebookHref','linkeDin' => 'linkeDinHref']}
+                        befor_social_media = '''
+                        {load_presentation_object filename="aboutUs" assign="objAbout"}
+                            {assign var="about"  value=$objAbout->getData()}
+                            {assign var="socialLinks"  value=$about['social_links']|json_decode:true}
+                            {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref','aparat' => 'aparatHref','youtube' => 'youtubeHref','facebook' => 'facebookHref','linkeDin' => 'linkeDinHref']}
 
-                                                {foreach $socialLinks as $key => $val}
-                                                        {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}
-                                                {/foreach}'''
+                            {foreach $socialLinks as $key => $val}
+                                    {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}
+                            {/foreach}'''
                         befor_social_media_soup = BeautifulSoup(befor_social_media, "html.parser")
                         social_element = local_section.find(class_='__social_class__')
                         if social_element:
@@ -2017,7 +2027,7 @@ def general_module(generals_section, project_path, lang = 'fa',  file_name = '',
         generals_final_content = generals_final_content.replace("__all_link_href__", "{$smarty.const.ROOT_ADDRESS}/page/" + special_page)
         generals_final_content = generals_final_content.replace("&gt;", ">")
         generals_final_content = generals_final_content.replace("&lt;", "<")
-        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'files' subdirectory
+        include_files_directory = os.path.join(project_path, 'include_files')  # Create a 'final_files' subdirectory
         return helper.create_file(generals_final_content, include_files_directory, file_name, 'tpl')
     except Exception as e:
         traceback_str = traceback.format_exc()
