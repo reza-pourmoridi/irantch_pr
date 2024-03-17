@@ -423,6 +423,7 @@ def initiation_progress():
     count_modulation = final_massage.count('polomp')
     count_success = final_massage.count('successfully')
 
+
     upload_massage = 'not successful'
     copy_controller = 'not successful'
     if count_success >= count_modulation:
