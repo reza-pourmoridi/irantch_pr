@@ -1872,7 +1872,7 @@ def general_module(generals_section, project_path, lang = 'fa',  file_name = '',
                 else:
                     sections = generals_section.find_all(class_=section_class)
 
-
+                    
 
                 if sections:
                     for local_section in sections:

@@ -11,6 +11,8 @@ from collections import OrderedDict
 import traceback
 from difflib import SequenceMatcher
 import socket
+from jdatetime import datetime, timedelta
+
 
 requests.packages.urllib3.disable_warnings()
 
@@ -540,6 +542,12 @@ def special_items(data, item):
     if item == '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$item['id']}/{$item['tour_slug']}''':
         return '192.168.1.100/gds/fa/detailTour/' + data['id'] + '/' + data['tour_slug']
 
+    if item == '''{$smarty.const.ROOT_ADDRESS}/resultExternalHotel/{$item['CountryEn']}/{$item['DepartureCityEn']}/{$objDate->daysAfterToday('7')}/{$objDate->daysAfterToday('8')}/1/R:2-0-0''':
+        return '192.168.1.100/gds/fa/resultExternalHotel/' + data['CountryEn'] + '/' + data['DepartureCityEn'] + '/' + get_jalali_date_after_n_days(7) + '/' + get_jalali_date_after_n_days(8) + '/1/R:2-0-0'
+
+    if item == '''assets/images/hotel/{$item['DepartureCode']}.jpg''':
+        return '192.168.1.100/assets/images/hotel/' + data['DepartureCode'] + '.jpg'
+
     if item == '''{$smarty.const.ROOT_ADDRESS_WITHOUT_LANG}/pic/reservationTour/{$item['tour_pic']}''':
         return '192.168.1.100/gds/pic/reservationTour/' + data['tour_pic']
 
@@ -653,3 +661,14 @@ def check_url_real(urls):
 def similarity(string1, string2):
     matcher = SequenceMatcher(None, string1, string2)
     return matcher.ratio() * 100
+
+
+def get_jalali_date_after_n_days(n):
+    # Get today's Jalali date
+    today = datetime.now().date()
+
+    # Calculate the date after n days
+    future_date = today + timedelta(days=n)
+
+    # Return the Jalali date as a string in the format 'yyyy-mm-dd'
+    return f"{future_date.year}-{future_date.month:02d}-{future_date.day:02d}"

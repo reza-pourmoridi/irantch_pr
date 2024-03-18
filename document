@@ -104,6 +104,7 @@ hooks:
         __rate_count_class__     : کلاس تعداد ارا
 
     hotel webservice: i_modular_hotels_webservice
+    __hotel__
     __hotel__internal__
     __hotel__external__
         __all_link_href__ : لینک همه هتل ها
