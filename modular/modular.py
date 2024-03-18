@@ -347,13 +347,14 @@ def initiation_progress():
     }
 
     # moduls_array = {
-    #     'menu': {
-    #         'class': 'i_modular_menu',
-    #         'name': 'منو',
-    #         'file': 'menu',
-    #         'modular': menu_module,
-    #         'test_function': unit_test.unit_test_menu
-    #     },
+    #     'tours': {
+    #         'class': 'i_modular_tours',
+    #         'name': 'تور',
+    #         'file': 'tours',
+    #         'array': tours_data_array,
+    #         'modular': False,
+    #
+    #      },
     # }
 
     final_massage = '--'
@@ -1905,36 +1906,37 @@ def general_module(generals_section, project_path, lang = 'fa',  file_name = '',
                         before_html = before_html.replace("__local_max_limit__", max_item_number)
                         for num in simple_items_numbers:
                             simple_element = local_section.find(class_=simple_items_class + num)
-                            if num == simple_items_numbers[0]:
-                                simple_element = helper.replace_placeholders(simple_element, generals_simple_replacements)
-                                simple_element = local_section.find(class_=simple_items_class + num)
-                                helper.add_before_after(local_section, simple_items_class + num, before_foreach_local, after_foreach_local)
-                                simple_element = local_section.find(class_=simple_items_class + num)
-                                for class_name, val in replace_classes_local.items():
-                                    for atr, value in val.items():
-                                        helper.replace_attribute(simple_element, class_name, atr, value)
+                            if simple_element:
+                                if num == simple_items_numbers[0]:
+                                    simple_element = helper.replace_placeholders(simple_element, generals_simple_replacements)
+                                    simple_element = local_section.find(class_=simple_items_class + num)
+                                    helper.add_before_after(local_section, simple_items_class + num, before_foreach_local, after_foreach_local)
+                                    simple_element = local_section.find(class_=simple_items_class + num)
+                                    for class_name, val in replace_classes_local.items():
+                                        for atr, value in val.items():
+                                            helper.replace_attribute(simple_element, class_name, atr, value)
 
-                                for i in range(1, 6):
-                                    light_star_elements = simple_element.find(class_='__star_class_light__' + str(i))
-                                    dark_star_elements = simple_element.find(class_='__star_class_dark__' + str(i))
-                                    if i == 1 and light_star_elements:
-                                        new_light_star = before_star_simple + str(light_star_elements) + '''{/for}'''
-                                        new_light_star = BeautifulSoup(new_light_star, 'html.parser')
-                                        light_star_elements.replace_with(new_light_star)
-                                    else:
-                                        if light_star_elements:
-                                            light_star_elements.decompose()
+                                    for i in range(1, 6):
+                                        light_star_elements = simple_element.find(class_='__star_class_light__' + str(i))
+                                        dark_star_elements = simple_element.find(class_='__star_class_dark__' + str(i))
+                                        if i == 1 and light_star_elements:
+                                            new_light_star = before_star_simple + str(light_star_elements) + '''{/for}'''
+                                            new_light_star = BeautifulSoup(new_light_star, 'html.parser')
+                                            light_star_elements.replace_with(new_light_star)
+                                        else:
+                                            if light_star_elements:
+                                                light_star_elements.decompose()
 
-                                    if i == 1 and dark_star_elements:
-                                        new_dark_star = before_dark_star_simple + str(dark_star_elements) + '''{/for}'''
-                                        new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
-                                        dark_star_elements.replace_with(new_dark_star)
-                                    else:
-                                        if dark_star_elements:
-                                            dark_star_elements.decompose()
+                                        if i == 1 and dark_star_elements:
+                                            new_dark_star = before_dark_star_simple + str(dark_star_elements) + '''{/for}'''
+                                            new_dark_star = BeautifulSoup(new_dark_star, 'html.parser')
+                                            dark_star_elements.replace_with(new_dark_star)
+                                        else:
+                                            if dark_star_elements:
+                                                dark_star_elements.decompose()
 
-                            else:
-                                simple_element.decompose()
+                                else:
+                                    simple_element.decompose()
 
 
 

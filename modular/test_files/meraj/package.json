@@ -1,0 +1,10 @@
+{
+  "name": "camera-slider-master",
+  "version": "1.0.0",
+  "scripts": {
+      "start" : "sass --watch --style compressed scss:css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
