@@ -20,7 +20,7 @@ simple_items_class = "__i_modular_nc_item_class_"
 repeatable_links = {
         '{$smarty.const.ROOT_ADDRESS}/page/flight':
             {
-                'پرواز', 'رحلة جوية', 'flight', 'بلیط هواپیما'
+                'پرواز', 'رحلة جوية', 'flight', 'بلیط هواپیما' , 'بلیط'
             },
         '{$smarty.const.ROOT_ADDRESS}/page/flight-hotel':
             {
@@ -56,7 +56,7 @@ repeatable_links = {
             },
         '{$smarty.const.ROOT_ADDRESS}/mag':
             {
-                'وبلاگ'
+                'وبلاگ' , 'مقالات'
             },
         '{$smarty.const.ROOT_ADDRESS}/iranVisa':
             {
@@ -68,7 +68,7 @@ repeatable_links = {
             },
         '{$smarty.const.ROOT_ADDRESS}/page/tour':
             {
-                'تور', 'شبكة', 'Iran Tour', 'tour', 'تور لحظه آخری'
+                'تور', 'شبكة', 'Iran Tour', 'tour', 'تور لحظه آخری' , 'تور داخلی' , 'تور خارجی'
             },
         '{$smarty.const.ROOT_ADDRESS}/page/visa':
             {
@@ -82,7 +82,7 @@ repeatable_links = {
             {
                 'اخبار سایت', 'news', 'اخبار'
             },
-        '{$smarty.const.ROOT_ADDRESS}/loginUser':
+        '{$smarty.const.ROOT_ADDRESS}/authenticate':
             {
                 'باشگاه مسافران', 'باشگاه مشتریان'
             },
@@ -118,6 +118,10 @@ repeatable_links = {
             {
                 'اطلاعات ویزا', 'ویزا'
             },
+        '{$smarty.const.ROOT_ADDRESS}/page/forms':
+            {
+                'فرم ها'
+            },
         '{$smarty.const.ROOT_ADDRESS}/aboutCountry':
             {
                 'معرفی کشورها'
@@ -144,19 +148,19 @@ repeatable_links = {
             },
         '{$smarty.const.ROOT_ADDRESS}/pay':
             {
-                'پرداخت آنلاین', 'درگاه پرداخت'
+                'پرداخت آنلاین', 'درگاه پرداخت' ,'درگاه پرداخت آﻧﻼﻳﻦ' ,'درگاه پرداخت آنلاین'
             },
         '{$smarty.const.ROOT_ADDRESS}/gallery':
             {
-                'گالری عکس'
+                'گالری عکس' , 'گالری تصاویر'
             },
         '{$smarty.const.ROOT_ADDRESS}/recommendation':
             {
-                'recommendation', 'Travelogue', 'سفر نامه', 'نظر مشتریان'
+                'recommendation', 'Travelogue', 'سفر نامه', 'نظر مشتریان' , 'سفرنامه'
             },
         '{$smarty.const.ROOT_ADDRESS}/orderServices':
             {
-                'الخدمات السياحية', 'Tourism services'
+                'الخدمات السياحية', 'Tourism services' ,'درخواست خدمات'
             },
         '{$smarty.const.ROOT_ADDRESS}/clock':
             {
@@ -181,9 +185,10 @@ repeatable_social_links = {
     '__linkdin_class__': '{if $linkeDinHref}{$linkeDinHref}{/if}',
     '__aparat_class__': '{if $aparatHref}{$aparatHref}{/if}',
     '__youtube_class__': '{if $youTubeHref}{$youTubeHref}{/if}',
+    '__twitter_class__': '{if $twitterHref}{$twitterHref}{/if}',
 }
 
-befor_all_css = ['css/header.css', 'css/bootstrap.min.css', 'css/header.css']
+befor_all_css = ['css/bootstrap.min.css', 'css/header.css']
 between_mainPage_assets_css = []
 not_inside_mainPage_css = []
 after__all_pags_mainpage_css = ['css/select2.css', 'css/select2.min.css']
@@ -196,7 +201,7 @@ befor_all_js = ['js/bootstrap.min.js', 'bootstrap.bundle.min.js', 'js/bootstrap.
 between_mainPage_assets_js = []
 inside_mainPage_js = []
 remove_assets_js = ['js/jquery-3.4.1.min.js']
-after__all_js = ['js/header.js', 'js/mega-menu.js', 'js/script.js']
+after__all_js = ['js/header.js', 'js/mega-menu.js', 'js/script.js','js/public-main.js']
 
 
 def initiation_progress():
@@ -253,6 +258,15 @@ def initiation_progress():
             'array': advertisment_data_array,
             'modular': False,
         },
+
+     'installment_calculator': {
+          'class': 'i_modular_installment_calculator',
+          'name': 'محاسبه گر اقساط',
+          'file': 'installment_calculator',
+          'array': installment_calculator_data_array,
+          'modular': False,
+      },
+
         'news': {
             'class': 'i_modular_news',
             'name': 'اخبار',
@@ -727,6 +741,7 @@ def header_module(header_section, project_path, lang='fa', file_name=''):
         <script type="text/javascript" src="assets/js/jquery-ui.min.js"></script>
 
         <!-- datepicker calendar -->
+        <script type="text/javascript" src="assets/datepicker/jalali.js"></script>
         <script type="text/javascript" src="assets/datepicker/jquery.cookie.min.js"></script>
         <script type="text/javascript" src="assets/datepicker/jquery.ui.core.js"></script>
         <script type="text/javascript" src="assets/datepicker/jquery.ui.datepicker-cc.js"></script>
@@ -834,7 +849,7 @@ def footer_module(footer_section, project_path, lang='fa', file_name=''):
                             {/if}'''
 
         befor_social_media = '''{assign var="socialLinks"  value=$about['social_links']|json_decode:true}
-                                {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref','aparat' => 'aparatHref','youtube' => 'youtubeHref','facebook' => 'facebookHref','linkeDin' => 'linkeDinHref']}
+                                {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref','aparat' => 'aparatHref','youTube' => 'youtubeHref','facebook' => 'facebookHref','linkedin' => 'linkeDinHref' , 'twitter' => 'twitterHref']}
 
                                 {foreach $socialLinks as $key => $val}
                                         {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}
@@ -898,7 +913,6 @@ def footer_script_module(footer_script_section, project_path, lang='fa', file_na
                             <script src="project_files/js/mega-menu.js"></script>
                             <script type="text/javascript" src="project_files/js/script.js"></script>
 
-                            <script type="text/javascript" src="assets/main-asset/js/public-main.js"></script>
                             </html>
                         '''
         footer_script_section = footer_script_content
@@ -1304,7 +1318,7 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
         helper.replace_attribute(menu_section, '__logo_class__', 'alt', '''{$obj->Title_head()}''')
 
         befor_social_media = '''{assign var="socialLinks"  value=$about['social_links']|json_decode:true}
-                                {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref','aparat' => 'aparatHref','youtube' => 'youtubeHref','facebook' => 'facebookHref','linkeDin' => 'linkeDinHref']}
+                                {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref','aparat' => 'aparatHref','youtube' => 'youtubeHref','facebook' => 'facebookHref','linkeDin' => 'linkeDinHref' , 'twitter' => 'twitterHref']}
 
                                 {foreach $socialLinks as $key => $val}
                                         {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}
@@ -1338,7 +1352,7 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
 def club_weather_module(club_weather_section, project_path, lang = 'fa',  file_name = ''):
     try:
         repeatable_links_club = {
-        '{$smarty.const.ROOT_ADDRESS}/loginUser':
+        '{$smarty.const.ROOT_ADDRESS}/authenticate':
             {
                 'ورود'
             },
@@ -1430,15 +1444,15 @@ news_data_array = {
     'general_type_array': [''],
     'before_html': '''''',
     'before_html_local': '''{assign var="__general_var__" value=$obj_main_page->getNewsArticles()}
-                    {assign var="othe_itmes" value=$__general_var__['data']}
+                    {assign var="other_items" value=$__general_var__['data']}
                     {assign var="i" value="2"}
                     {assign var='counter' value=0}
-                    {if $othe_itmes > 0 }
-                    {if $__general_var__[0]}
+                    {if $other_items|count > 0 }
+                    {if $other_items[0]}
                         {assign var='check_general' value=true}
                     {/if}
                     ''',
-    'after_html': '''{/if}''',
+    'after_html': '''{/if}{/if}''',
     'before_foreach_local': '''{foreach $__general_var__ as $item} {if $__local_min_var__ <= $__local_max_var__}''',
     'after_foreach_local': '''
                             {$__local_min_var__ = $__local_min_var__ + 1}
@@ -1455,25 +1469,25 @@ news_data_array = {
     },
     'replace_comlex_classes_local': {
         '__image_class__': {
-            'src': '''{$__general_var__[{0}]['image']}''',
-            'alt': '''{$__general_var__[{0}]['alt']}'''},
-        '__title_class__': {'string': '''{$__general_var__[{0}]['title']}'''},
-        '__heading_class__': {'string': '''{$__general_var__[{0}]["created_at"]}'''},
-        '__date_class__': {'string': '''{$__general_var__[{0}]['heading']}'''},
-        '__description_class__': {'string': '''{$__general_var__[{0}]['description']}'''},
+            'src': '''{$other_items[{0}]['image']}''',
+            'alt': '''{$other_items[{0}]['alt']}'''},
+        '__title_class__': {'string': '''{$other_items[{0}]['title']}'''},
+        '__heading_class__': {'string': '''{$other_items[{0}]["created_at"]}'''},
+        '__date_class__': {'string': '''{$other_items[{0}]['heading']}'''},
+        '__description_class__': {'string': '''{$other_items[{0}]['description']}'''},
     },
 
     'generals_simple_replacements': {
         "__link__": '''{$item['link']}''',
     },
     'generals_complex_replacements': {
-        "__link__": '''{$__general_var__[{0}]['link']}''',
+        "__link__": '''{$other_items[{0}]['link']}''',
     },
 
     'before_star_simple': '''{for $i = 0; $i < count($item['StarCode']); $i++}''',
     'before_dark_star_simple': '''{for $i = count($item['StarCode']); $i < 6; $i++}''',
-    'before_star_complex': '''{for $i = 0; $i < count($__general_var__['StarCode']); $i++}''',
-    'before_dark_star_complex': '''{for $i = count($__general_var__['StarCode']); $i < 6; $i++}''',
+    'before_star_complex': '''{for $i = 0; $i < count($other_items['StarCode']); $i++}''',
+    'before_dark_star_complex': '''{for $i = count($other_items['StarCode']); $i < 6; $i++}''',
 
     'unique_key': 'news',
     'no_chiled': 'yes',
@@ -1568,11 +1582,10 @@ blog_data_array = {
     'after_html': '''{/if}''',
     'before_foreach_local': '''
                         {foreach $__general_var__ as $key => $item}
-                            {if $__local_min_var__ <= $__local_max_var__}
+
                         ''',
     'after_foreach_local': '''
-                            {$__local_min_var__ = $__local_min_var__ + 1}
-                            {/if}
+
                         {/foreach}
                         ''',
 
@@ -1611,6 +1624,58 @@ blog_data_array = {
     'unique_key': 'blog',
     'no_chiled': 'yes',
     'replace_classes_general': {},
+}
+
+installment_calculator_data_array = {
+    'general_region_array': [''],
+    'general_type_array': [''],
+    'before_html': '''{load_presentation_object filename="installmentCalculator" assign="objAbout"}
+                      {assign var="calculatorData" value=$objAbout->GetData()}
+                      {if $calculatorData['initial_payment'] != '' && $calculatorData['initial_payment'] != '' && $calculatorData['max_installments'] != '' && $calculatorData['max_price'] != '' && $calculatorData['max_price'] != '' }''',
+    'before_html_local': '''''',
+    'after_html': '''{/if}''',
+    'before_foreach_local': '''''',
+    'after_foreach_local': '''''',
+
+    'replace_classes_local': {},
+    'replace_comlex_classes_local': {},
+
+    'generals_simple_replacements': {},
+    'generals_complex_replacements': {},
+
+    'before_star_simple': '''''',
+    'before_dark_star_simple': '',
+    'before_star_complex': '''''',
+    'before_dark_star_complex': '''''',
+
+    'unique_key': 'installment_calculator',
+    'no_chiled': 'yes',
+    'replace_classes_general': {
+        '__title__': {'string': ''' {if $calculatorData['title'] != ''}
+                                    <h2>{$calculatorData['title']}</h2>
+                                    {else}
+                                    <h2>محاسبه‌گر اقساط</h2>
+                                    {/if}
+                                   '''},
+        '__initial_payment__': {'string': '''<input type="hidden" id='initial_payment' name='initial_payment' value='{$calculatorData['initial_payment']}'>'''},
+        '__min_installments__': {'string': '''{$calculatorData['min_installments']}'''},
+        '__max_installments__': {'onchange': 'getInfoCalculator()' , 'id':'''installments''' , 'max':'''{$calculatorData['max_installments']}''' , 'min':'''{$calculatorData['min_installments']}''' },
+        '__min_price__': {'string': '''{$calculatorData['min_price']}'''},
+        '__range_price__': {'onchange': '''getInfoCalculator()''' , 'id': '''price''' , 'max': '''{$calculatorData['max_price']}''' , 'min':'''{$calculatorData['min_price']}''' },
+        '__amount_each_installment__': {'id': '''amount_each_installment''' ,'string':''},
+        '__price_all__': {'id': '''price_all''' ,'string':''},
+        '__result_calculate__': {'id': '''result_calculate''' ,'string':''},
+        '__priceInput__': {'id': '''priceInput''' , 'name': '''priceInput''' },
+        '__anAmount_tour__': {'id': '''anAmount_tour''' , 'name': '''anAmount_tour''' },
+        '__amount_each_installment_calculater__': {'id': '''amount_each_installment_calculater''' ,'string':'' },
+        '__price_all_calculater__': {'id': '''price_all_calculater''' ,'string':'' },
+        '__result_calculater__': {'id': '''result_calculater''' ,'string':''},
+        '__persent_discount__': {'id': '''persent_discount''' },
+        '__number_installments__': {'id': '''number_installments''' },
+        '__error_show_price__': {'string': '''<div id='error_show_price' class="alert alert-danger" role="alert"></div>''' },
+        '__AdvancedInstallmentCalculatorBox__': {'id': '''AdvancedInstallmentCalculatorBox_response_hide''' },
+
+    },
 }
 
 tours_data_array = {
@@ -1675,10 +1740,10 @@ tours_data_array = {
                                 '''},
     },
     'generals_simple_replacements': {
-        "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$item['id']}/{$item['tour_slug']}''',
+        "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$item['id_same']}/{$item['tour_slug']}''',
     },
     'generals_complex_replacements': {
-        "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$__general_var__[{0}]['id']}/{$__general_var__[{0}]['tour_slug']}''',
+        "__link__": '''{$smarty.const.ROOT_ADDRESS}/detailTour/{$__general_var__[{0}]['id_same']}/{$__general_var__[{0}]['tour_slug']}''',
     },
 
     'before_star_simple': '''{for $i = 0; $i < count($item['rate_average']); $i++}''',
@@ -1758,7 +1823,7 @@ hotels_external_cities_data_array = {
     'general_region_array': ['external'],
     'general_type_array': ['city'],
     'before_html': '''''',
-    'before_html_local': '''                                        
+    'before_html_local': '''
                         {assign var='__general_var__' value=$obj_main_page->getExternalHotelCity()}
                         {if $__general_var__}
                             {assign var='check_general' value=true}
@@ -1873,7 +1938,7 @@ def general_module(generals_section, project_path, lang = 'fa',  file_name = '',
                 else:
                     sections = generals_section.find_all(class_=section_class)
 
-                    
+
 
                 if sections:
                     for local_section in sections:
@@ -1993,7 +2058,7 @@ def general_module(generals_section, project_path, lang = 'fa',  file_name = '',
                         {load_presentation_object filename="aboutUs" assign="objAbout"}
                             {assign var="about"  value=$objAbout->getData()}
                             {assign var="socialLinks"  value=$about['social_links']|json_decode:true}
-                            {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref','aparat' => 'aparatHref','youtube' => 'youtubeHref','facebook' => 'facebookHref','linkeDin' => 'linkeDinHref']}
+                            {assign var="socialLinksArray" value=['telegram'=>'telegramHref','whatsapp'=> 'whatsappHref','instagram' => 'instagramHref','aparat' => 'aparatHref','youtube' => 'youtubeHref','facebook' => 'facebookHref','linkeDin' => 'linkeDinHref' ,'twitter' => 'twitterHref']}
 
                             {foreach $socialLinks as $key => $val}
                                     {assign var=$socialLinksArray[$val['social_media']] value=$val['link']}

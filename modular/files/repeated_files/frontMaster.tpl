@@ -12,7 +12,7 @@
         <div class="content_tech">
             <div class="container">
 
-                {if $smarty.const.GDS_SWITCH neq 'mainPage' && $smarty.const.GDS_SWITCH neq 'page'}
+                {if $smarty.const.GDS_SWITCH neq 'mainPage' && $smarty.const.GDS_SWITCH neq 'page'  &&  $smarty.const.GDS_SWITCH neq 'detailTour'}
                     {include file="`$smarty.const.FRONT_CURRENT_CLIENT`modules/rich/breadcrumb/main.tpl" obj_main_page=$obj_main_page}
                 {/if}
 
