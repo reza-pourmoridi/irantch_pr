@@ -2,3 +2,4 @@
 /modular/files/*
 !/modular/files/repeated_files/
 !/modular/files/repeated_files/**
+/venv/
