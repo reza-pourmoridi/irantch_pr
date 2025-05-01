@@ -1286,18 +1286,18 @@ def menu_module(menu_section, project_path , lang = 'fa',  file_name = ''):
 
         before_html  = '''{load_presentation_object filename="reservationBasicInformation" assign="objResult"}'''
 
-        helper.replace_attribute_by_text(menu_section, 'ورود  |  ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
-        helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
-        helper.replace_attribute_by_text(menu_section, 'ورود / ثبت نام' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
-        helper.replace_attribute_by_text(menu_section, 'الدخول / يسجل' , 'string', '{include file="`$smarty.const.FRONT_CURRENT_THEME`topBarName.tpl"}')
+        helper.replace_attribute_by_text(menu_section, 'ورود  |  ثبت نام' , 'string', '{include file="../../include/signIn/topBarName.tpl"}')
+        helper.replace_attribute_by_text(menu_section, 'ورود یا ثبت نام' , 'string', '{include file="../../include/signIn/topBarName.tpl"}')
+        helper.replace_attribute_by_text(menu_section, 'ورود / ثبت نام' , 'string', '{include file="../../include/signIn/topBarName.tpl"}')
+        helper.replace_attribute_by_text(menu_section, 'الدخول / يسجل' , 'string', '{include file="../../include/signIn/topBarName.tpl"}')
 
         helper.replace_attribute(menu_section, '__login_register_class__2', 'href', '''{if $obj_main_page->isLogin()}javascript:{else}{$smarty.const.ROOT_ADDRESS}/authenticate{/if}''')
         helper.replace_attribute(menu_section, '__login_register_class__', 'href', '''{if $obj_main_page->isLogin()}javascript:{else}{$smarty.const.ROOT_ADDRESS}/authenticate{/if}''')
 
-        helper.add_class_to_elements(menu_section, '__login_register_class__2',' {if $obj_main_page->isLogin()}show-box-login-js main-navigation__button2{else}main-navigation__button1{/if} ')
-        helper.add_class_to_elements(menu_section, '__login_register_class__',' {if $obj_main_page->isLogin()}show-box-login-js main-navigation__button2{else}main-navigation__button1{/if} ')
+        helper.add_class_to_elements(menu_section, '__login_register_class__2',' {if $obj_main_page->isLogin()}show-box-login-js main-navigation_button2{else}main-navigation_button1{/if} ')
+        helper.add_class_to_elements(menu_section, '__login_register_class__',' {if $obj_main_page->isLogin()}show-box-login-js main-navigation_button2{else}main-navigation_button1{/if} ')
         after_login = '''<div class="main-navigation__sub-menu2 arrow-up show-content-box-login-js" style="display: none">
-                            {include file="`$smarty.const.FRONT_CURRENT_THEME`topBar.tpl"}
+                            {include file="../../include/signIn/topBar.tpl"}
                         </div>'''
         helper.add_before_after(menu_section, '__login_register_class__', '', after_login)
 
