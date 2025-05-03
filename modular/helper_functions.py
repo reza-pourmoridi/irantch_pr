@@ -485,7 +485,6 @@ def upload():
     if 'file' not in request.files:
         return jsonify({"message": "No file part"})
 
-
     file = request.files['file']
 
     if not is_zip(file):
@@ -494,11 +493,33 @@ def upload():
     if file.filename == '':
         return jsonify({"message": "No selected file"})
 
-    files_directory = os.path.dirname(__file__)  # Get the directory of the script
-    files_directory = os.path.join(files_directory, 'files')  # Create a 'final_files' subdirectory
-    files_directory = os.path.join(files_directory, 'repeated_files')  # Create a 'final_files' subdirectory
-    files_directory = os.path.join(files_directory, 'project_files')  # Create a 'final_files' subdirectory
+    files_directory = os.path.dirname(__file__)
+    files_directory = os.path.join(files_directory, 'files', 'repeated_files', 'project_files')
+
     unzip_to_folder(files_directory, file)
+
+    # Remove fonts folder
+    fonts_path = os.path.join(files_directory, 'fonts')
+    if os.path.exists(fonts_path) and os.path.isdir(fonts_path):
+        shutil.rmtree(fonts_path)
+
+    # Change path in .css and .scss files
+    for root, dirs, files in os.walk(files_directory):
+        for filename in files:
+            if filename.endswith(('.css', '.scss')):
+                file_path = os.path.join(root, filename)
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                except UnicodeDecodeError:
+                    # Try ISO-8859-1 or any common fallback encoding
+                    with open(file_path, 'r', encoding='iso-8859-1') as f:
+                        content = f.read()
+                # Replace ../fonts with ../../../assets/all-fonts
+                updated_content = content.replace('../fonts', '../../../assets/all-fonts')
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    f.write(updated_content)
+
     return jsonify({"message": 'استایل های پروژه بارگذاری شدند.'})
 
 
