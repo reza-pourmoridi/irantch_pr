@@ -16,9 +16,7 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
     try:
         tabs_section = searchBox_section.find(class_='__search_box_tabs__')
         boxes_section = searchBox_section.find(class_='__search_boxes__')
-        has_tpl_services = {'Tour': Tour,
-                            'Visa': Visa,'Train': Train,'Insurance': Insurance,'Bus': Bus,'GashtTransfer': GashtTransfer,'Entertainment': Entertainment,'Europcar': Europcar
-                            }
+        has_tpl_services = {'Tour': Tour,'Visa': Visa,'Train': Train,'Insurance': Insurance,'Bus': Bus,'GashtTransfer': GashtTransfer,'Entertainment': Entertainment,'Europcar': Europcar}
 
         # getting the tabs and put them in array adn tab.tpl file in searchbox directory
         hrefs_list = []
@@ -26,7 +24,7 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
         if tabs_section:
             all_a_tags = tabs_section.find_all('a')
             boxes_path = helper.create_folder('boxes', project_path + '/include_files/search-box')
-            sections_path = helper.create_folder('sections', project_path + '/include_files/search-box/boxes')
+            # sections_path = helper.create_folder('sections', project_path + '/include_files/search-box/boxes') #todo (sections removed)
 
             for a in all_a_tags:
                 if a.get('href'):
@@ -36,7 +34,7 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
                     parent_li = parent_li.replace("nav-link", 'nav-link {if $active} active {/if}')
                     hrefs_list.append(item)
                     modified_id = item.replace('_internal', '').replace('_external', '')
-                    item_path = helper.create_folder(modified_id, sections_path)
+                    # item_path = helper.create_folder(modified_id, sections_path) #todo (sections removed)
 
                     check_svg = a.find('svg')
                     check_i = a.find('i')
@@ -63,32 +61,25 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
             modified_id = box_id.replace('_internal', '').replace('_external', '')
             if box_id:
                 if box_id not in hrefs_list:
-                    item_path = helper.create_folder(box_id, sections_path)
+                    # item_path = helper.create_folder(box_id, sections_path) #todo (sections removed)
                     id_lists.append(box_id)
                 if modified_id in has_tpl_services:
                     has_tpl_massage = has_tpl_services[modified_id](f'{b}' ,boxes_path, modified_id, box_id)
                 else:
                     helper.if_dosnt_exist_create_else_add(boxes_path, modified_id, f'{b}')
-
-        ##separation of codes
-        for b in boxs:
-            box_id = b.get('id')
-            modified_id = box_id.replace('_internal', '').replace('_external', '')
-            if box_id:
-                final_massage = seprate_search_box_codes(project_path,modified_id)
+                final_massage = f"File '{file_path}' created or content replaced successfully."
                 item_massage = box_id + " : " + final_massage
                 items_massages.append(item_massage + '<br><br> evaluation_c')
 
+        # ##separation of codes #todo (sections removed)
+        # for b in boxs:
+        #     box_id = b.get('id')
+        #     modified_id = box_id.replace('_internal', '').replace('_external', '')
+        #     if box_id:
+        #         final_massage = seprate_search_box_codes(project_path,modified_id)
+        #         item_massage = box_id + " : " + final_massage
+        #         items_massages.append(item_massage + '<br><br> evaluation_c')
 
-
-        # # creating relational services array
-        # services_array = {}
-        # for item in id_lists:
-        #     modified_item = item.replace('_internal', '').replace('_external', '')
-        #     if item in services_array:
-        #         services_array[item].append(modified_item)
-        #     else:
-        #         services_array[item] = modified_item
 
 
         return [f'{items_massages}', tab_icons]
