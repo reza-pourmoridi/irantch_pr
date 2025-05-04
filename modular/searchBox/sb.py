@@ -67,7 +67,7 @@ def search_box(searchBox_section, project_path, lang = 'fa',  file_name = ''):
                     has_tpl_massage = has_tpl_services[modified_id](f'{b}' ,boxes_path, modified_id, box_id)
                 else:
                     helper.if_dosnt_exist_create_else_add(boxes_path, modified_id, f'{b}')
-                final_massage = f"File '{file_path}' created or content replaced successfully."
+                final_massage = f"File '{box_id}' created or content replaced successfully."
                 item_massage = box_id + " : " + final_massage
                 items_massages.append(item_massage + '<br><br> evaluation_c')
 

@@ -236,127 +236,136 @@ def initiation_progress():
     if not soup:
         return jsonify({"message": "testing html = " + f'{soup}'})
 
+    # moduls_array = {
+    #     'blog': {
+    #         'class': 'i_modular_blog',
+    #         'file': 'blog',
+    #         'name': 'وبلاگ',
+    #         'array': blog_data_array,
+    #         'modular': False,
+    #     },
+    #     'newsletter': {
+    #         'class': 'i_modular_newsletter',
+    #         'name': 'خبرنامه',
+    #         'file': 'newsletter',
+    #         'array': newsletter_data_array,
+    #         'modular': False,
+    #     },
+    #     'advertisement': {
+    #         'class': 'i_modular_adds',
+    #         'name': 'تبلیغات',
+    #         'file': 'advertisement',
+    #         'array': advertisment_data_array,
+    #         'modular': False,
+    #     },
+    #
+    #  'installment_calculator': {
+    #       'class': 'i_modular_installment_calculator',
+    #       'name': 'محاسبه گر اقساط',
+    #       'file': 'installment_calculator',
+    #       'array': installment_calculator_data_array,
+    #       'modular': False,
+    #   },
+    #
+    #     'news': {
+    #         'class': 'i_modular_news',
+    #         'name': 'اخبار',
+    #         'file': 'news',
+    #         'array': news_data_array,
+    #         'modular': False,
+    #     },
+    #     'menu': {
+    #         'class': 'i_modular_menu',
+    #         'name': 'منو',
+    #         'file': 'menu',
+    #         'modular': menu_module,
+    #         'test_function': unit_test.unit_test_menu
+    #     },
+    #     'footer': {
+    #         'class': 'i_modular_footer',
+    #         'name': 'فوتر',
+    #         'file': 'footer',
+    #         'modular': footer_module,
+    #         'test_function': unit_test.unit_test_footer
+    #     },
+    #     'about_us': {
+    #         'class': 'i_modular_about_us',
+    #         'name': 'درباره ما',
+    #         'file': 'about-us',
+    #         'array': about_us_data_array,
+    #         'modular': False,
+    #     },
+    #     'banner_gallery': {
+    #             'class': 'i_modular_banner_gallery',
+    #         'name': 'گالری بنر و سرچ باکس',
+    #         'file': 'search-box',
+    #         'modular': banner_gallery_module,
+    #         'test_function': unit_test.unit_test_banner_gallery
+    #     },
+    #     'header': {
+    #         'class': False,
+    #         'name': 'هدر',
+    #         'file': 'header',
+    #         'modular': header_module,
+    #         'test_function': unit_test.unit_test_header,
+    #         'tag': 'head'
+    #     },
+    #     'footer_script': {
+    #         'class': False,
+    #         'name': 'اسکریپت فوتر',
+    #         'file': 'footer_script',
+    #         'modular': footer_script_module,
+    #         'test_function': unit_test.unit_test_script_footer,
+    #         'tag': 'script'
+    #
+    #     },
+    #     'tours': {
+    #         'class': 'i_modular_tours',
+    #         'name': 'تور',
+    #         'file': 'tours',
+    #         'array': tours_data_array,
+    #         'modular': False,
+    #
+    #      },
+    #     'hotels_webservice': {
+    #         'class': 'i_modular_hotels_webservice',
+    #         'name': 'هتل وب سرویس',
+    #         'file': 'hotels-webservice',
+    #         'array': hotels_webservice_data_array,
+    #         'modular': False,
+    #
+    #     },
+    #     'hotels__external_cities': {
+    #         'class': 'i_modular_hotels_external_cities',
+    #         'name': 'هتل , شهرهای خارجی',
+    #         'file': 'hotels-external_cities',
+    #         'array': hotels_external_cities_data_array,
+    #         'modular': False,
+    #
+    #     },
+    #     'club_weather_section': {
+    #         'class': 'i_modular_club_weather',
+    #         'name': 'باشگاه, نرخ ارز, تبدیل تاریخ و هواشناسی',
+    #         'file': 'club_weather',
+    #         'modular': club_weather_module,
+    #         'test_function': unit_test.test_unit_test
+    #     },
+    #     'fast_flight_search_section': {
+    #         'class': 'i_modular_fast_search_flight',
+    #         'name': 'جستجوی سریع پرواز',
+    #         'file': 'fast_flight_search',
+    #         'modular': fast_flight_search_module,
+    #         'test_function': unit_test.test_unit_test
+    #
+    #     }
+    # }
     moduls_array = {
-        'blog': {
-            'class': 'i_modular_blog',
-            'file': 'blog',
-            'name': 'وبلاگ',
-            'array': blog_data_array,
-            'modular': False,
-        },
-        'newsletter': {
-            'class': 'i_modular_newsletter',
-            'name': 'خبرنامه',
-            'file': 'newsletter',
-            'array': newsletter_data_array,
-            'modular': False,
-        },
-        'advertisement': {
-            'class': 'i_modular_adds',
-            'name': 'تبلیغات',
-            'file': 'advertisement',
-            'array': advertisment_data_array,
-            'modular': False,
-        },
-
-     'installment_calculator': {
-          'class': 'i_modular_installment_calculator',
-          'name': 'محاسبه گر اقساط',
-          'file': 'installment_calculator',
-          'array': installment_calculator_data_array,
-          'modular': False,
-      },
-
-        'news': {
-            'class': 'i_modular_news',
-            'name': 'اخبار',
-            'file': 'news',
-            'array': news_data_array,
-            'modular': False,
-        },
-        'menu': {
-            'class': 'i_modular_menu',
-            'name': 'منو',
-            'file': 'menu',
-            'modular': menu_module,
-            'test_function': unit_test.unit_test_menu
-        },
-        'footer': {
-            'class': 'i_modular_footer',
-            'name': 'فوتر',
-            'file': 'footer',
-            'modular': footer_module,
-            'test_function': unit_test.unit_test_footer
-        },
-        'about_us': {
-            'class': 'i_modular_about_us',
-            'name': 'درباره ما',
-            'file': 'about-us',
-            'array': about_us_data_array,
-            'modular': False,
-        },
         'banner_gallery': {
-                'class': 'i_modular_banner_gallery',
+            'class': 'i_modular_banner_gallery',
             'name': 'گالری بنر و سرچ باکس',
             'file': 'search-box',
             'modular': banner_gallery_module,
             'test_function': unit_test.unit_test_banner_gallery
-        },
-        'header': {
-            'class': False,
-            'name': 'هدر',
-            'file': 'header',
-            'modular': header_module,
-            'test_function': unit_test.unit_test_header,
-            'tag': 'head'
-        },
-        'footer_script': {
-            'class': False,
-            'name': 'اسکریپت فوتر',
-            'file': 'footer_script',
-            'modular': footer_script_module,
-            'test_function': unit_test.unit_test_script_footer,
-            'tag': 'script'
-
-        },
-        'tours': {
-            'class': 'i_modular_tours',
-            'name': 'تور',
-            'file': 'tours',
-            'array': tours_data_array,
-            'modular': False,
-
-         },
-        'hotels_webservice': {
-            'class': 'i_modular_hotels_webservice',
-            'name': 'هتل وب سرویس',
-            'file': 'hotels-webservice',
-            'array': hotels_webservice_data_array,
-            'modular': False,
-
-        },
-        'hotels__external_cities': {
-            'class': 'i_modular_hotels_external_cities',
-            'name': 'هتل , شهرهای خارجی',
-            'file': 'hotels-external_cities',
-            'array': hotels_external_cities_data_array,
-            'modular': False,
-
-        },
-        'club_weather_section': {
-            'class': 'i_modular_club_weather',
-            'name': 'باشگاه, نرخ ارز, تبدیل تاریخ و هواشناسی',
-            'file': 'club_weather',
-            'modular': club_weather_module,
-            'test_function': unit_test.test_unit_test
-        },
-        'fast_flight_search_section': {
-            'class': 'i_modular_fast_search_flight',
-            'name': 'جستجوی سریع پرواز',
-            'file': 'fast_flight_search',
-            'modular': fast_flight_search_module,
-            'test_function': unit_test.test_unit_test
-
         }
     }
 
@@ -573,6 +582,8 @@ def create_controller(main_array_string, project_path, contrller_name='test'):
 
             parent::__construct();
             $this->icons_json =  json_decode($this->icons_json, true);
+            $cleaned = str_replace(['\\\\', "\\\\r"], '', $this->icons_json);
+            $this->icons_json = str_replace('>n', '>', $cleaned);
         }
 
         public $icons_json = '__main_array_string__';
