@@ -573,6 +573,8 @@ def create_controller(main_array_string, project_path, contrller_name='test'):
 
             parent::__construct();
             $this->icons_json =  json_decode($this->icons_json, true);
+            $cleaned = str_replace(['\\\\', "\\\\r"], '', $this->icons_json);
+            $this->icons_json = str_replace('>n', '>', $cleaned);
         }
 
         public $icons_json = '__main_array_string__';
